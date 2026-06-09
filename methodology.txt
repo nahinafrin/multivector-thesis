@@ -1,0 +1,714 @@
+================================================================================
+MODIFIED METHODOLOGY:
+A Zero-Cost, Local, Adaptive RAG Security Extension
+================================================================================
+
+This pipeline wraps a Retrieval-Augmented Generation system in a thirteen-stage
+defensive cascade. The unifying design principle is an ADAPTIVE RISK SCORE that
+flows forward through every stage -- a borderline-suspicious prompt does not
+just get logged at the gate; it raises the strictness of context sanitization,
+reranking, grounding, and the output rails for that same request. Every
+component runs locally on commodity hardware and is open-source or permissively
+licensed, so the entire defense costs nothing per query and has no third-party
+dependency that could leak prompts off-host.
+
+Two components extend the forward cascade beyond a single pass. A MULTI-VECTOR
+RISK FUSION detector (Section 10A) watches the injection-bearing channels --
+the query-side gate score and the context-side per-chunk score from Step 6 --
+and fires on the CONJUNCTIVE case where both are softly active even though
+neither alone crosses its block threshold. A CLOSED-LOOP RISK-FEEDBACK
+CONTROLLER (Section 10B) wraps the retrieval-to-grounding segment and, using
+the late signals the forward pass already computes (ensemble disagreement,
+grounding faithfulness, canary integrity, multi-vector co-activation), decides
+to accept, escalate-and-re-verify, broaden-and-retry, or refuse. Both are
+local and add no per-query cost on the common path.
+
+
+================================================================================
+0.  DATASETS USED (and which step each one drives)
+================================================================================
+
+Three datasets are used at three distinct points in the system. None of them
+are paid; all are downloadable from HuggingFace, with the Kaggle-sourced
+slices already merged into the local JSONL files committed to the project.
+
+--------------------------------------------------------------------------------
+0.1  rag-datasets/rag-mini-wikipedia    (HuggingFace -- knowledge base + clean QA)
+--------------------------------------------------------------------------------
+Two configs of this dataset are used independently:
+
+  (a) text-corpus / passages split
+      Used by:   Step 5 (Vector Search)
+      How:       download_dataset.py pulls it as JSONL; then
+                 kb_rag_mini_wikipedia.py --ingest --index ./kb_wiki encodes
+                 every passage with the bge-m3 embedder and writes the FAISS
+                 index sidecars (kb_wiki.faiss + kb_wiki.texts).
+      Why:       It is a small (3.2k passages), self-contained, factually
+                 verifiable Wikipedia subset. Small enough that retrieval
+                 timings are deterministic and reproducible; factually
+                 verifiable so faithfulness errors are obvious; and free
+                 of personal data so the corpus itself does not introduce
+                 PII confounds into Step 11 evaluation.
+
+  (b) question-answer / test split
+      Used by:   Step 1 input feed (evaluation mode);
+                 Step 10 grounding judge (as gold-answer reference);
+                 build_adversarial_slice.py (as the benign-control pool).
+      How:       Read as JSONL, one record per question with ground-truth
+                 answer. Records flow through the full pipeline exactly as a
+                 live user prompt would, but with their ground_truth label
+                 retained for scoring.
+      Why:       Provides labelled benign questions whose correct answers
+                 actually live in the (a) corpus. This is what gives us
+                 SPECIFICITY evidence -- proof that the cascade does not
+                 over-block clean queries.
+
+--------------------------------------------------------------------------------
+0.2  Compiled attack dataset           (HuggingFace + Kaggle, merged locally)
+--------------------------------------------------------------------------------
+Path:         dataset/merged_output/dataset_all.clean.jsonl  (+ train/test/val splits)
+Schema:       {"prompt": str, "safety": "safe"|"unsafe", "attack_type": str, ...}
+Used by:      Step 3 (Injection Detection -- Input Gate) for evaluation;
+              Step 3c (Fusion Gate) calibration and threshold tuning;
+              build_adversarial_slice.py (as the adversarial-query pool).
+How:          Multiple public prompt-injection / jailbreak / toxicity corpora
+              from HuggingFace and Kaggle (e.g. deepset prompt-injection,
+              jailbreak-prompts, harmful-behavior subsets) are normalized into
+              one schema, deduplicated, and split into train/val/test under
+              dataset/merged_output/. The reproducible_build_config.json and
+              quota_audit_report.json beside it document exactly which source
+              corpora were sampled, in what proportions, with what random seed.
+Why:          A single open corpus would not cover the full attack surface --
+              prompt-injection corpora rarely contain jailbreak role-plays,
+              jailbreak corpora rarely contain context-poisoning payloads.
+              Merging them yields balanced positives across attack types so
+              the input gate is evaluated on each class rather than dominated
+              by the largest single source.
+
+--------------------------------------------------------------------------------
+0.3  adversarial_slice.jsonl           (constructed evaluation slice)
+--------------------------------------------------------------------------------
+Path:         step4 dataset/adversarial_slice.jsonl
+Used by:      run_full_pipeline.py (end-to-end scoring);
+              score_slice.py (adaptive-cascade behavioural scoring);
+              ablation_grounding.py (Step 10 ablations).
+How:          build_adversarial_slice.py samples five labelled groups from
+              (0.1) and (0.2) -- a 220-row slice in the default configuration
+              (n-adversarial 40, n-poisoned 40, n-benign 80, n-multivector 40,
+              n-gate-slip 20) -- and writes them as one shuffled JSONL with
+              explicit per-row "expectation" labels:
+
+                kind = "adversarial_query"  : drawn from (0.2) where safety=unsafe.
+                                              Tests Threat Model A -- direct
+                                              injection. Expectation:
+                                              gate_blocks_or_reviews = True.
+
+                kind = "poisoned_context"   : drawn from (0.1) question-answer.
+                                              The query itself is benign, but a
+                                              poison_chunk string is attached
+                                              and the harness splices it into
+                                              the retrieved context at Step 5.
+                                              Tests Threat Model B -- indirect
+                                              injection. Expectation:
+                                              poison_redacted_by_step6 = True,
+                                              canary_intact_at_step10 = True.
+
+                kind = "benign_control"     : drawn from (0.1) question-answer.
+                                              Clean queries with no payload.
+                                              Tests SPECIFICITY -- the cascade
+                                              must stay at base thresholds.
+                                              Expectation:
+                                              gate_blocks_or_reviews = False,
+                                              sanitization_strictness = 0.50,
+                                              rerank_min_score = 0.20.
+
+                kind = "multivector_attack" : a benign question carrying a MILD
+                                              query-side instruction PLUS a
+                                              SUBTLE poison chunk, each crafted
+                                              to score BELOW its own block
+                                              threshold so neither vector trips
+                                              alone. Tests Threat Model C --
+                                              conjunctive sub-threshold
+                                              injection. Expectation:
+                                              each_vector_subthreshold = True,
+                                              multivector_detector_fires = True
+                                              (the Section 10A detector must
+                                              catch the co-activation).
+
+                kind = "gate_slip_query"    : an unsafe prompt from (0.2)
+                                              wrapped in benign-looking framing
+                                              (novel-writing, roleplay,
+                                              security-training cover). Tests
+                                              the SEMANTIC-OBFUSCATION residual:
+                                              these carry ~0 injection signature
+                                              on both channels, so the detector
+                                              is NOT expected to catch them.
+                                              Expectation: gate_should_block =
+                                              True; the row MEASURES the residual
+                                              gap rather than claiming to close
+                                              it.
+Why:          The rag-mini-wikipedia QA set is almost entirely benign, so
+              running it through the full pipeline produces ~0 risk on nearly
+              every row, which means Steps 6/7/10 sit at base thresholds and
+              the adaptive cascade never fires. To DEMONSTRATE the cascade
+              -- the project's defining feature -- you need a mix of inputs
+              that actually raise risk in the gate while leaving room for
+              benign controls. This slice was constructed to be the smallest
+              labelled evaluation set that exercises all of the threat regimes
+              simultaneously: the three single-vector regimes above plus the
+              conjunctive sub-threshold case (multivector_attack) and the
+              semantic-obfuscation residual (gate_slip_query).
+
+Calibration   The injection detector (deberta-v3) is NEAR-BINARY: it scores
+finding:      benign text ~0.0 and injection ~0.9-1.0, with little mass in
+              between. The [floor, block) band a conjunctive sub-threshold
+              attack must occupy is therefore genuinely SPARSE -- in
+              calibration runs (calibrate_payloads.py) the in-band poison /
+              query candidates frequently come back empty, and the multi-vector
+              joint_risk distributions for benign vs attack rows overlap on the
+              raw scalar (a single strong context chunk drives joint_risk high
+              on its own). This is why the Section 10A detector does NOT key on
+              joint_risk alone: it additionally requires at least two channels
+              active (min_channels = 2). The near-binary behaviour is reported
+              as a finding -- it BOUNDS how often conjunctive sub-threshold
+              attacks can be instantiated against this class of detector --
+              rather than papered over by lowering thresholds until benign
+              rows leak in.
+
+
+================================================================================
+1.  USER INPUT
+================================================================================
+
+Purpose. Accept either a live user prompt for serving or, for evaluation,
+prompts from the constructed adversarial slice (Section 0.3). Each evaluation
+record carries a ground-truth safety label so detector precision and recall
+can be measured rather than asserted.
+
+What we use. Python file I/O over the JSONL evaluation slice; FastAPI's
+POST /ask endpoint (server.py) for live serving.
+
+Why these tools. JSONL is line-addressable, streamable, and human-readable,
+which matters when ground-truth labels need to be re-audited later. FastAPI
+was chosen for serving because its Pydantic-based request validation rejects
+malformed JSON at the framework boundary (returning a structured 422), so
+step 2 never has to defensively re-validate input SHAPE -- it only has to
+defend against input CONTENT.  Zero cost.
+
+
+================================================================================
+2.  NORMALIZATION
+================================================================================
+
+Purpose. Strip the whitespace, hidden characters, and encoding tricks
+attackers use to evade downstream classifiers. A prompt-injection detector
+trained on English text cannot reliably score a prompt disguised with
+zero-width joiners, bidi overrides, or homoglyphs.
+
+What we use. ftfy (Speer, 2019) to repair mojibake and broken encoding;
+Python's unicodedata.normalize("NFKC", ...) for canonical composition and
+zero-width / bidi-character stripping; spaCy (Honnibal & Montani, 2017) for
+linguistic normalization and contraction expansion. Heuristic Length
+Filtering (Butcher et al., 2025) with a 40-2000 character window is applied,
+but OUT-OF-WINDOW PROMPTS ARE FLAGGED, NOT DROPPED.
+
+Why these tools. ftfy is the canonical Python library for character-encoding
+repair and is deterministic, which means the same input always yields the
+same normalized form -- critical for reproducibility of safety experiments.
+NFKC was chosen over NFC because it collapses compatibility characters
+(fullwidth Latin, ligatures) that attackers use specifically to bypass naive
+substring filters. spaCy's tokenizer is mature and ships compact NER models
+we reuse downstream in Presidio -- using it here avoids a second tokenization
+pipeline.
+
+Point of difference. The Butcher length heuristic was modified: dataset
+analysis of (0.2) showed concise inputs (under 40 characters) are FREQUENTLY
+genuine attacks ("ignore prior", role-play unlocks) that must still reach
+the detector. Hard-dropping them would have created a trivial bypass. The
+identical normalization routine runs at training and inference time to
+eliminate train/serve skew. All tools open-source, CPU-only, zero cost.
+
+
+================================================================================
+3.  INJECTION DETECTION -- INPUT GATE
+================================================================================
+
+Purpose. Every prompt is screened for injection and jailbreak attempts BEFORE
+the LLM is ever invoked. A red verdict ends the request immediately and
+returns a fixed refusal; the model never sees the prompt at all. This is the
+single most important latency win in the pipeline -- most attacks die here,
+cheaply.
+
+What we use.
+  Step 3   -- the LLM-Guard library's PromptInjection and Toxicity scanners,
+              which load the open model protectai/deberta-v3-base-prompt-
+              injection-v2 locally.
+  Step 3c  -- a local Llama-Guard 3 (1B) classifier via Ollama.
+  Fusion   -- a fusion gate (C3RF) that combines them into a single tri-state
+              decision (allow / review / block) with category-aware weighting.
+
+Why these tools. protectai/deberta-v3-base-prompt-injection-v2 is the best-
+published open injection detector that runs on CPU in single-digit-hundred-
+millisecond range -- it replaces a hosted moderation API call with a local
+model that is auditable and never sends the prompt off-host. Llama-Guard 3
+contributes a CATEGORIZED safety verdict (S1 violent crimes, S2 non-violent
+crimes, S5 specialized advice, etc.) rather than a single scalar, which lets
+the fusion gate apply category-specific hard blocks rather than relying
+solely on a continuous threshold. Combining them rescues both detectors'
+failure modes: DeBERTa over-flags benign instruction-following; Llama-Guard
+under-flags subtle role-play jailbreaks.
+
+Which dataset trains/tests this stage. The compiled attack dataset (0.2).
+Threshold calibration and category-weight tuning are scored against that
+JSONL's "safety" and "attack_type" columns.
+
+Point of difference and connection to the pipeline. The gate emits a
+CONTINUOUS fused risk score, not merely a binary verdict, and this score is
+written into state.scores["fusion_risk"] and propagated forward. A
+borderline prompt (risk 0.55) does not get blocked here -- it raises the
+strictness of context sanitization (Step 6), reranking (Step 7), and
+grounding (Step 10) for the same request. MIT-licensed, local, zero cost.
+
+
+================================================================================
+4.  QUERY EMBEDDING
+================================================================================
+
+Purpose. Encode green prompts into dense semantic vectors so the vector
+store can find documents that are SEMANTICALLY close to the question, not
+merely lexically overlapping. This is what makes RAG retrieve evidence
+rather than keywords.
+
+What we use. A local Matryoshka-capable embedding model -- BAAI/bge-m3
+(default) via sentence-transformers, with optional Qwen3-Embedding fallback
+through Ollama. The vector is truncated to a chosen prefix dimension
+(default 512) and L2-renormalized.
+
+Why this tool. bge-m3 is a top-tier open multilingual embedder that supports
+Matryoshka representation learning, meaning a single trained model can
+produce vectors at ANY prefix length down to 64 dimensions without
+retraining. This lets the same model serve a memory-tight HNSW deployment
+and a high-recall flat-index deployment from one set of weights. It directly
+replaces OpenAI text-embedding-3-large -- an outbound API call that would
+otherwise leak every user prompt to a third party. Local, CPU-or-GPU,
+zero cost.
+
+
+================================================================================
+5.  VECTOR SEARCH
+================================================================================
+
+Purpose. Match the query vector against the indexed knowledge base by
+approximate-nearest-neighbour cosine similarity to retrieve candidate
+evidence chunks.
+
+What we use. FAISS -- IndexFlatIP over L2-normalized vectors for exact
+cosine on smaller corpora; IndexHNSWFlat for true approximate nearest
+neighbour on larger corpora. The persisted index lives as kb_wiki.faiss +
+kb_wiki.texts and is loaded once at server startup so per-request latency
+excludes index load.
+
+Which dataset populates this index. rag-mini-wikipedia / text-corpus from
+Section 0.1(a). Every passage is embedded once at --ingest time and never
+re-embedded at serve time.
+
+Why this tool. FAISS is the de-facto standard for local vector search --
+C++-backed (fast), CPU-and-GPU capable, and gives exact-cosine and ANN
+options from one library, so the same code path serves both small-evaluation
+and large-deployment regimes. It replaces Pinecone, a paid managed service
+that would charge per query and store the corpus off-host. Choosing inner
+product on L2-normalized vectors gives mathematically exact cosine
+similarity without the cost of a separate normalization step at query time.
+Local, zero cost.
+
+
+================================================================================
+6.  RETRIEVED CONTEXT SANITIZATION -- FIRST CHECKPOINT
+================================================================================
+
+Purpose. Each retrieved chunk is independently scanned for embedded
+instructions before it may enter the prompt. This is the defense against
+INDIRECT INJECTION -- attacks smuggled into the knowledge base by a poisoned
+document author, the most insidious class of RAG attack because it bypasses
+the input gate entirely.
+
+What we use. The same LLM-Guard injection scanner applied PER CHUNK rather
+than per query, plus a programmatically inserted CANARY TOKEN appended to
+the assembled context.
+
+Why these tools. Reusing the LLM-Guard scanner at this stage rather than
+introducing a second detector is deliberate -- running the same model
+against the same threat surface keeps the failure modes correlated and
+well-understood, and avoids the calibration drift you get from two different
+scoring scales. The canary is a unique synthetic token (e.g.
+RAGGUARD_CANARY_7f3a...) that has no business appearing anywhere in the
+generated answer; if it does, that proves the model treated the context as
+instructions to follow.
+
+Which dataset exercises this stage. The poisoned_context rows of (0.3).
+Those rows attach a known indirect-injection payload (one of five standard
+poison strings) and the per-row expectation poison_redacted_by_step6 = True
+makes the test pass/fail observable.
+
+Point of difference and adaptive coupling. The per-chunk scanning
+STRICTNESS is set dynamically from the input risk score carried forward
+from Step 3c -- if the gate found the question borderline-suspicious, even
+mildly suspicious chunks are dropped here. This is a dual-checkpoint
+design: the canary planted at Step 6 enables a second, independent
+verification at Step 10. Local, zero cost.
+
+
+================================================================================
+7.  CONTEXT RANKING
+================================================================================
+
+Purpose. Surviving chunks are reranked for true relevance to the query so
+the most pertinent evidence reaches the generator and irrelevant-but-
+superficially-similar chunks are demoted. Bi-encoder retrieval (Step 5)
+optimizes for recall; this step optimizes for precision.
+
+What we use. A local cross-encoder reranker -- BAAI/bge-reranker-v2-m3 via
+sentence-transformers, with Qwen3-Reranker as an alternative.
+
+Why this tool. Cross-encoders read query and chunk JOINTLY (one transformer
+pass over the concatenated pair) rather than encoding them separately, which
+is significantly more accurate for relevance scoring than dot-product of
+bi-encoder embeddings -- at the cost of latency that is acceptable for
+top-K reranking but prohibitive for full-corpus retrieval. This is the
+standard two-stage retrieval pattern (cheap recall, expensive precision).
+bge-reranker-v2-m3 directly replaces Cohere Rerank, a per-query paid API.
+Local, zero cost.
+
+Adaptive coupling. The rerank score threshold tightens when
+state.input_risk() is high -- under attack we would rather return less
+context than risk passing along marginal chunks. score_slice.py asserts
+this directly: high-risk rows must show rerank_min_score = 0.40 while
+benign rows stay at 0.20.
+
+
+================================================================================
+8.  AUGMENTED PROMPT
+================================================================================
+
+Purpose. Assemble the query and the top-ranked evidence into a structured
+prompt that EXPLICITLY INSTRUCTS THE GENERATOR NEVER TO OBEY INSTRUCTIONS
+FOUND INSIDE THE RETRIEVED CONTEXT. This is the model-side complement to
+Step 6: even if a malicious instruction slipped through context
+sanitization, the system prompt tells the model to treat retrieved text as
+data, not commands.
+
+What we use. LangChain Core's LCEL (|-piped) prompt template.
+
+Why this tool. LCEL templates are declarative, composable, and unit-
+testable, and integrate natively with the RunnableParallel we use in Step 9
+to fan out to multiple models. Building this layer with raw f-strings would
+have made the three-model ensemble in Step 9 significantly more complex to
+wire. Open-source, zero cost.
+
+
+================================================================================
+9.  GENERATOR LLM -- PARALLEL INTELLIGENCE
+================================================================================
+
+Purpose. Dispatch the augmented prompt concurrently to a SMALL ENSEMBLE OF
+INDEPENDENT LOCAL MODELS so the final answer is not at the mercy of one
+model's quirks, biases, or jailbreak susceptibility.
+
+What we use. Three Ollama-served open models -- llama3.2:3b, mistral:7b,
+qwen2.5:3b -- invoked in parallel through LangChain's RunnableParallel,
+with consensus (majority) or fusion selection of the final answer.
+
+Why these tools. Ollama provides a uniform local inference server for
+diverse model families, which lets us pick models from three DIFFERENT
+training lineages (Meta, Mistral, Alibaba) so their failure modes are
+uncorrelated. If a single base model had been jailbroken on a particular
+prompt class during training, all three are unlikely to have been
+jailbroken in the same way. RunnableParallel runs them concurrently rather
+than sequentially so total latency tracks the slowest model, not the sum.
+Together they replace GPT-4o (or any hosted model) -- and pointedly, they
+let the system run ENTIRELY OFFLINE with no prompts leaving the host.
+Zero cost; local compute only.
+
+Point of difference and key signal. The DISAGREEMENT between model outputs
+(computed via an all-MiniLM-L6-v2 semantic distance) is itself carried
+forward as a risk signal into state.scores["disagreement"]. The principle:
+injected or hallucinated content tends to produce INCONSISTENT answers
+across architecturally different models, where genuine grounded answers
+converge. This disagreement score tightens the grounding judge's threshold
+in Step 10.
+
+
+================================================================================
+10. GROUNDING AND POLICY CHECKING -- SECOND CHECKPOINT
+================================================================================
+
+Purpose. Verify that the selected answer is faithfully supported by the
+retrieved evidence (not hallucinated), and RE-CHECK THE CANARY TOKEN from
+Step 6 to confirm no indirect-injection leak occurred during generation.
+
+What we use. A HYBRID FAITHFULNESS SCORER -- a deterministic lexical-overlap
+check combined by max with a small-model LLM judge in the DeepEval style --
+plus a policy gate.
+
+Why this design. The hybrid was adopted after experiments showed each
+scorer alone was unreliable in opposite directions: the small judge
+under-scored near-verbatim answers (it preferred paraphrases as evidence
+of "understanding"), and the lexical check under-scored legitimate
+paraphrases. Crucially, THEIR FAILURES ARE UNCORRELATED -- when one scorer
+is fooled, the other tends to be right. Combining them by max rescues both
+honest cases while still requiring genuinely ungrounded content to fail
+BOTH scorers to slip through. A single hosted judge (e.g. GPT-4 as critic)
+would have been simpler but would have re-introduced an outbound API call
+and re-coupled the system's safety to a closed model's quirks.
+
+Which dataset exercises this stage. The benign_control and poisoned_context
+rows of (0.3), scored against their ground_truth answers (sourced from
+0.1 question-answer). ablation_grounding.py runs the lexical-only,
+judge-only, and hybrid variants over the same slice to establish that the
+hybrid actually outperforms either alone.
+
+Adaptive coupling. The pass threshold is RAISED when input risk or ensemble
+disagreement is high -- under attack, we demand stronger evidence of
+grounding before releasing the answer. Local judge, zero cost.
+
+
+================================================================================
+10A. MULTI-VECTOR RISK FUSION
+================================================================================
+
+Purpose. Catch the CONJUNCTIVE SUB-THRESHOLD attack -- the case a single-
+channel gate cannot see. An attacker can split a payload so that the query-
+side instruction is too mild to trip the input gate (Step 3c) AND the
+context-side poison is too mild to be dropped by sanitization (Step 6), yet
+together they steer the answer. Neither channel alone justifies a block; the
+co-activation does.
+
+What we use. multivector.py fuses two channels, each in [0, 1]:
+    query_vector   = max(injection_detection, fusion_risk)   -- the direct
+                     injection / harm signal carried from Steps 3 / 3c.
+    context_vector = context_injection  -- the max per-chunk injection score
+                     produced by Step 6's sanitizer.
+The detector fires only when ALL THREE conditions hold:
+    1. each "active" channel is at or above ITS OWN floor (per-channel, set
+       from that channel's benign noise -- not one global number);
+    2. at least min_channels are active (default 2) -- this is the
+       co-activation requirement;
+    3. the noisy-OR joint risk (1 - product of (1 - channel)) is itself at or
+       above joint_min.
+A separate, higher joint_block level (default 0.85) marks the result a HARD
+BLOCK rather than merely multi-vector.
+
+Why this design. Condition (2) is what makes a LOW per-channel floor safe.
+The injection detector is near-binary (Section 0.3 calibration finding), so a
+single strong chunk pushes the noisy-OR joint_risk near 1.0 on its own; keying
+on joint_risk alone would therefore false-fire on ordinary poisoned-context
+rows. Requiring two channels active separates "one loud vector" (handled by
+the existing single-channel rails) from "two quiet vectors acting together"
+(the gap this detector exists to close). The four constants
+(DEFAULT_SOFT_PER_CHANNEL, DEFAULT_MIN_CHANNELS, DEFAULT_JOINT_MIN,
+DEFAULT_JOINT_BLOCK) are the single source of truth and are recalibrated from
+calibrate_payloads.py / calibrate_thresholds.py against the benign vs
+multivector_attack distributions; the pipeline wiring never changes.
+
+Which dataset exercises this stage. The multivector_attack rows of (0.3),
+with benign_control rows as the specificity counter-set. verify_channels.py
+confirms both channels are actually populated on accepted multi-vector rows
+before any threshold is trusted.
+
+Scope boundary (stated so the writeup does not overclaim). This detector
+closes the conjunctive sub-threshold gap ON THE INJECTION CHANNELS only. It
+does NOT close pure semantic obfuscation -- the gate_slip_query rows
+(roleplay / novel / security-training framing) leave ~0 injection signature
+on both channels, so they are reported as a residual gap (Section 0.3),
+not as something this stage catches. Local, zero cost.
+
+
+================================================================================
+10B. CLOSED-LOOP RISK-FEEDBACK CONTROLLER
+================================================================================
+
+Purpose. Turn the retrieval-to-grounding segment (Steps 4-10) from a single
+forward pass into a closed loop that can REVISE the security verdict using the
+late signals the forward pass already computes but would otherwise discard.
+Prior iterative-RAG work (Self-RAG, Corrective-RAG, FLARE) loops to improve
+answer QUALITY; here the control variable is RISK.
+
+What we use. risk_feedback_controller.py wraps the segment. After each attempt
+it reads (grounding passed, canary intact, faithfulness, threshold) from Step
+10 and the attack-evidence signals (ensemble disagreement from Step 9, the
+Section 10A multi-vector verdict, and an opt-in context-coherence anomaly) and
+selects exactly one action:
+
+    refuse_multivector       -- Section 10A hard_block fired: coordinated
+                                co-activation, refuse now, no retry.
+    refuse_security_canary   -- the Step 6 canary leaked into the answer:
+                                strongest breach evidence, refuse, no retry.
+    accept                   -- grounded with no attack-like late signal.
+    escalate_verify          -- grounded BUT attack-like signal: raise
+                                effective_risk and RE-RUN STEP 10 ONLY at the
+                                now-stricter threshold (no second 3-model
+                                generation); accept iff it re-passes.
+    refuse_security_signal   -- ungrounded AND attack-like: the gate missed it,
+                                the loop catches it, refuse on security grounds.
+    recover_retry            -- ungrounded but signals benign and evidence is
+                                at least topically related: broaden retrieval
+                                (larger k, larger top_n) and retry the full
+                                segment, bounded by max_attempts.
+    refuse_ungrounded        -- ungrounded with no plausible recovery (out of
+                                corpus, or retries / k-cap exhausted): an HONEST
+                                refusal, not a security verdict.
+
+Why this design. Escalation does not duplicate the forward cascade's adaptive
+logic: the controller simply writes state.scores["effective_risk"], and
+PipelineState.input_risk() folds it in, so Steps 6/7/10 re-tighten on the next
+pass automatically. The accept/escalate/recover/refuse split is what lets the
+loop tell "the gate under-scored an attack" (escalate then refuse) apart from
+"benign question, retrieval just missed" (broaden then retry) -- without that
+distinction every ungrounded result would be either wrongly refused or wrongly
+retried. The recover path is cost-guarded: it refuses immediately rather than
+paying for another ensemble generation when faithfulness shows the evidence is
+not even topically close (an out-of-corpus question cannot be rescued by a
+bigger k).
+
+Cost model. Common path (grounded, clean) = 1 segment run, 1 generation.
+Escalate-and-re-verify = 1 segment + 1 Step-10 re-run, no extra ensemble call.
+Recover = up to max_attempts segment runs (default 3: 1 initial + 2 retries).
+
+Evaluation hook. run_full_pipeline.py exposes --no-controller, which preserves
+the original single-pass behaviour byte-for-byte. Running the same slice with
+and without the controller (grounded_baseline.jsonl vs grounded_controller.jsonl)
+is the A/B that isolates the controller's effect. The controller is FAIL-CLOSED:
+if it raises for any reason, the row is forced to a block rather than served.
+Local, zero cost on the common path.
+
+
+================================================================================
+11. OUTPUT SANITIZATION
+================================================================================
+
+Purpose. A two-layer output rail that catches PII and unsafe content the
+generator may have produced even from clean inputs (training data leakage,
+accidental memorization, or rare confabulation).
+
+What we use.
+  Layer 1 -- Microsoft Presidio (regex + spaCy NER via en_core_web_lg) to
+             mask sensitive PII -- emails, phone numbers, SSNs, credit-card
+             fragments, names in sensitive contexts.
+  Layer 2 -- a local Llama-Guard classifier for a single-pass safe/unsafe
+             verdict on the masked output.
+
+Why these tools. Presidio is the most mature open-source PII scrubber and
+is configurable per entity type -- which matters because we DELIBERATELY
+EXCLUDE TEMPORAL ENTITIES from masking (dates and times are almost always
+legitimate answer content, never PII, and masking them would have destroyed
+half the Wikipedia-style answers). Layering Llama-Guard on top catches
+semantic unsafety that regex/NER cannot -- slurs in context, harmful
+advice, etc. Together they replace hosted moderation APIs (OpenAI
+Moderation, Perspective). Local, zero cost.
+
+
+================================================================================
+12. DLP SCANNER
+================================================================================
+
+Purpose. A deterministic, model-free data-loss-prevention net positioned
+AFTER Presidio specifically so that if the model-based layer ever silently
+degrades (Ollama crashes, NER model fails to load), there is still a hard
+regex/checksum floor that cannot be bypassed.
+
+What we use. Three layers:
+  (a) regex pattern matching for known structured secrets;
+  (b) the LUHN CHECKSUM validation to confirm and de-false-positive credit
+      card numbers (the regex catches DIGIT SHAPE; Luhn confirms it is a
+      REAL card number);
+  (c) EXACT-DATA-MATCH against a local sensitive-value store (specific
+      known secrets that must never be emitted).
+
+Why this design. Determinism. Steps 3, 6, 9, 10, and 11 all involve ML
+models that can fail open if Ollama is down or a model file is corrupted.
+Step 12 has no model at all -- it is pure Python and will produce the same
+verdict on the same input forever. This is the FAIL-SAFE LAYER OF LAST
+RESORT, by design unsexy. Zero cost.
+
+
+================================================================================
+13. SAFE RESPONSE
+================================================================================
+
+Purpose. Format a clean answer for the user, and on any block decision at
+any prior stage, return the FIXED REFUSAL with the originating stage
+recorded for audit.
+
+What we use. A Python formatter and the constant FIXED_REFUSAL.
+
+Why this design. A fixed refusal string is intentional -- it gives an
+attacker zero side-channel information about which stage blocked them,
+why, or how close they came. Variable error messages are a known
+information leak in security systems. The blocking stage is recorded in
+the audit trail returned to the operator (block_stage, block_reason) but
+NOT in the user-facing answer. Python formatter, zero cost.
+
+
+================================================================================
+ARCHITECTURAL SUMMARY
+================================================================================
+
+  Stage                       Tool / Library                       Replaces (paid)            Cost
+  --------------------------  -----------------------------------  -------------------------  ----
+   1. User Input              FastAPI / JSONL                      --                         $0
+   2. Normalization           ftfy, unicodedata, spaCy             --                         $0
+   3. Input Gate              LLM-Guard (DeBERTa) + Llama-Guard 3  OpenAI Moderation          $0
+   4. Query Embedding         bge-m3 (sentence-transformers)       OpenAI text-embedding-3    $0
+   5. Vector Search           FAISS (Flat / HNSW)                  Pinecone                   $0
+   6. Context Sanitization    LLM-Guard per-chunk + canary         --                         $0
+   7. Reranking               bge-reranker-v2-m3                   Cohere Rerank              $0
+   8. Augmented Prompt        LangChain LCEL                       --                         $0
+   9. Generator Ensemble      Ollama x {llama3.2, mistral, qwen}   GPT-4o                     $0
+  10. Grounding               Lexical-max-DeepEval-judge           GPT-4-as-critic            $0
+  10A. Multi-Vector Fusion    multivector.py (noisy-OR co-activn)  --                         $0
+  10B. Risk-Feedback Control  risk_feedback_controller.py          --                         $0
+  11. Output Rail             Presidio + Llama-Guard               OpenAI Moderation          $0
+  12. DLP                     regex + Luhn + EDM                   Symantec / Forcepoint DLP  $0
+  13. Safe Response           Python formatter + fixed refusal     --                         $0
+
+The thread that ties every stage together is the carried-forward risk:
+state.scores["fusion_risk"] (from Step 3c) and state.scores["disagreement"]
+(from Step 9) are read by Steps 6, 7, and 10 to tighten their thresholds
+adaptively. A clean prompt costs almost nothing; a borderline one pays for
+stricter scrutiny at every downstream stage; an obviously hostile one dies
+at Step 3 before the expensive stages are ever invoked. The system is
+therefore ADAPTIVE IN STRICTNESS BUT CONSTANT IN SURFACE AREA -- and free
+to run.
+
+Two extensions deepen that thread without breaking it. The multi-vector
+fusion detector (10A) reads the SAME carried-forward channels -- the query
+gate score and Step 6's per-chunk context score -- and fires on their
+conjunction, covering the sub-threshold gap a single-channel view misses.
+The risk-feedback controller (10B) closes the loop: it writes
+state.scores["effective_risk"] from the late signals (disagreement, canary,
+grounding, multi-vector verdict), which input_risk() folds back so the same
+forward adaptivity re-runs at a stricter setting. Both reuse the existing
+risk plumbing rather than introducing a parallel one, so the audit JSONL
+still records one risk story per row.
+
+
+================================================================================
+DATASET-TO-STEP CROSS-REFERENCE (quick lookup)
+================================================================================
+
+  Dataset                                              Drives Step(s)
+  ---------------------------------------------------  ----------------------------------
+  rag-mini-wikipedia / text-corpus  (HF)               5 (knowledge base)
+  rag-mini-wikipedia / question-answer  (HF)           1, 10 (clean QA + ground truth)
+  dataset_all.clean.jsonl  (HF + Kaggle, merged)       3, 3c (input gate train/test)
+  adversarial_slice.jsonl  (constructed, 5-kind/220)   1, 6, 7, 10, 10A, 10B (end-to-end)
+
+  References:
+    Speer, R. (2019). ftfy. Zenodo.
+    Honnibal, M. & Montani, I. (2017). spaCy 2.
+    Butcher et al. (2025). Heuristic Length Filtering for LLM Safety.
+    rag-datasets/rag-mini-wikipedia, HuggingFace.
+    protectai/deberta-v3-base-prompt-injection-v2, HuggingFace.
+    BAAI/bge-m3 and BAAI/bge-reranker-v2-m3, HuggingFace.
+    Meta Llama-Guard 3 (1B), HuggingFace.
+    Microsoft Presidio.

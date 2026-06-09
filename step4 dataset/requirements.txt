@@ -1,0 +1,47 @@
+# ============================================================================
+# requirements.txt — full RAG security pipeline (Steps 1–13)
+# ----------------------------------------------------------------------------
+# These cover the *runtime serving* pipeline, not just the dataset utility.
+# Install with:  pip install -r requirements.txt
+#
+# NOT pip-installable (install separately — see SETUP_AND_RUN.md):
+#   * Ollama runtime + models: llama-guard3:1b, llama3.2:3b, mistral:7b, qwen2.5:3b
+#   * spaCy model:  python -m spacy download en_core_web_lg
+# ============================================================================
+
+# --- Dataset download / preprocessing (Steps 1–2, KB ingest) ----------------
+datasets>=2.14.0
+huggingface_hub>=0.16.0
+pandas>=2.0.0
+pyarrow>=10.0.0
+numpy>=1.24.0
+ftfy>=6.0
+spacy>=3.7
+
+# --- Step 3 / 3b / 3c : input gate (injection detector + Llama-Guard fusion) -
+# llm-guard pulls in transformers + torch and loads
+# protectai/deberta-v3-base-prompt-injection-v2 on first use.
+# NOTE: llm-guard pins transformers fairly tightly; if pip reports a conflict,
+# install llm-guard first in a clean venv and let it choose transformers/torch.
+llm-guard>=0.3.0
+
+# --- Steps 4, 7, 9, 10 : embeddings, reranker, semantic disagreement, judge --
+# Provides SentenceTransformer (bge-m3), CrossEncoder (bge-reranker-v2-m3),
+# and all-MiniLM-L6-v2 for the disagreement scorer.
+sentence-transformers>=2.7.0
+
+# --- Step 5 : local vector store --------------------------------------------
+faiss-cpu>=1.7.4
+
+# --- Steps 8, 9, 3b, 3c, 11 : LangChain + Ollama client ---------------------
+langchain-core>=0.2.0
+langchain-ollama>=0.1.0
+
+# --- Step 11 : Presidio PII masking (output rail layer 1) -------------------
+# Presidio's default NLP engine expects a spaCy model (en_core_web_lg).
+presidio-analyzer>=2.2.0
+presidio-anonymizer>=2.2.0
+
+# --- HTTP service (server.py) -----------------------------------------------
+fastapi>=0.110.0
+uvicorn[standard]>=0.29.0

@@ -1,0 +1,42 @@
+{
+  "builder_name": "parquet",
+  "citation": "",
+  "config_name": "default",
+  "dataset_name": "safe-guard-prompt-injection",
+  "dataset_size": 4061942,
+  "description": "",
+  "download_size": 2490968,
+  "features": {
+    "text": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "label": {
+      "dtype": "int64",
+      "_type": "Value"
+    }
+  },
+  "homepage": "",
+  "license": "",
+  "size_in_bytes": 6552910,
+  "splits": {
+    "train": {
+      "name": "train",
+      "num_bytes": 3278522,
+      "num_examples": 8236,
+      "dataset_name": "safe-guard-prompt-injection"
+    },
+    "test": {
+      "name": "test",
+      "num_bytes": 783420,
+      "num_examples": 2060,
+      "dataset_name": "safe-guard-prompt-injection"
+    }
+  },
+  "version": {
+    "version_str": "0.0.0",
+    "major": 0,
+    "minor": 0,
+    "patch": 0
+  }
+}

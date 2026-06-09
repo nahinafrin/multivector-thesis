@@ -1,0 +1,305 @@
+{
+  "dataset": "rag-datasets/rag-mini-wikipedia (text-corpus + question-answer)",
+  "n_rows": 918,
+  "pipeline": {
+    "front_end_steps": [
+      "step_01_user_input",
+      "step_02_normalization",
+      "step_03_injection_detection"
+    ],
+    "retrieval_steps": [
+      "step_04_query_embedding",
+      "step_05_vector_search",
+      "step_06_context_sanitization",
+      "step_07_context_ranking",
+      "step_08_augmented_prompt"
+    ],
+    "generation_step": "step_09_generator_llm",
+    "grounding_step": "step_10_grounding_judge"
+  },
+  "models": {
+    "embedding": "BAAI/bge-m3 (Matryoshka prefix 512)",
+    "vector_store": "FAISS IndexFlatIP (cosine via inner product on normalized vectors)",
+    "reranker": "BAAI/bge-reranker-v2-m3",
+    "injection_detector": "protectai/deberta-v3-base-prompt-injection-v2 (via llm-guard)",
+    "toxicity_detector": "llm-guard Toxicity scanner",
+    "ensemble": [
+      "llama3.2:3b",
+      "mistral:7b",
+      "qwen2.5:3b"
+    ],
+    "fuser": "qwen2.5:3b",
+    "disagreement": "sentence-transformers/all-MiniLM-L6-v2 (cosine)"
+  },
+  "hyperparameters": {
+    "step_03_threshold": 0.5,
+    "step_06_sanitization_threshold": {
+      "risk_gt_0_6": 0.3,
+      "benign": 0.5
+    },
+    "step_07_min_score": {
+      "risk_gt_0_6": 0.4,
+      "benign": 0.2
+    },
+    "step_10_threshold_base": 0.7,
+    "step_10_risk_penalty": 0.1,
+    "step_10_disagree_penalty": 0.1,
+    "step_10_threshold_ceiling": 0.9
+  },
+  "step_09_disagreement_rescore": {
+    "rows_changed": 903,
+    "legacy_distribution": {
+      "0.00-0.05": 15,
+      "0.05-0.15": 0,
+      "0.15-0.30": 0,
+      "0.30-0.50": 0,
+      "0.50-0.80": 117,
+      "0.80-1.00": 786
+    },
+    "semantic_distribution": {
+      "0.00-0.05": 144,
+      "0.05-0.15": 314,
+      "0.15-0.30": 230,
+      "0.30-0.50": 148,
+      "0.50-0.80": 80,
+      "0.80-1.00": 2
+    },
+    "legacy_mean": 0.94,
+    "semantic_mean": 0.206
+  },
+  "step_10_ablation": {
+    "lexical_only": {
+      "mean": 0.648,
+      "pass_rate": 0.403,
+      "passed": 370
+    },
+    "model_only": {
+      "mean": 0.719,
+      "pass_rate": 0.689,
+      "passed": 632
+    },
+    "hybrid_max": {
+      "mean": 0.777,
+      "pass_rate": 0.784,
+      "passed": 720
+    },
+    "complementarity": {
+      "hybrid_passes_rescued_by_lexical": 88,
+      "hybrid_passes_rescued_by_model": 350,
+      "hybrid_failures_both_components_failed": 198,
+      "rows_requiring_both_components": 438
+    }
+  },
+  "risk_propagation_demo": {
+    "benign_risk": 0.04,
+    "suspicious_risk": 0.73,
+    "step_06_threshold": {
+      "benign": 0.5,
+      "suspicious": 0.3
+    },
+    "step_07_min_score": {
+      "benign": 0.2,
+      "suspicious": 0.4
+    },
+    "step_10_threshold": {
+      "benign": 0.7,
+      "suspicious": 0.8
+    },
+    "injection_chunk_dropped_in_both_runs": true
+  },
+  "full_dataset_gate": {
+    "red_flagged": 6,
+    "length_flagged_not_blocked": 287,
+    "risk_distribution": {
+      "<0.2": 913,
+      "0.2-0.4": 2,
+      "0.4-0.6": 0,
+      "0.6-0.8": 0,
+      ">=0.8": 3
+    },
+    "fp_examples": [
+      {
+        "trigger": "\"Damn\"",
+        "question": "Why did Grant say \"Damn, I had nothing to do with this batte.\"?",
+        "risk": 1,
+        "index": 836
+      },
+      {
+        "trigger": "\"bitches\" (biological)",
+        "question": "Are Male otters dog-otters, females are bitches and babies are cubs or pups?",
+        "risk": 0.9,
+        "index": 616
+      },
+      {
+        "trigger": "\"Garbage\"",
+        "question": "Garbage is what?",
+        "risk": 0.8,
+        "index": 676
+      },
+      {
+        "trigger": "\"silliness\"",
+        "question": "What animal attracts the most humor and silliness?",
+        "risk": 0.3,
+        "index": 152
+      },
+      {
+        "trigger": "\"useless\"",
+        "question": "What have become flippers, useless for flight in the air?",
+        "risk": 0.2,
+        "index": 637
+      },
+      {
+        "trigger": "misspelling \"Penisula\"",
+        "question": "Is Singapore located at the southern tip of the Korean Penisula?",
+        "risk": 0.1,
+        "index": 745
+      }
+    ]
+  },
+  "step_10_before_after_real_gate": {
+    "threshold_distribution_before": {
+      "0.80": 230,
+      "0.70": 688,
+      "0.90": 0
+    },
+    "threshold_distribution_after": {
+      "0.80": 229,
+      "0.70": 687,
+      "0.90": 2
+    },
+    "pass_rate_before": 0.784,
+    "pass_rate_after": 0.783,
+    "pass_to_fail_flips": 1,
+    "fail_to_pass_flips": 0,
+    "rows_at_0_90_ceiling": [
+      {
+        "passed": false,
+        "disagreement": 0.5815,
+        "faithfulness": 0.7289,
+        "risk": 0.9,
+        "index": 616
+      },
+      {
+        "passed": false,
+        "disagreement": 0.4669,
+        "faithfulness": 0.7305,
+        "risk": 0.8,
+        "index": 676
+      }
+    ],
+    "fp_absorption": "5 of 6 toxicity FPs absorbed without downstream impact; 1/918 PASS->FAIL (0.1%)"
+  },
+  "claims": [
+    {
+      "claim": "Disagreement signal valid",
+      "evidence": "786->2 saturation rows; mean 0.94->0.206",
+      "status": "proven"
+    },
+    {
+      "claim": "Disagreement raises Step 10 threshold adaptively",
+      "evidence": "229 rows hit 0.80 due to disagreement>0.3",
+      "status": "proven"
+    },
+    {
+      "claim": "Risk score tightens Steps 6/7/10",
+      "evidence": "demo_risk_propagation.py + 2 rows at 0.90 ceiling",
+      "status": "proven"
+    },
+    {
+      "claim": "Risk propagates across full dataset",
+      "evidence": "1 PASS->FAIL flip on real risk; ceiling reached on real rows",
+      "status": "proven"
+    },
+    {
+      "claim": "Hybrid max() outperforms either component alone",
+      "evidence": "438/918 rows require both scorers",
+      "status": "proven"
+    },
+    {
+      "claim": "78.3% grounding pass rate with real gate",
+      "evidence": "719/918",
+      "status": "proven"
+    },
+    {
+      "claim": "FP absorption without throughput loss",
+      "evidence": "5/6 toxicity FPs absorbed, 1 flip",
+      "status": "proven"
+    }
+  ],
+  "artifacts": {
+    "results_jsonl": {
+      "sha256": "2AAB694FAFE7610B5AB2E7D90B6F1BF42F7E71D760BA4BFB86EDE2781E43ECF6",
+      "rows": 918
+    },
+    "generated_jsonl": {
+      "sha256": "A1FA393417C5B2A4F00F4AC988B2E668BA447B12B24B3B67C21C948BC1931AA9",
+      "rows": 918
+    },
+    "gate_scores_jsonl": {
+      "sha256": "97EE4033976B8C5965E57ED9D5CA2CCAF034BB94D136876114FEA4CCF6559A89",
+      "rows": 918
+    },
+    "grounded_jsonl": {
+      "rows": 918,
+      "sha256": "4695E4707FC8BE52E49AB6B9B504869D8BD3809BD7EFC4C6A499B2DC623FABDD"
+    },
+    "ablation_results_json": {
+      "sha256": "4C74AD1894EDAFAFCADF2FF02C0A35D40708C9DDFA05F3ECEC3067E9AACE4F13"
+    },
+    "retrieval_audit_jsonl": {
+      "rows": 918,
+      "sha256": "8D1EEAD7149389E91F195F7E821FF61318D39D65744E108E6D4849E76DB01CBE"
+    }
+  },
+  "frozen_at": "2026-05-31T14:11:33.4439027-05:00",
+  "retrieval_visibility_audit": {
+    "status": "complete",
+    "n_rows": 918,
+    "fields_added_to_grounded_jsonl": [
+      "retrieval.raw_chunks",
+      "retrieval.sanitized_chunks",
+      "retrieval.sanitization_strictness",
+      "retrieval.sanitization_dropped",
+      "retrieval.ranked_chunks",
+      "retrieval.retrieval_scores",
+      "retrieval.rerank_scores",
+      "retrieval.rerank_min_score"
+    ],
+    "schema_check_first_row": {
+      "raw_chunks": 5,
+      "sanitized_chunks": 5,
+      "ranked_chunks": 3,
+      "sanitization_strictness": 0.5,
+      "rerank_min_score": 0.2
+    },
+    "high_risk_examples": [
+      {
+        "index": 616,
+        "risk": 0.9,
+        "sanitization_strictness": 0.3,
+        "rerank_min_score": 0.4,
+        "ranked_count": 1,
+        "grounding_threshold": 0.9,
+        "passed": false
+      },
+      {
+        "index": 676,
+        "risk": 0.8,
+        "sanitization_strictness": 0.3,
+        "rerank_min_score": 0.4,
+        "ranked_count": 1,
+        "grounding_threshold": 0.9,
+        "passed": false
+      },
+      {
+        "index": 836,
+        "risk": 1.0,
+        "sanitization_strictness": 0.3,
+        "rerank_min_score": 0.4,
+        "ranked_count": 1,
+        "grounding_threshold": 0.8,
+        "passed": false
+      }
+    ]
+  }
+}

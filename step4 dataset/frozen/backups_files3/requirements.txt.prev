@@ -1,0 +1,6 @@
+datasets>=2.19.0
+sentence-transformers>=2.7.0
+faiss-cpu>=1.7.4
+llm-guard>=0.3.14
+langchain-core>=0.2.0
+numpy>=1.24

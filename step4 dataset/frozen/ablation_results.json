@@ -1,0 +1,37 @@
+{
+  "ablation": [
+    {
+      "scorer": "lexical_only",
+      "n": 918,
+      "mean_score": 0.6483,
+      "min": 0.0,
+      "max": 1.0,
+      "passed": 370,
+      "pass_rate": 0.4031
+    },
+    {
+      "scorer": "model_only",
+      "n": 918,
+      "mean_score": 0.7193,
+      "min": 0.5001,
+      "max": 0.7311,
+      "passed": 632,
+      "pass_rate": 0.6885
+    },
+    {
+      "scorer": "hybrid_max",
+      "n": 918,
+      "mean_score": 0.7769,
+      "min": 0.5001,
+      "max": 1.0,
+      "passed": 720,
+      "pass_rate": 0.7843
+    }
+  ],
+  "complementarity": {
+    "hybrid_passes_rescued_by_lexical": 88,
+    "hybrid_passes_rescued_by_model": 350,
+    "hybrid_failures_both_components_failed": 198,
+    "n_rows": 918
+  }
+}

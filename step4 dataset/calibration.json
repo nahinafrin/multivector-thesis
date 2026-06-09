@@ -1,0 +1,25 @@
+{
+  "channels": {
+    "query_vector": {
+      "method": "identity",
+      "a": 1.0,
+      "b": 0.0,
+      "temperature": 1.0,
+      "eps": 0.0001
+    }
+  },
+  "meta": {
+    "query_vector": {
+      "method": "identity",
+      "requested_method": "platt",
+      "helped": false,
+      "forced": false,
+      "n": 800,
+      "source": "../dataset/merged_output/dataset_all.clean.jsonl",
+      "saturated_frac_raw": 0.9213,
+      "saturated_frac_calibrated": 0.0,
+      "separation_raw": -0.3,
+      "separation_calibrated": -0.3915
+    }
+  }
+}

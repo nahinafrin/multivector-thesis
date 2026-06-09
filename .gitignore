@@ -1,0 +1,32 @@
+# Python virtual environments
+.venv/
+.venv311/
+.venv313/
+**/.venv/
+**/.venv311/
+**/.venv313/
+env/
+venv/
+
+# Python caches / build
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+build/
+dist/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+
+# Local backups / caches
+*.bak
+*.premv.bak
+*.cache.jsonl
+
+# Logs
+*.log

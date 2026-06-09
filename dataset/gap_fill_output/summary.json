@@ -1,0 +1,29 @@
+{
+  "mode": "compile",
+  "max_rows_per_source": 0,
+  "per_source_cap": 2000,
+  "keep_positive_only": true,
+  "benign_cap_per_source": null,
+  "only": [
+    "safeguard_prompt_injection",
+    "jigsaw_toxicity",
+    "ai4privacy_pii"
+  ],
+  "loaded": [
+    "ai4privacy_pii",
+    "jigsaw_toxicity",
+    "safeguard_prompt_injection"
+  ],
+  "failed": [],
+  "rows_per_source": {
+    "safeguard_prompt_injection": 2000,
+    "ai4privacy_pii": 2000,
+    "jigsaw_toxicity": 2000
+  },
+  "pool_sizes": {
+    "prompt_injection": 2000,
+    "pii_leakage": 2000,
+    "toxicity_abuse": 2000
+  },
+  "safe_rows": 0
+}

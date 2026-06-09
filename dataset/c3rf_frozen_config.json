@@ -1,0 +1,30 @@
+{
+  "config": {
+    "alpha": 0.5,
+    "beta": 0.4,
+    "gamma": 0.15,
+    "delta": 0.1,
+    "eta": 0.08,
+    "tau_review": 0.3,
+    "tau_block": 0.55,
+    "inj_hard_block": 0.9,
+    "inj_soft_escalate": 0.7,
+    "severe_lg_block": 0.85,
+    "lg_hard_block_s": 0.8,
+    "lg_hard_block_w": 0.7,
+    "lg_soft_escalate_s": 0.55,
+    "lg_soft_escalate_w": 0.55,
+    "fastpath_inj": 0.1,
+    "fastpath_lg": 0.3,
+    "fastpath_rho": 0.2,
+    "sl_unsafe_high": 0.95,
+    "sl_unsafe_med": 0.88,
+    "sl_unsafe_low": 0.72,
+    "sl_unsafe_uncat": 0.8,
+    "sl_safe": 0.05
+  },
+  "treat_review_as_red": true,
+  "frozen_at": "2026-05-27T23:03:24",
+  "frozen_from_dev": "val.jsonl",
+  "notes": "Frozen from val.jsonl sweep (n=1194). Selected Max-F1 (no FP budget) operating point. Dev metrics: P=0.930 R=0.788 F1=0.853 FP=62 FN=221. Grid corner -- noted as a caveat."
+}

@@ -1,0 +1,106 @@
+"""
+pipeline_common.py  —  UNIFIED state for the whole pipeline (Steps 1-13)
+========================================================================
+
+WHY THIS REPLACES THE TWO OLD VERSIONS
+--------------------------------------
+The project previously had two separate PipelineState classes:
+  * the gate half (Steps 1-3): flag / block_stage / block(stage, reason)
+  * the RAG half  (Steps 4-8): context / ranked_context / block(reason)
+
+Because they were different objects in different files, the input-gate risk
+score could never reach the retrieval steps, and the RAG orchestrator started a
+fresh state with injection_detection=0.0. The "adaptive risk that flows through
+every stage" — the project's defining feature — had no path to flow.
+
+This unified class is a strict superset of both, with a backward-compatible
+block() that accepts either calling convention, so existing step files keep
+working while a single state now threads Steps 1 -> 13 and carries the risk
+score the whole way.
+"""
+
+from __future__ import annotations
+
+import importlib
+from dataclasses import dataclass, field
+from typing import Any, Iterator
+import json
+
+
+@dataclass
+class PipelineState:
+    """Mutable state threaded through every step, gate-half and RAG-half."""
+
+    # --- shared core ---
+    prompt: str = ""
+    raw_prompt: str = ""
+    blocked: bool = False
+    block_stage: str = ""
+    block_reason: str = ""
+    flag: str = "green"                                   # green | amber | red
+
+    # --- RAG-half payload (Steps 4-8) ---
+    context: list[str] = field(default_factory=list)         # Step 5 output
+    ranked_context: list[str] = field(default_factory=list)  # Step 7 output
+    augmented_prompt: str = ""                                # Step 8 output
+
+    # --- bookkeeping ---
+    meta: dict[str, Any] = field(default_factory=dict)
+    scores: dict[str, float] = field(default_factory=dict)
+    trace: list[dict[str, Any]] = field(default_factory=list)
+
+    def __post_init__(self) -> None:
+        if not self.raw_prompt:
+            self.raw_prompt = self.prompt
+
+    def log(self, step: str, **fields: Any) -> None:
+        entry: dict[str, Any] = {"step": step}
+        entry.update(fields)
+        self.trace.append(entry)
+
+    def block(self, arg1: str, arg2: str | None = None) -> None:
+        """Backward-compatible block.
+
+        Gate-half calls:  block(stage, reason)   -> two args
+        RAG-half calls:   block(reason)          -> one arg
+        """
+        if arg2 is None:
+            stage, reason = "", arg1
+        else:
+            stage, reason = arg1, arg2
+        self.blocked = True
+        self.flag = "red"
+        self.block_stage = stage
+        self.block_reason = reason
+        self.log(stage or "block", blocked=True, reason=reason)
+
+    # convenience: the single carried-forward risk every adaptive step reads
+    def input_risk(self) -> float:
+        """C3RF fused risk if present, else raw injection score, else 0.0."""
+        return float(
+            self.scores.get("fusion_risk",
+                            self.scores.get("injection_detection", 0.0))
+        )
+
+
+def lazy_import(module_name: str, pip_name: str | None = None):
+    try:
+        return importlib.import_module(module_name)
+    except ImportError as e:
+        hint = pip_name or module_name
+        raise ImportError(
+            f"Missing dependency '{module_name}'. Install: pip install {hint}"
+        ) from e
+
+
+def read_jsonl(path: str) -> Iterator[dict]:
+    """Tolerant JSONL reader (skips blanks; reports line number on error)."""
+    with open(path, "r", encoding="utf-8") as f:
+        for lineno, line in enumerate(f, start=1):
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                yield json.loads(line)
+            except json.JSONDecodeError as e:
+                raise ValueError(f"{path}: bad JSON on line {lineno}: {e.msg}") from e

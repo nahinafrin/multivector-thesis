@@ -1,0 +1,11 @@
+--- a/run_full_pipeline.py	2026-06-06 08:14:01.006497487 +0000
++++ run_full_pipeline.py	2026-06-07 01:57:57.487745679 +0000
+@@ -330,6 +330,8 @@
+                 rec = _record(st, rid, row.get("ground_truth"))
+                 rec["kind"] = row.get("kind")
+                 rec["expectation"] = row.get("expectation")
++                rec["success_marker"] = row.get("success_marker")
++                rec["true_answer"] = row.get("true_answer")
+                 fout.write(json.dumps(rec, ensure_ascii=False) + "\n")
+                 fout.flush()
+         print(f"[done] wrote slice results -> {args.out}")

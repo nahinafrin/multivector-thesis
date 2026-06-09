@@ -1,0 +1,45 @@
+{
+  "seed": 42,
+  "attack_distribution": {
+    "prompt_injection": 0.15,
+    "jailbreak": 0.1,
+    "obfuscation": 0.1,
+    "indirect_injection": 0.05,
+    "toxicity_abuse": 0.1,
+    "self_harm_danger": 0.05,
+    "misinformation_manipulation": 0.05,
+    "financial_cyber_risk": 0.05,
+    "pii_leakage": 0.05,
+    "direct_harm_instruction": 0.1,
+    "cyberattack_exploitation": 0.05,
+    "cbrn": 0.03,
+    "social_engineering": 0.02,
+    "benign_clear": 0.05,
+    "benign_hard_negative": 0.05
+  },
+  "tier_distribution": {
+    "tier1_adversarial_core": 0.4,
+    "tier2_semantic_policy_pii": 0.3,
+    "tier3_structured_high_risk": 0.2,
+    "tier4_benign_hard_negative": 0.1
+  },
+  "dataset_cap": 0.55,
+  "max_rows_per_source": 25000,
+  "audit_tolerance": 0.02,
+  "min_hard_negative_ratio": 0.05,
+  "per_attack_overfill": 1.5,
+  "dataset_cap_audit_epsilon": 0.006,
+  "strict_audit": false,
+  "warn_only": true,
+  "loaded_sources": [
+    "advbench",
+    "ai4privacy_pii",
+    "beavertails",
+    "harmbench",
+    "jbb_behaviors",
+    "jigsaw_toxicity",
+    "safeguard_prompt_injection",
+    "wildjailbreak"
+  ],
+  "required_sources": []
+}
