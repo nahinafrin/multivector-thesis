@@ -221,6 +221,19 @@ class RiskController:
                             "closed-loop refuse: canary leak detected in answer")
                 break
 
+            # 1b) Honest abstention from the generator (e.g. Step 9A
+            #     isolate-aggregate found no consensus). This is a TERMINAL
+            #     benign outcome, not a security verdict and not an
+            #     under-retrieval miss to refuse on: accept it and let Step 13
+            #     deliver the transparent "can't confidently answer" message.
+            #     Placed after the multi-vector / canary security checks so a
+            #     genuine attack is still refused before we honour an abstention.
+            if state.abstained:
+                rec["action"] = "abstain"
+                rec["abstain_reason"] = state.abstain_reason
+                attempts.append(rec)
+                break
+
             # 2) Grounded AND no attack-like late signal -> accept and exit.
             if passed and not is_attack:
                 rec["action"] = "accept"

@@ -39,6 +39,14 @@ FIXED_REFUSAL = (
     "our content-safety and data-privacy policy."
 )
 
+# Transparent abstention, distinct from the security refusal above. Used when a
+# step declared an honest "can't confidently answer" (state.abstained) rather
+# than a policy/security block. Falls back to this if no step-specific
+# abstention message was provided.
+DEFAULT_ABSTENTION = (
+    "I can't give a confident answer to that from the available sources."
+)
+
 
 # --------------------------------------------------------------------------- #
 # Light formatting (no external markdown lib needed)
@@ -55,8 +63,13 @@ def _format_answer(text: str) -> str:
 
 
 def run(state: PipelineState) -> PipelineState:
+    # Abstention takes precedence over the answer path but is checked after
+    # block: a row that was both (somehow) blocked and abstained is treated as
+    # the stronger security refusal. In practice the two are mutually exclusive.
     if state.blocked:
         response = FIXED_REFUSAL
+    elif state.abstained:
+        response = state.meta.get("abstention_message") or DEFAULT_ABSTENTION
     else:
         answer = state.meta.get("answer", "") or state.meta.get("fused_answer", "")
         response = _format_answer(answer) if answer.strip() else FIXED_REFUSAL
@@ -66,10 +79,14 @@ def run(state: PipelineState) -> PipelineState:
         "blocked": state.blocked,
         "block_stage": state.block_stage or None,
         "block_reason": state.block_reason or None,
+        "abstained": state.abstained,
+        "abstain_stage": state.abstain_stage or None,
+        "abstain_reason": state.abstain_reason or None,
         "trace_len": len(state.trace),
     }
     state.log("step_13_safe_response",
-              blocked=state.blocked, block_stage=state.block_stage or None)
+              blocked=state.blocked, block_stage=state.block_stage or None,
+              abstained=state.abstained)
     return state
 
 

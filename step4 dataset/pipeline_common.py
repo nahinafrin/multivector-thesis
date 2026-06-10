@@ -76,6 +76,15 @@ class PipelineState:
     blocked: bool = False
     block_stage: str = ""
     block_reason: str = ""
+    # Abstention is a TERMINAL outcome distinct from `blocked`. A blocked row is
+    # a policy/security refusal ("I won't answer"); an abstained row is an honest
+    # "I can't confidently answer from the available sources". Step 9A
+    # (isolate-aggregate) sets this when no consensus clears its vote threshold,
+    # so the answer is delivered as a transparent abstention rather than being
+    # turned into the fixed safety refusal by the grounding/controller path.
+    abstained: bool = False
+    abstain_stage: str = ""
+    abstain_reason: str = ""
     meta: dict[str, Any] = field(default_factory=dict)
     scores: dict[str, float] = field(default_factory=dict)
     trace: list[dict[str, Any]] = field(default_factory=list)
@@ -100,6 +109,20 @@ class PipelineState:
         self.block_stage = stage
         self.block_reason = reason
         self.log(stage, blocked=True, reason=reason)
+
+    def abstain(self, stage: str, reason: str) -> None:
+        """Declare an honest abstention at `stage` (NOT a security refusal).
+
+        Unlike .block(), this does not set the red flag and does not route the
+        row to the fixed refusal. Downstream verification (grounding) and the
+        risk controller treat an abstained row as a terminal benign outcome,
+        and Step 13 renders a transparent "can't confidently answer" message.
+        """
+        self.abstained = True
+        self.flag = "amber"
+        self.abstain_stage = stage
+        self.abstain_reason = reason
+        self.log(stage, abstained=True, reason=reason)
 
     def input_risk(self) -> float:
         """The carried-forward input risk that the adaptive cascade reads.

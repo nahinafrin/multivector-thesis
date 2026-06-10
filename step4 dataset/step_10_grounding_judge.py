@@ -153,7 +153,9 @@ def grounding_threshold(risk: float, disagreement: float) -> float:
 # --------------------------------------------------------------------------- #
 def run(state: PipelineState) -> PipelineState:
     """Verify faithfulness + policy; block ungrounded or leaking answers."""
-    if state.blocked:
+    if state.blocked or state.abstained:
+        # An abstained row has no answer to ground; it is a terminal honest
+        # "can't confidently answer", not a grounding failure to refuse on.
         return state
 
     answer = state.meta.get("answer", "") or state.meta.get("fused_answer", "")

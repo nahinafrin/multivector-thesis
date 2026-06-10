@@ -66,6 +66,7 @@ import step_07_context_ranking as s7
 import step_08_augmented_prompt as s8
 # Generation + output rail (adapt these imports to your filenames)
 import step_09_generator_llm as s9
+import step_09a_isolate_aggregate as s9a
 import step_09b_knowledge_conflict as s9b
 import step_10_grounding_judge as s10
 import step_11_output_sanitization as s11
@@ -100,7 +101,10 @@ def process(question: str, *, k: int = 5, top_n: int = 3,
             continue_blocked_for_audit: bool = False,
             use_controller: bool = True,
             controller_cfg: ControllerConfig | None = None,
-            kc_scorer: "s9b.ConflictScorer | None" = None) -> PipelineState:
+            kc_scorer: "s9b.ConflictScorer | None" = None,
+            generator: str = "fused",
+            ia_scorer: "s9a.IsolateAggregator | None" = None,
+            ia_min_agreement: int = 2) -> PipelineState:
     """Run one question through the whole pipeline on a single state.
 
     If `poison_chunk` is given, it is spliced into the retrieved context after
@@ -166,7 +170,10 @@ def process(question: str, *, k: int = 5, top_n: int = 3,
                                                  float(mv["joint_risk"]))
         state = s7.run(state, top_n=top_n)  # reads input_risk() -> adaptive rerank
         state = s8.run(state)
-        state = s9.run(state)            # sets meta["answer"] + scores["disagreement"]
+        if generator == "isolate":
+            state = s9a.run(state, ia_scorer, min_agreement=ia_min_agreement)
+        else:
+            state = s9.run(state)        # sets meta["answer"] + scores["disagreement"]
         state = s10.run(state)           # grounding judge; reads input_risk() + disagreement
         return state
 
@@ -194,6 +201,13 @@ def process(question: str, *, k: int = 5, top_n: int = 3,
                      f"controller error: {type(e).__name__}: {e}")
     else:
         st = _segment(st, k=k, top_n=top_n)
+
+    # Honest abstention (e.g. Step 9A isolate-aggregate found no consensus) is a
+    # terminal benign outcome: skip the knowledge-conflict probe and output rail
+    # (there is no answer to scan) and let Step 13 render the transparent
+    # "can't confidently answer" message rather than the fixed safety refusal.
+    if st.abstained:
+        return s13.run(st)
 
     # Step 9b: post-generation knowledge-conflict signal. Measure-only here —
     # run ONCE on the final st.meta["answer"] (one extra parametric generation
@@ -245,6 +259,7 @@ def _record(st: PipelineState, index: int, ground_truth: str | None) -> dict:
         "generation": {
             "answer": st.meta.get("answer", ""),
             "disagreement": st.scores.get("disagreement", 0.0),
+            "isolate_aggregate": st.meta.get("isolate_aggregate"),
             "knowledge_conflict": st.scores.get("knowledge_conflict"),
             "parametric_answer": st.meta.get("parametric_answer"),
             "knowledge_conflict_reason": st.meta.get("knowledge_conflict_reason"),
@@ -258,6 +273,9 @@ def _record(st: PipelineState, index: int, ground_truth: str | None) -> dict:
         "blocked": st.blocked,
         "block_stage": st.block_stage or None,
         "block_reason": st.block_reason or None,
+        "abstained": st.abstained,
+        "abstain_stage": st.abstain_stage or None,
+        "abstain_reason": st.abstain_reason or None,
     }
 
 
@@ -282,6 +300,15 @@ def main() -> None:
     ap.add_argument("--resume", action="store_true",
                     help="Slice mode: skip ids already present in --out and append "
                          "the rest, so a run can recover after a crash.")
+    ap.add_argument("--generator", choices=["fused", "isolate"], default="fused",
+                    help="fused: existing Step 9 ensemble. isolate: per-passage "
+                         "isolation + majority vote (Step 9A misinformation defense).")
+    ap.add_argument("--ia-backend", choices=["ollama", "stub"], default="ollama",
+                    help="Step 9A isolate-aggregate backend. 'stub' is only for "
+                         "offline structure checks, not validation.")
+    ap.add_argument("--ia-min-agreement", type=int, default=2,
+                    help="Passages required to agree before returning consensus "
+                         "(default 2; a single-vote poison cannot win).")
     ap.add_argument("--max-attempts", type=int, default=None,
                     help="Override ControllerConfig.max_attempts (default 3). "
                          "Ignored when --no-controller is set.")
@@ -298,6 +325,10 @@ def main() -> None:
                       else None)
     kc_scorer = (s9b.OllamaKnowledgeConflict() if args.kc_backend == "ollama"
                  else s9b.HeuristicKnowledgeConflict())
+    ia_scorer = None
+    if args.generator == "isolate":
+        ia_scorer = (s9a.OllamaIsolateAggregator() if args.ia_backend == "ollama"
+                     else s9a.StubIsolateAggregator())
 
     def _run(q: str, poison: str | None = None) -> PipelineState:
         return process(q, k=args.k, top_n=args.top_n,
@@ -307,7 +338,10 @@ def main() -> None:
                        continue_blocked_for_audit=args.continue_blocked_for_audit,
                        use_controller=use_controller,
                        controller_cfg=controller_cfg,
-                       kc_scorer=kc_scorer)
+                       kc_scorer=kc_scorer,
+                       generator=args.generator,
+                       ia_scorer=ia_scorer,
+                       ia_min_agreement=args.ia_min_agreement)
 
     if args.question:
         st = _run(args.question)
