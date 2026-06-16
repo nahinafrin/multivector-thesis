@@ -112,7 +112,14 @@ def _suggest_floors(jsonl_path: str) -> tuple[dict[str, float], float]:
         kind = r.get("kind")
         ch = (r.get("multivector") or {}).get("channels", {})
         if kind == "benign_control":
-            qi = r.get("gate", {}).get("injection_score")
+            # Use the actual multivector channel value. On the graded-channel
+            # path this is NOT the same as gate.injection_score: the gate still
+            # reports the old post-softmax/squashed score, while multivector
+            # consumes the pre-sigmoid-margin graded score. Falling back keeps
+            # old result files usable.
+            qi = ch.get("query_vector")
+            if qi is None:
+                qi = r.get("gate", {}).get("injection_score")
             if qi is not None:
                 q.append(float(qi))
             cv = ch.get("context_vector")

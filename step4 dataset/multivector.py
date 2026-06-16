@@ -33,25 +33,36 @@ from typing import Any
 
 # --- defaults (recalibrate from calibrate_payloads.py against your benign data) --- #
 # Per-channel activation floors: set just above each channel's benign p95.
+# Calibrated from grounded_baseline.jsonl on the GRADED channel scale
+# (calibrate_payloads.py): benign query p95=0.178 -> 0.228, context p95=0.541
+# -> 0.300. These lift the floors off the old 0.15/0.20 (which were on the
+# squashed scale) so benign co-activations near the floor stop firing.
 DEFAULT_SOFT_PER_CHANNEL: dict[str, float] = {
-    "query_vector": 0.15,
-    "context_vector": 0.20,
+    "query_vector": 0.228,
+    "context_vector": 0.30,
 }
-DEFAULT_SOFT = 0.20          # fallback floor for any channel not listed above
+DEFAULT_SOFT = 0.30          # fallback floor for any channel not listed above
 DEFAULT_MIN_CHANNELS = 2     # co-activation: how many channels must be active
-DEFAULT_JOINT_MIN = 0.40     # the combination must be this strong to count at all
+DEFAULT_JOINT_MIN = 0.542    # the combination must be this strong to count at all
 DEFAULT_JOINT_BLOCK = 0.85   # at/above this (and multivector), warrant a hard refuse
 
 
 def input_channels(state: Any) -> dict[str, float]:
     s = state.scores
-    query = max(
-        float(s.get("injection_detection", 0.0) or 0.0),
-        float(s.get("fusion_risk", 0.0) or 0.0),
-    )
+    # Prefer the GRADED injection signals (pre-sigmoid margin via
+    # graded_channels.py); fall back to the squashed scores when the graded
+    # channel was not produced. We deliberately do NOT max the query channel
+    # against ``fusion_risk`` here: fusion_risk is still the squashed C3RF score,
+    # and maxing the freshly-graded signal against a saturated one would
+    # re-saturate the very channel the graded path exists to fix. The gate still
+    # uses fusion_risk for its own block decision, untouched.
+    query = float(s.get("injection_graded",
+                        s.get("injection_detection", 0.0)) or 0.0)
+    ctx = float(s.get("context_graded",
+                      s.get("context_injection", 0.0)) or 0.0)
     return {
         "query_vector": query,
-        "context_vector": float(s.get("context_injection", 0.0) or 0.0),
+        "context_vector": ctx,
     }
 
 

@@ -330,6 +330,16 @@ def run(state: PipelineState, cfg: Optional[FusionConfig] = None,
     result = fuse(s_I=s_I, s_L=s_L, category=cat, rho=rho, cfg=cfg)
 
     state.scores["injection_detection"] = s_I
+    # Additive graded channel for the multi-vector detector: Step 3C is the gate
+    # used by run_full_pipeline.py, so this is where the query-side graded score
+    # must be written. The fused gate's own decision still uses the squashed
+    # s_I/R scores above; multivector.input_channels() reads this optional
+    # pre-sigmoid-margin score and falls back to injection_detection if absent.
+    try:
+        from graded_channels import graded_score
+        state.scores["injection_graded"] = graded_score(state.prompt)
+    except Exception:
+        pass
     state.scores["llamaguard_soft"] = s_L
     state.scores["fusion_risk"] = result.R
     state.meta["llamaguard_verdict"] = raw

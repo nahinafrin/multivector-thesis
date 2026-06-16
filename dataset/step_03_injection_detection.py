@@ -91,6 +91,15 @@ def run(state: PipelineState, threshold: float = 0.5,
             red = True
 
     state.scores["injection_detection"] = worst_score
+    # Additive graded signal: read the SAME model's pre-sigmoid margin so the
+    # multi-vector channel arrives graded instead of saturated. Optional — the
+    # squashed worst_score above still drives the red/green block decision, and
+    # multivector falls back to it if the graded channel is unavailable.
+    try:
+        from graded_channels import graded_score
+        state.scores["injection_graded"] = graded_score(state.prompt)
+    except Exception:
+        pass
     state.log("step_03_injection_detection", flag="red" if red else "green",
               worst_score=round(worst_score, 4), detail=detail)
 

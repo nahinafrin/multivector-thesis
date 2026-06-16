@@ -68,6 +68,13 @@ class ControllerConfig:
     disagreement_attack: float = 0.45
     coherence_attack: float = 0.55
     use_coherence: bool = False      # opt-in; requires Step 6 to populate it
+    # Ablation switch for clean three-way attribution. Default on (live policy).
+    # Off => the controller ignores the multi-vector signal entirely (neither
+    # the hard_block refuse nor the is_multivector escalation fire), while the
+    # rest of the closed loop (canary, grounding, disagreement) stays intact.
+    # Run with this off to attribute neutralization to the multi-vector signal
+    # alone: (no-controller) vs (controller without mv) vs (controller with mv).
+    use_multivector: bool = True
 
     # Risk escalation.
     escalate_step: float = 0.35      # added to input_risk() on each escalation
@@ -139,7 +146,7 @@ def _attack_evidence(state: PipelineState,
     coh = (float(state.scores.get("context_coherence_anomaly", 0.0) or 0.0)
            if cfg.use_coherence else 0.0)
     mv = state.meta.get("multivector", {}) or {}
-    is_mv = bool(mv.get("is_multivector"))
+    is_mv = bool(mv.get("is_multivector")) and cfg.use_multivector
 
     is_attack = (dis >= cfg.disagreement_attack
                  or (cfg.use_coherence and coh >= cfg.coherence_attack)
@@ -197,7 +204,7 @@ class RiskController:
             #    so there is concrete evidence of a coordinated attack and the
             #    cheap thing to do is stop now. No retry: a retry just lets
             #    the attacker probe with broader retrieval.
-            if mv.get("hard_block"):
+            if mv.get("hard_block") and cfg.use_multivector:
                 rec["action"] = "refuse_multivector"
                 rec["mv_active_channels"] = list(mv.get("active_channels", []))
                 rec["mv_joint_risk"] = float(mv.get("joint_risk", 0.0) or 0.0)

@@ -1,0 +1,14 @@
+{
+  "T": 7.4114,
+  "meta": {
+    "T": 7.4114,
+    "floor": 0.15,
+    "benign_p95_margin": -12.8559,
+    "benign_p95_graded": 0.15,
+    "attack_p10_graded": 0.1367,
+    "attack_p50_graded": 0.5837,
+    "respects_floor": true
+  },
+  "n_benign": 319,
+  "n_attack": 481
+}

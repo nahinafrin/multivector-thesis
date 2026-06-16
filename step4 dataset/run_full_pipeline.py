@@ -312,6 +312,13 @@ def main() -> None:
     ap.add_argument("--max-attempts", type=int, default=None,
                     help="Override ControllerConfig.max_attempts (default 3). "
                          "Ignored when --no-controller is set.")
+    ap.add_argument("--no-multivector-signal", dest="no_multivector_signal",
+                    action="store_true",
+                    help="Ablation: keep the closed-loop controller but make it "
+                         "ignore the multi-vector signal (no hard_block refuse, no "
+                         "is_multivector escalation). Use for clean three-way "
+                         "attribution: --no-controller vs this vs full controller. "
+                         "Ignored when --no-controller is set.")
     ap.add_argument("--kc-backend", choices=["ollama", "stub"], default="ollama",
                     help="Step 9b knowledge-conflict backend. 'ollama' (default) "
                          "runs a real context-free generation + judge against the "
@@ -320,9 +327,14 @@ def main() -> None:
     args = ap.parse_args()
 
     use_controller = not args.no_controller
-    controller_cfg = (ControllerConfig(max_attempts=args.max_attempts)
-                      if (use_controller and args.max_attempts is not None)
-                      else None)
+    controller_cfg = None
+    if use_controller and (args.max_attempts is not None or args.no_multivector_signal):
+        cfg_kwargs: dict[str, object] = {}
+        if args.max_attempts is not None:
+            cfg_kwargs["max_attempts"] = args.max_attempts
+        if args.no_multivector_signal:
+            cfg_kwargs["use_multivector"] = False
+        controller_cfg = ControllerConfig(**cfg_kwargs)
     kc_scorer = (s9b.OllamaKnowledgeConflict() if args.kc_backend == "ollama"
                  else s9b.HeuristicKnowledgeConflict())
     ia_scorer = None

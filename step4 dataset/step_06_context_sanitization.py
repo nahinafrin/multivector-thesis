@@ -84,6 +84,17 @@ def run(state: PipelineState, drop_dirty: bool = True) -> PipelineState:
     # the conjunctive sub-threshold attack be detected at all.
     context_injection = max(chunk_scores, default=0.0)
     state.scores["context_injection"] = float(context_injection)
+    # Additive graded signal: strongest per-chunk pre-sigmoid margin, so the
+    # multi-vector context channel arrives graded instead of saturated. Optional
+    # and falls back to the squashed context_injection above. NOTE: this scores
+    # each chunk a second time; fold the margin into sanitize_chunk to reuse the
+    # single forward pass if Step 6 cost matters.
+    try:
+        from graded_channels import graded_score
+        state.scores["context_graded"] = max(
+            (graded_score(c) for c in raw_chunks), default=0.0)
+    except Exception:
+        pass
 
     state.context = kept
     state.meta.update({
