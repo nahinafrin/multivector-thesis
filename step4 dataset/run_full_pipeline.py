@@ -58,6 +58,7 @@ from pipeline_common import PipelineState
 import step_01_user_input as s1
 import step_02_normalization as s2
 import step_03c_fusion_gate as s3c
+import step_03d_semantic_intent_gate as s3d
 # RAG half
 import step_04_query_embedding as s4
 import step_05_vector_search as s5
@@ -104,7 +105,9 @@ def process(question: str, *, k: int = 5, top_n: int = 3,
             kc_scorer: "s9b.ConflictScorer | None" = None,
             generator: str = "fused",
             ia_scorer: "s9a.IsolateAggregator | None" = None,
-            ia_min_agreement: int = 2) -> PipelineState:
+            ia_min_agreement: int = 2,
+            use_semantic_intent: bool = True,
+            semantic_intent_backend: str = "nli") -> PipelineState:
     """Run one question through the whole pipeline on a single state.
 
     If `poison_chunk` is given, it is spliced into the retrieved context after
@@ -139,6 +142,22 @@ def process(question: str, *, k: int = 5, top_n: int = 3,
         st.blocked = False
         st.block_stage = ""
         st.block_reason = ""
+
+    # --- Step 3d: semantic intent gate (orthogonal reframing/obfuscation check) ---
+    # Additive, fail-open detector for the gate_slip_query class that carries no
+    # injection signature. Reported as its OWN detector (score_ab_and_detectors).
+    if use_semantic_intent:
+        st = s3d.run(st, backend=semantic_intent_backend,
+                     treat_review_as_red=treat_review_as_red)
+        if st.blocked:
+            if not continue_blocked_for_audit:
+                return s13.run(st)
+            st.meta["gate_would_have_blocked"] = True
+            st.meta["gate_block_stage"] = st.block_stage
+            st.meta["gate_block_reason"] = st.block_reason
+            st.blocked = False
+            st.block_stage = ""
+            st.block_reason = ""
 
     ensure_index(index_path)
 
@@ -266,6 +285,13 @@ def _record(st: PipelineState, index: int, ground_truth: str | None) -> dict:
         },
         "grounding": g,
         "multivector": st.meta.get("multivector", {}),
+        "meta": {
+            "semantic_intent_decision": st.meta.get("semantic_intent_decision"),
+            "semantic_intent_reason": st.meta.get("semantic_intent_reason"),
+            "semantic_intent": st.scores.get("semantic_intent"),
+            "semantic_intent_error": st.meta.get("semantic_intent_error"),
+            "context_scale": st.meta.get("context_scale"),
+        },
         "controller": st.meta.get("controller", {}),
         "output_sanitization": st.meta.get("output_sanitization", {}),
         "dlp": st.meta.get("dlp", {}),
@@ -324,6 +350,15 @@ def main() -> None:
                          "runs a real context-free generation + judge against the "
                          "live models; 'stub' is the offline heuristic (NOT "
                          "validation — scores ~0 for any off-table question).")
+    ap.add_argument("--semantic-intent", dest="use_semantic_intent",
+                    action="store_true", default=False,
+                    help="Enable the experimental Step 3d semantic-intent gate "
+                         "(Solution 5). Off by default because the local NLI "
+                         "backend must be calibrated before it is safe for the "
+                         "main benign/attack runs.")
+    ap.add_argument("--semantic-intent-backend", choices=["nli", "llm"], default="nli",
+                    help="Step 3d backend: 'nli' (local zero-shot, no Ollama) or "
+                         "'llm' (single yes/no judge via Ollama).")
     args = ap.parse_args()
 
     use_controller = not args.no_controller
@@ -353,7 +388,9 @@ def main() -> None:
                        kc_scorer=kc_scorer,
                        generator=args.generator,
                        ia_scorer=ia_scorer,
-                       ia_min_agreement=args.ia_min_agreement)
+                       ia_min_agreement=args.ia_min_agreement,
+                       use_semantic_intent=args.use_semantic_intent,
+                       semantic_intent_backend=args.semantic_intent_backend)
 
     if args.question:
         st = _run(args.question)

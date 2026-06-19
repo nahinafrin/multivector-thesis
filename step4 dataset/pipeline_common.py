@@ -124,35 +124,47 @@ class PipelineState:
         self.abstain_reason = reason
         self.log(stage, abstained=True, reason=reason)
 
-    def input_risk(self) -> float:
-        """The carried-forward input risk that the adaptive cascade reads.
+    def _squashed_risk(self) -> float:
+        """The gate-side SQUASHED input risk (the original ``input_risk`` body).
 
-        Steps 6 (context sanitization), 7 (rerank) and 10 (grounding judge)
-        tighten their thresholds when this is high. The value is whichever is
-        larger of:
+        The Step-3c BLOCK decision is tuned on this scale, so any code that must
+        match the gate's own verdict scale should call THIS, not the graded
+        ``input_risk`` below. Whichever is larger of:
           * ``scores["fusion_risk"]``         — set by Step 3c (full pipeline)
           * ``scores["injection_detection"]`` — set by Step 3, or carried in by
                                                  the retrieval-only KB harness
           * ``scores["effective_risk"]``      — set by the closed-loop risk
                                                  feedback controller when late
-                                                 evidence (e.g. high ensemble
-                                                 disagreement on a grounded
-                                                 answer) revises the gate's
-                                                 verdict upward. Folding it
-                                                 in here is what lets the
-                                                 controller re-tighten Steps
-                                                 6/7/10 on a retry pass
-                                                 without duplicating their
-                                                 forward-adaptive logic.
-        so the cascade behaves correctly whether the gate was the full C3RF
-        fusion, just the injection detector, or augmented after the fact by
-        the controller. Absent any score, risk is 0.0.
+                                                 evidence revises the verdict up.
+        Absent any score, risk is 0.0.
         """
         return max(
             float(self.scores.get("fusion_risk", 0.0) or 0.0),
             float(self.scores.get("injection_detection", 0.0) or 0.0),
             float(self.scores.get("effective_risk", 0.0) or 0.0),
         )
+
+    def input_risk(self) -> float:
+        """Risk the ADAPTIVE CASCADE (Steps 6/7/10) reads.
+
+        Prefers the GRADED query-side score when present, because the squashed
+        ``fusion_risk`` is near-binary (~0 or ~1) and almost never lands in the
+        [0.3, 0.85) band where tightening is supposed to happen. Falls back to
+        the squashed value (``_squashed_risk``) so behaviour is unchanged when
+        graded scores were not produced.
+
+        ``effective_risk`` (written by the controller / multivector or semantic
+        escalation) is folded in at full strength on EITHER scale, so a late
+        escalation still re-tightens the next pass. Note the gate's own block
+        decision continues to run on the squashed scale, untouched — only the
+        downstream adaptivity moves to graded.
+        """
+        graded = float(self.scores.get("injection_graded", 0.0) or 0.0)
+        ctx_graded = float(self.scores.get("context_graded", 0.0) or 0.0)
+        effective = float(self.scores.get("effective_risk", 0.0) or 0.0)
+        if graded == 0.0 and ctx_graded == 0.0:
+            return self._squashed_risk()
+        return max(graded, ctx_graded, effective)
 
 
 def read_jsonl(path: str) -> Iterator[dict]:

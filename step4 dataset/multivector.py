@@ -29,7 +29,7 @@ signature in either channel.
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Iterable
 
 # --- defaults (recalibrate from calibrate_payloads.py against your benign data) --- #
 # Per-channel activation floors: set just above each channel's benign p95.
@@ -110,3 +110,39 @@ def multivector_risk(channels: dict[str, float], *,
         "floors": {c: floors.get(c, soft) for c in channels},
         "joint_min": joint_min,
     }
+
+
+def assert_separation(benign_joints: Iterable[float],
+                      attack_joints: Iterable[float],
+                      joint_min: float = DEFAULT_JOINT_MIN,
+                      *, p_benign: float = 95.0, p_attack: float = 10.0) -> dict:
+    """Fail loudly if the chosen joint_min does not actually separate the classes.
+
+    Call this in a unit test / CI step (and from recalibrate_graded.py) BEFORE
+    trusting any pasted threshold. Raises AssertionError with the offending
+    percentiles so you cannot silently ship a detector whose benign and attack
+    joint-risk distributions overlap (the exact failure calibrate_thresholds.py
+    warned about). On success returns a separation report dict.
+    """
+    import numpy as np
+    b = np.asarray(list(benign_joints), dtype="float64")
+    a = np.asarray(list(attack_joints), dtype="float64")
+    b95 = float(np.percentile(b, p_benign))
+    a10 = float(np.percentile(a, p_attack))
+    report = {
+        "benign_p95_joint": round(b95, 4),
+        "attack_p10_joint": round(a10, 4),
+        "chosen_joint_min": joint_min,
+        "separated": b95 < a10,
+        "joint_min_in_valley": b95 <= joint_min <= a10,
+    }
+    assert report["separated"], (
+        f"benign p95 joint ({b95:.3f}) >= attack p10 joint ({a10:.3f}): "
+        f"distributions OVERLAP — fix payloads (Solution 4) before trusting "
+        f"this detector."
+    )
+    assert report["joint_min_in_valley"], (
+        f"joint_min={joint_min} is not in the [benign_p95={b95:.3f}, "
+        f"attack_p10={a10:.3f}] valley; move it there."
+    )
+    return report

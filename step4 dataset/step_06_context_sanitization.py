@@ -34,7 +34,12 @@ _SCANNER_CACHE: dict[float, object] = {}
 
 BASE_THRESHOLD = 0.50
 STRICT_THRESHOLD = 0.30
-RISK_TIGHTEN_AT = 0.60
+# Was 0.60 on the squashed scale (effectively unreachable before a gate block).
+# input_risk() now prefers the GRADED scale, on which the actionable band starts
+# around benign graded p95 / attack p25; 0.45 sits just above benign graded p95
+# and below attack p50 (see graded_config.json), so borderline rows actually
+# reach the strict threshold instead of the cascade staying inert.
+RISK_TIGHTEN_AT = 0.45
 REDACTION = "[redacted: potential injected instruction]"
 
 
@@ -85,16 +90,20 @@ def run(state: PipelineState, drop_dirty: bool = True) -> PipelineState:
     context_injection = max(chunk_scores, default=0.0)
     state.scores["context_injection"] = float(context_injection)
     # Additive graded signal: strongest per-chunk pre-sigmoid margin, so the
-    # multi-vector context channel arrives graded instead of saturated. Optional
-    # and falls back to the squashed context_injection above. NOTE: this scores
-    # each chunk a second time; fold the margin into sanitize_chunk to reuse the
-    # single forward pass if Step 6 cost matters.
+    # multi-vector context channel arrives graded instead of saturated. The
+    # cascade reads this (via input_risk), so the fallback is AUDITED rather than
+    # silent: meta['context_scale'] records whether 'graded' or
+    # 'squashed_fallback' actually drove tightening on this row, and any import
+    # error is captured. NOTE: this scores each chunk a second time; fold the
+    # margin into sanitize_chunk to reuse the single forward pass if cost matters.
     try:
         from graded_channels import graded_score
-        state.scores["context_graded"] = max(
-            (graded_score(c) for c in raw_chunks), default=0.0)
-    except Exception:
-        pass
+        state.scores["context_graded"] = float(max(
+            (graded_score(c) for c in raw_chunks), default=0.0))
+        state.meta["context_scale"] = "graded"
+    except Exception as e:
+        state.meta["context_scale"] = "squashed_fallback"
+        state.meta["context_graded_error"] = f"{type(e).__name__}: {e}"
 
     state.context = kept
     state.meta.update({
