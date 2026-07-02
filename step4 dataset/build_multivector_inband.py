@@ -230,7 +230,8 @@ def main():
     rows, stats = build(args.qa_jsonl, args.n, index_path=args.index, k=args.k,
                         pipeline_context=args.pipeline_context, planted=args.planted, seed=args.seed)
     with open(args.out, "w", encoding="utf-8") as f:
-        for r in rows:
+        for i, r in enumerate(rows):
+            r["id"] = i
             f.write(json.dumps(r, ensure_ascii=False) + "\n")
     print("[inband]", json.dumps(stats, indent=2))
     print(f"[inband] wrote {len(rows)} rows -> {args.out}")

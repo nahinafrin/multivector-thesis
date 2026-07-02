@@ -424,8 +424,8 @@ def main() -> None:
 
         mode = "a" if args.resume else "w"
         with open(args.out, mode, encoding="utf-8") as fout:
-            for row in read_jsonl(args.slice_file):
-                rid = row.get("id", 0)
+            for i, row in enumerate(read_jsonl(args.slice_file)):
+                rid = row.get("id", i)
                 if args.resume and rid in done_ids:
                     continue
                 st = _run(row.get("question", ""), poison=row.get("poison_chunk"))
