@@ -1,0 +1,14 @@
+--- a/step_07_context_ranking.py	2026-06-30 14:17:21.794233742 +0000
++++ b/step_07_context_ranking.py	2026-06-30 14:17:21.833751833 +0000
+@@ -67,7 +67,10 @@
+         return state
+ 
+     risk = state.input_risk()
+-    min_score = STRICT_MIN_SCORE if risk > RISK_TIGHTEN_AT else BASE_MIN_SCORE
++    # Adaptive framework hook: honour a tier-pinned rerank floor when present.
++    pinned = state.meta.get("tier_rerank_min_score")
++    min_score = float(pinned) if pinned is not None else (
++        STRICT_MIN_SCORE if risk > RISK_TIGHTEN_AT else BASE_MIN_SCORE)
+ 
+     ranked = rerank(state.prompt, state.context, min_score)
+     if top_n:

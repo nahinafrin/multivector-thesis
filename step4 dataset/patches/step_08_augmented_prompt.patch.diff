@@ -1,0 +1,21 @@
+--- a/step_08_augmented_prompt.py	2026-06-30 14:17:21.794256368 +0000
++++ b/step_08_augmented_prompt.py	2026-06-30 14:17:21.833915758 +0000
+@@ -38,7 +38,8 @@
+ )
+ 
+ 
+-def build_augmented_prompt(question: str, context_chunks: list[str]) -> str:
++def build_augmented_prompt(question: str, context_chunks: list[str],
++                           system: str | None = None) -> str:
+     context = "\n".join(f"- {c}" for c in context_chunks) if context_chunks \
+         else "(no context retrieved)"
+     # ---- LCEL path (preferred) -------------------------------------------
+@@ -47,7 +48,7 @@
+         from langchain_core.runnables import RunnablePassthrough
+         prompt = ChatPromptTemplate.from_template(_TEMPLATE)
+         chain = (
+-            {"system": lambda _: _SYSTEM,
++            {"system": lambda _: (system or _SYSTEM),
+              "context": lambda _: context,
+              "question": RunnablePassthrough()}
+             | prompt

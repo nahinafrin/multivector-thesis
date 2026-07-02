@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1180 760" font-family="Arial">
+<defs><marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L7,3 L0,6 Z" fill="#2C2C2A"/></marker><marker id="ahr" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L7,3 L0,6 Z" fill="#A32D2D"/></marker></defs>
+<rect x="0" y="0" width="1180" height="760" fill="#FFFFFF"/>
+<text x="590.0" y="34" text-anchor="middle" font-family="Arial" font-size="21" font-weight="500" fill="#2C2C2A">Adaptive Risk-Aware Security Framework for RAG</text>
+<text x="590.0" y="56" text-anchor="middle" font-family="Arial" font-size="13" font-weight="400" fill="#5F5E5A">forward cumulative-risk accrual with a grounding feedback loop</text>
+<text x="70" y="80" text-anchor="start" font-family="Arial" font-size="11" font-weight="500" fill="#0C447C">INPUT ANALYSIS</text>
+<rect x="40" y="86" width="150" height="56" rx="8" fill="#E6F1FB" stroke="#0C447C" stroke-width="1.5"/><text x="115.0" y="119.0" text-anchor="middle" font-family="Arial" font-size="15" font-weight="500" fill="#0C447C">User input</text>
+<rect x="240" y="86" width="150" height="56" rx="8" fill="#E6F1FB" stroke="#0C447C" stroke-width="1.5"/><text x="315.0" y="119.0" text-anchor="middle" font-family="Arial" font-size="15" font-weight="500" fill="#0C447C">Normalization</text>
+<line x1="190" y1="114" x2="240" y2="114" stroke="#2C2C2A" stroke-width="1.6" marker-end="url(#ah)"/>
+<rect x="440" y="86" width="150" height="56" rx="8" fill="#E6F1FB" stroke="#0C447C" stroke-width="1.5"/><text x="515.0" y="110.0" text-anchor="middle" font-family="Arial" font-size="15" font-weight="500" fill="#0C447C">Injection</text><text x="515.0" y="129.0" text-anchor="middle" font-family="Arial" font-size="11.5" fill="#0C447C">detection</text>
+<line x1="390" y1="114" x2="440" y2="114" stroke="#2C2C2A" stroke-width="1.6" marker-end="url(#ah)"/>
+<rect x="640" y="86" width="150" height="56" rx="8" fill="#E6F1FB" stroke="#0C447C" stroke-width="1.5"/><text x="715.0" y="110.0" text-anchor="middle" font-family="Arial" font-size="15" font-weight="500" fill="#0C447C">Semantic</text><text x="715.0" y="129.0" text-anchor="middle" font-family="Arial" font-size="11.5" fill="#0C447C">intent</text>
+<line x1="590" y1="114" x2="640" y2="114" stroke="#2C2C2A" stroke-width="1.6" marker-end="url(#ah)"/>
+<line x1="790" y1="114" x2="830" y2="114" stroke="#2C2C2A" stroke-width="1.6" marker-end="url(#ah)"/>
+<rect x="870" y="80" width="270" height="78" rx="8" fill="#EEEDFE" stroke="#3C3489" stroke-width="1.5"/><text x="1005.0" y="115.0" text-anchor="middle" font-family="Arial" font-size="16" font-weight="500" fill="#3C3489">Adaptive Security</text><text x="1005.0" y="134.0" text-anchor="middle" font-family="Arial" font-size="11.5" fill="#3C3489">Controller  ·  selects tier</text>
+<rect x="40" y="200" width="1100" height="46" rx="8" fill="#F1EFE8" stroke="#444441" stroke-width="1.2"/>
+<text x="60" y="219" text-anchor="start" font-family="Arial" font-size="12.5" font-weight="500" fill="#444441">Cumulative risk  (noisy-OR)</text>
+<text x="60" y="237" text-anchor="start" font-family="Arial" font-size="11" font-weight="400" fill="#5F5E5A">risk = 1 − ∏(1 − pi)   accrues forward</text>
+<rect x="470" y="209" width="115" height="28" rx="6" fill="#FFFFFF" stroke="#444441" stroke-width="1"/>
+<text x="527" y="227" text-anchor="middle" font-family="Arial" font-size="11" font-weight="400" fill="#444441">prompt +</text>
+<rect x="600" y="209" width="115" height="28" rx="6" fill="#FFFFFF" stroke="#444441" stroke-width="1"/>
+<text x="657" y="227" text-anchor="middle" font-family="Arial" font-size="11" font-weight="400" fill="#444441">semantic +</text>
+<rect x="730" y="209" width="115" height="28" rx="6" fill="#FFFFFF" stroke="#444441" stroke-width="1"/>
+<text x="787" y="227" text-anchor="middle" font-family="Arial" font-size="11" font-weight="400" fill="#444441">context +</text>
+<rect x="860" y="209" width="115" height="28" rx="6" fill="#FFFFFF" stroke="#444441" stroke-width="1"/>
+<text x="917" y="227" text-anchor="middle" font-family="Arial" font-size="11" font-weight="400" fill="#444441">disagree +</text>
+<rect x="990" y="209" width="115" height="28" rx="6" fill="#FFFFFF" stroke="#444441" stroke-width="1"/>
+<text x="1047" y="227" text-anchor="middle" font-family="Arial" font-size="11" font-weight="400" fill="#444441">grounding +</text>
+<line x1="1005.0" y1="158" x2="1005.0" y2="200" stroke="#3C3489" stroke-width="1.6" stroke-dasharray="4 3" marker-end="url(#ah)"/>
+<text x="1091.0" y="183.0" text-anchor="middle" font-family="Arial" font-size="10.5" font-weight="400" fill="#3C3489">reads / writes risk</text>
+<line x1="1005.0" y1="246" x2="1005.0" y2="286" stroke="#3C3489" stroke-width="1.6" marker-end="url(#ah)"/>
+<rect x="120" y="290" width="300" height="30" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/><text x="270.0" y="310.0" text-anchor="middle" font-family="Arial" font-size="14" font-weight="500" fill="#0F6E56">LOW tier</text>
+<rect x="120" y="324" width="300" height="70" rx="8" fill="#FFFFFF" stroke="#0F6E56" stroke-width="1.2"/>
+<text x="270" y="344" text-anchor="middle" font-family="Arial" font-size="12" font-weight="400" fill="#0F6E56">K=8 · sim 0.55</text>
+<text x="270" y="363" text-anchor="middle" font-family="Arial" font-size="12" font-weight="400" fill="#0F6E56">std prompt · 1 LLM</text>
+<text x="270" y="382" text-anchor="middle" font-family="Arial" font-size="12" font-weight="400" fill="#0F6E56">grounding on</text>
+<line x1="270" y1="286" x2="270" y2="290" stroke="#3C3489" stroke-width="1.3" marker-end="url(#ah)"/>
+<rect x="470" y="290" width="300" height="30" rx="8" fill="#FAEEDA" stroke="#854F0B" stroke-width="1.5"/><text x="620.0" y="310.0" text-anchor="middle" font-family="Arial" font-size="14" font-weight="500" fill="#854F0B">MEDIUM tier</text>
+<rect x="470" y="324" width="300" height="70" rx="8" fill="#FFFFFF" stroke="#854F0B" stroke-width="1.2"/>
+<text x="620" y="344" text-anchor="middle" font-family="Arial" font-size="12" font-weight="400" fill="#854F0B">K=5 · sim 0.65</text>
+<text x="620" y="363" text-anchor="middle" font-family="Arial" font-size="12" font-weight="400" fill="#854F0B">guarded prompt · 1 LLM</text>
+<text x="620" y="382" text-anchor="middle" font-family="Arial" font-size="12" font-weight="400" fill="#854F0B">grounding on</text>
+<line x1="1005.0" y1="286" x2="620" y2="290" stroke="#3C3489" stroke-width="1.3" marker-end="url(#ah)"/>
+<rect x="820" y="290" width="300" height="30" rx="8" fill="#FCEBEB" stroke="#A32D2D" stroke-width="1.5"/><text x="970.0" y="310.0" text-anchor="middle" font-family="Arial" font-size="14" font-weight="500" fill="#A32D2D">HIGH tier</text>
+<rect x="820" y="324" width="300" height="70" rx="8" fill="#FFFFFF" stroke="#A32D2D" stroke-width="1.2"/>
+<text x="970" y="344" text-anchor="middle" font-family="Arial" font-size="12" font-weight="400" fill="#A32D2D">K=3 · sim 0.72 · strict prompt</text>
+<text x="970" y="363" text-anchor="middle" font-family="Arial" font-size="12" font-weight="400" fill="#A32D2D">ensemble + policy check</text>
+<text x="970" y="382" text-anchor="middle" font-family="Arial" font-size="12" font-weight="400" fill="#A32D2D">grounding on</text>
+<line x1="970" y1="286" x2="970" y2="290" stroke="#3C3489" stroke-width="1.3" marker-end="url(#ah)"/>
+<text x="70" y="432" text-anchor="start" font-family="Arial" font-size="11" font-weight="500" fill="#0F6E56">ADAPTIVE PIPELINE  (parameters set by active tier)</text>
+<rect x="40" y="440" width="158" height="64" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/><text x="119.0" y="468.0" text-anchor="middle" font-family="Arial" font-size="13" font-weight="500" fill="#0F6E56">Trust-aware retrieval</text><text x="119.0" y="487.0" text-anchor="middle" font-family="Arial" font-size="11.5" fill="#0F6E56">sim × trust</text>
+<rect x="228" y="440" width="158" height="64" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/><text x="307.0" y="468.0" text-anchor="middle" font-family="Arial" font-size="13" font-weight="500" fill="#0F6E56">Context sanitization</text><text x="307.0" y="487.0" text-anchor="middle" font-family="Arial" font-size="11.5" fill="#0F6E56">strictness</text>
+<line x1="198" y1="472" x2="228" y2="472" stroke="#2C2C2A" stroke-width="1.6" marker-end="url(#ah)"/>
+<rect x="416" y="440" width="158" height="64" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/><text x="495.0" y="468.0" text-anchor="middle" font-family="Arial" font-size="13" font-weight="500" fill="#0F6E56">Prompt construction</text><text x="495.0" y="487.0" text-anchor="middle" font-family="Arial" font-size="11.5" fill="#0F6E56">profile</text>
+<line x1="386" y1="472" x2="416" y2="472" stroke="#2C2C2A" stroke-width="1.6" marker-end="url(#ah)"/>
+<rect x="604" y="440" width="158" height="64" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/><text x="683.0" y="468.0" text-anchor="middle" font-family="Arial" font-size="13" font-weight="500" fill="#0F6E56">Generation</text><text x="683.0" y="487.0" text-anchor="middle" font-family="Arial" font-size="11.5" fill="#0F6E56">1 / ensemble</text>
+<line x1="574" y1="472" x2="604" y2="472" stroke="#2C2C2A" stroke-width="1.6" marker-end="url(#ah)"/>
+<rect x="792" y="440" width="158" height="64" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/><text x="871.0" y="468.0" text-anchor="middle" font-family="Arial" font-size="13" font-weight="500" fill="#0F6E56">Grounding verification</text><text x="871.0" y="487.0" text-anchor="middle" font-family="Arial" font-size="11.5" fill="#0F6E56">faithfulness</text>
+<line x1="762" y1="472" x2="792" y2="472" stroke="#2C2C2A" stroke-width="1.6" marker-end="url(#ah)"/>
+<rect x="980" y="440" width="158" height="64" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/><text x="1059.0" y="468.0" text-anchor="middle" font-family="Arial" font-size="13" font-weight="500" fill="#0F6E56">Output filtering / DLP</text><text x="1059.0" y="487.0" text-anchor="middle" font-family="Arial" font-size="11.5" fill="#0F6E56">redact</text>
+<line x1="950" y1="472" x2="980" y2="472" stroke="#2C2C2A" stroke-width="1.6" marker-end="url(#ah)"/>
+<line x1="1005.0" y1="394" x2="1005.0" y2="438" stroke="#3C3489" stroke-width="1.3" stroke-dasharray="4 3" marker-end="url(#ah)"/>
+<text x="1101.0" y="417.0" text-anchor="middle" font-family="Arial" font-size="10.5" font-weight="400" fill="#3C3489">applies tier config</text>
+<rect x="40" y="580" width="200" height="56" rx="8" fill="#F1EFE8" stroke="#444441" stroke-width="1.5"/><text x="140.0" y="604.0" text-anchor="middle" font-family="Arial" font-size="15" font-weight="500" fill="#444441">Final safe</text><text x="140.0" y="623.0" text-anchor="middle" font-family="Arial" font-size="11.5" fill="#444441">response / refuse</text>
+<line x1="1059" y1="504" x2="1059" y2="590" stroke="#2C2C2A" stroke-width="1.6" marker-end="url(#ah)"/>
+<line x1="1059" y1="590" x2="240" y2="608" stroke="#2C2C2A" stroke-width="1.6" marker-end="url(#ah)"/>
+<path d="M 871 504 C 871 610, 1005.0 670, 1005.0 670 L 1150 670 L 1150 148 L 1140 148" fill="none" stroke="#A32D2D" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#ahr)"/>
+<text x="1158" y="630" text-anchor="end" font-family="Arial" font-size="12" font-weight="500" fill="#A32D2D">grounding mismatch → raise risk → re-tier / regenerate / refuse</text>
+<text x="40" y="690" text-anchor="start" font-family="Arial" font-size="12" font-weight="500" fill="#A32D2D">Feedback loop:</text>
+<text x="135" y="690" text-anchor="start" font-family="Arial" font-size="12" font-weight="400" fill="#5F5E5A">a LATE signal (grounding) re-enters the controller, can push the row to a higher tier and trigger a guarded re-pass or refusal.</text>
+</svg>
