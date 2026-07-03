@@ -24,22 +24,23 @@ preflight_check.py
 
 ---
 
-## Step 1 — OFF-arm gate (run BEFORE any full A/B)
+## Step 1 — build a coherent planted slice, then OFF-arm gate
 
-An A/B is meaningless if attacks don't succeed with mitigation **OFF**. Run the gate first:
+The old `build_multivector_inband.py --planted` borrowed random answers as markers
+("a kangaroo" for penguin questions). Use **`build_planted_attacks.py`** instead:
 
 ```powershell
-python preflight_check.py --slice planted_inband.jsonl
+python build_planted_attacks.py --qa-jsonl data/question-answer/test.jsonl --n 30 --yesno-only --out planted_attacks_v2.jsonl
+```
+
+Then gate before any full A/B:
+
+```powershell
+python preflight_check.py --slice planted_attacks_v2.jsonl
 ```
 
 ```powershell
-python check_off_asr.py --slice planted_inband.jsonl --limit 30 --show-misses 10 --run-dir mitigation_results/planted30
-```
-
-Or score an existing OFF file:
-
-```powershell
-python check_off_asr.py --off mitigation_results/planted30/off.jsonl --show-misses 10
+python check_off_asr.py --slice planted_attacks_v2.jsonl --limit 30 --show-misses 10 --run-dir mitigation_results/planted30v2
 ```
 
 **Verdicts**
