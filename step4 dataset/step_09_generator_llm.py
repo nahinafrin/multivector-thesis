@@ -95,6 +95,14 @@ def generate_candidates(augmented_prompt: str,
     return parallel.invoke(augmented_prompt)
 
 
+def generate_single(augmented_prompt: str,
+                    model: str = "llama3.2:3b",
+                    base_url: str = "http://localhost:11434") -> str:
+    """One-model generation for controlled A/B arms (fixed decoding)."""
+    out = generate_candidates(augmented_prompt, models={model: model}, base_url=base_url)
+    return next(iter(out.values())) if out else ""
+
+
 def compute_disagreement(candidates: dict[str, str]) -> float:
     """Return a [0,1] *semantic* disagreement score.
 

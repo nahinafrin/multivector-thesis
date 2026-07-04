@@ -1,0 +1,17 @@
+--- a/step_06_context_sanitization.py	2026-06-30 14:17:21.794193852 +0000
++++ b/step_06_context_sanitization.py	2026-06-30 14:17:21.833459281 +0000
+@@ -64,7 +64,13 @@
+         return state
+ 
+     risk = state.input_risk()
+-    threshold = STRICT_THRESHOLD if risk > RISK_TIGHTEN_AT else BASE_THRESHOLD
++    # Adaptive framework hook: honour a tier-pinned strictness when the adaptive
++    # orchestrator set one; otherwise fall back to the original risk rule.
++    pinned = state.meta.get("tier_sanitization_strictness")
++    if pinned is not None:
++        threshold = float(pinned)
++    else:
++        threshold = STRICT_THRESHOLD if risk > RISK_TIGHTEN_AT else BASE_THRESHOLD
+ 
+     raw_chunks = list(state.context)
+     kept, dropped = [], []

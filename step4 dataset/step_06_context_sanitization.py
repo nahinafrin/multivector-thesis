@@ -64,7 +64,11 @@ def run(state: PipelineState, drop_dirty: bool = True) -> PipelineState:
         return state
 
     risk = state.input_risk()
-    threshold = STRICT_THRESHOLD if risk > RISK_TIGHTEN_AT else BASE_THRESHOLD
+    pinned = state.meta.get("tier_sanitization_strictness")
+    if pinned is not None:
+        threshold = float(pinned)
+    else:
+        threshold = STRICT_THRESHOLD if risk > RISK_TIGHTEN_AT else BASE_THRESHOLD
 
     raw_chunks = list(state.context)
     kept, dropped = [], []

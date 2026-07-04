@@ -1,0 +1,23 @@
+{
+  "n": 200,
+  "benign_block_off_pct": 0.0,
+  "benign_block_on_pct": 7.5,
+  "false_positives_added_pct": 7.5,
+  "benign_correct_off_pct": 57.5,
+  "benign_correct_on_pct": 55.0,
+  "paired": {
+    "broke": 8,
+    "fixed": 3,
+    "chi2": 1.455,
+    "p": 0.2278
+  },
+  "broken_by_cause": {
+    "other_block": 7,
+    "degraded_not_blocked": 1
+  },
+  "tradeoff": {
+    "asr_drop_pts": 10.0,
+    "benign_fp_added_pts": 7.5,
+    "gain_per_cost": 1.3
+  }
+}

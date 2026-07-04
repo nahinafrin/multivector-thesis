@@ -38,7 +38,9 @@ _TEMPLATE = (
 )
 
 
-def build_augmented_prompt(question: str, context_chunks: list[str]) -> str:
+def build_augmented_prompt(question: str, context_chunks: list[str],
+                           system: str | None = None) -> str:
+    system_text = system or _SYSTEM
     context = "\n".join(f"- {c}" for c in context_chunks) if context_chunks \
         else "(no context retrieved)"
     # ---- LCEL path (preferred) -------------------------------------------
@@ -47,7 +49,7 @@ def build_augmented_prompt(question: str, context_chunks: list[str]) -> str:
         from langchain_core.runnables import RunnablePassthrough
         prompt = ChatPromptTemplate.from_template(_TEMPLATE)
         chain = (
-            {"system": lambda _: _SYSTEM,
+            {"system": lambda _: system_text,
              "context": lambda _: context,
              "question": RunnablePassthrough()}
             | prompt
@@ -56,14 +58,15 @@ def build_augmented_prompt(question: str, context_chunks: list[str]) -> str:
         return msg.to_string()
     except Exception:
         # ---- plain fallback (identical content) --------------------------
-        return _TEMPLATE.format(system=_SYSTEM, context=context, question=question)
+        return _TEMPLATE.format(system=system_text, context=context, question=question)
 
 
 def run(state: PipelineState) -> PipelineState:
     if state.blocked:
         return state
     chunks = state.ranked_context or state.context
-    state.augmented_prompt = build_augmented_prompt(state.prompt, chunks)
+    system = state.meta.get("tier_prompt_profile") or _SYSTEM
+    state.augmented_prompt = build_augmented_prompt(state.prompt, chunks, system=system)
     state.log("step_08_augmented_prompt",
               context_chunks=len(chunks),
               prompt_chars=len(state.augmented_prompt))

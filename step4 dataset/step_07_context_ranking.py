@@ -67,7 +67,9 @@ def run(state: PipelineState, top_n: int | None = None) -> PipelineState:
         return state
 
     risk = state.input_risk()
-    min_score = STRICT_MIN_SCORE if risk > RISK_TIGHTEN_AT else BASE_MIN_SCORE
+    pinned = state.meta.get("tier_rerank_min_score")
+    min_score = float(pinned) if pinned is not None else (
+        STRICT_MIN_SCORE if risk > RISK_TIGHTEN_AT else BASE_MIN_SCORE)
 
     ranked = rerank(state.prompt, state.context, min_score)
     if top_n:

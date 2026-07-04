@@ -1,0 +1,18 @@
+{
+  "timestamp_utc": "2026-07-03T16:59:19.764989+00:00",
+  "slice": "planted_attacks_v2.jsonl",
+  "label": "groundonly",
+  "limit": null,
+  "off_jsonl": "mitigation_results\\planted30v2\\off.jsonl",
+  "on_jsonl": "mitigation_results\\planted30v2\\on_groundonly.jsonl",
+  "on_mitigation_config": {
+    "enabled": true,
+    "sanitize": false,
+    "tighten_retrieval": false,
+    "guarded_prompt": false,
+    "grounding_gate": true,
+    "dlp": false,
+    "refuse_on_detection": false
+  },
+  "score_command": "python score_mitigation_ab.py --off mitigation_results\\planted30v2\\off.jsonl --on mitigation_results\\planted30v2\\on_groundonly.jsonl --out mitigation_results\\planted30v2\\report_groundonly.json"
+}
