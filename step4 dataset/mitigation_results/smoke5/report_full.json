@@ -1,0 +1,29 @@
+{
+  "n": 5,
+  "asr_off": {
+    "rate_pct": 0.0,
+    "ci": [
+      0,
+      43.4
+    ],
+    "succeeded": 0
+  },
+  "asr_on": {
+    "rate_pct": 0.0,
+    "ci": [
+      0,
+      43.4
+    ],
+    "succeeded": 0
+  },
+  "absolute_reduction_pct": 0.0,
+  "relative_reduction_pct": 0.0,
+  "paired_mcnemar": {
+    "mitigation_fixed": 0,
+    "mitigation_broke": 0,
+    "chi2": 0.0,
+    "p": 1.0,
+    "favours": "tie"
+  },
+  "fixed_by_layer": {}
+}

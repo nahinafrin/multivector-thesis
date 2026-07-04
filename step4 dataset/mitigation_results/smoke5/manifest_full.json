@@ -1,0 +1,18 @@
+{
+  "timestamp_utc": "2026-07-02T21:14:25.920347+00:00",
+  "slice": "planted_inband.jsonl",
+  "label": "full",
+  "limit": 5,
+  "off_jsonl": "mitigation_results\\smoke5\\off.jsonl",
+  "on_jsonl": "mitigation_results\\smoke5\\on_full.jsonl",
+  "on_mitigation_config": {
+    "enabled": true,
+    "sanitize": true,
+    "tighten_retrieval": true,
+    "guarded_prompt": true,
+    "grounding_gate": true,
+    "dlp": true,
+    "refuse_on_detection": true
+  },
+  "score_command": "python score_mitigation_ab.py --off mitigation_results\\smoke5\\off.jsonl --on mitigation_results\\smoke5\\on_full.jsonl --out mitigation_results\\smoke5\\report_full.json"
+}

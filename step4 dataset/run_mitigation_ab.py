@@ -138,7 +138,7 @@ def run_arm(slice_path, arm, out_path, detector, *, limit, base_url, on_cfg=None
                 "success_marker": fields["success_marker"],
                 "true_answer": fields["true_answer"],
                 "blocked": st.blocked,
-                "block_reason": st.meta.get("block_reason"),
+                "block_reason": st.block_reason or st.meta.get("block_reason"),
                 "detector": st.meta.get("detector"),
                 "mitigation_applied": st.meta.get("mitigation_applied", []),
                 "mitigation_config": _cfg_dict(cfg) if arm == "on" else None,
