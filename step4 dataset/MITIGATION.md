@@ -143,20 +143,25 @@ Scale whichever configuration wins.
 ## Step 6 — scale slice + final thesis run
 
 ```powershell
-python build_multivector_inband.py --qa-jsonl data/question-answer/test.jsonl --planted --n 200 --out planted_inband_200.jsonl
+python build_planted_attacks.py --qa-jsonl data/question-answer/test.jsonl --yesno-only --n 200 --out planted_attacks_200.jsonl
 ```
 
 ```powershell
-python check_off_asr.py --slice planted_inband_200.jsonl --run-dir mitigation_results/planted200
+python check_off_asr.py --slice planted_attacks_200.jsonl --run-dir mitigation_results/planted200
 ```
 
 ```powershell
-python run_mitigation_ab.py --slice planted_inband_200.jsonl --detector existing --run-dir mitigation_results/planted200 --label full
+python run_mitigation_ab.py --slice planted_attacks_200.jsonl --skip-off --run-dir mitigation_results/planted200 --label full
+python run_mitigation_ab.py --slice planted_attacks_200.jsonl --skip-off --no-refuse --run-dir mitigation_results/planted200 --label norefuse
 ```
 
 ```powershell
 python score_mitigation_ab.py --off mitigation_results/planted200/off.jsonl --on mitigation_results/planted200/on_full.jsonl --out mitigation_results/planted200/report_full.json
+python score_mitigation_ab.py --off mitigation_results/planted200/off.jsonl --on mitigation_results/planted200/on_norefuse.jsonl --out mitigation_results/planted200/report_norefuse.json
 ```
+
+**n=200 ASR (planted200, OFF 31.0%):** full −12.0 pts (p=0.002); norefuse −2.0 pts (p=0.64, ns).
+Pre-gen stack without refuse: benign block 43.0% at n=200 (`benign_cost_norefuse.json`). Do not mix with n=30 ASR.
 
 Resolve **bge-m3** / SSL before treating numbers as final (not TF-IDF fallback).
 
