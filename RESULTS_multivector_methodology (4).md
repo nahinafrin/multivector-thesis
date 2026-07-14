@@ -264,6 +264,7 @@ measured, unsolved gap for this pipeline.
 | Semantic (misinformation) neutralization | false fact doesn't reach user | 4/8 succeed, passive and spotlight alike (n=8) | **partial; spotlighting adds nothing** |
 | Semantic-class detection | existing signal flags it | faithfulness/disagreement AUC ≤ 0.62 usable; 0.86 has negative gap | **does not hold** |
 | Semantic-class tested defense (`knowledge_conflict`) | flag poison via parametric conflict | AUC 0.54, gap −0.4, benign median 1.0 (matched baseline) | **does not hold (judge over-fires)** |
+| Fire-rule fusion (coactivation) | combine channels to catch more | same recall as query_only (40%); benign FP 45%→2.5% vs context_only | **holds as FP suppressor, not recall booster** |
 
 ### 4.9 Pre-generation filtering stack (mitigation A/B on planted attacks)
 
@@ -288,6 +289,34 @@ do not mix n=200 benign cost with n=30 ASR.
 
 **Do not claim** a working conjunctive detector from this harness; the detector
 is held fixed as an existing component and the contribution is mitigation layers.
+
+### 4.10 Detector fire-rule comparison — fusion as FP suppressor
+
+A separate question from mitigation ablations: *why fuse channels at all?* The
+OFF-arm JSONLs already log raw per-channel scores (`detector.query`,
+`detector.context`) for every row, so the live floors (`query_floor=0.20`,
+`context_floor=0.30`) can be re-applied offline under alternate fire rules with
+no model calls (`compare_detector_configs.py`). Sanity: re-derived coactivation
+matches the pipeline's logged `is_attack` on all 200 attack + 200 benign rows.
+
+| Rule | Recall (attacks caught) | Benign false-positive rate |
+|---|---|---|
+| query_only | 40.0% (80/200) | 3.0% (6/200) |
+| context_only | **100.0%** (200/200) | **45.0%** (90/200) |
+| or | 100.0% (200/200) | 45.5% (91/200) |
+| coactivation (fusion, live default) | 40.0% (80/200) | **2.5%** (5/200) |
+
+**Headline: fusion is not a recall booster here — it is a false-positive
+suppressor that costs nothing in recall.** `context_only` / `or` "catch" every
+attack, but context also fires on 45% of completely benign traffic: near-always-
+on against this planted type (assertive, directive-sounding "fact-check"
+strings in retrieved chunks), so high recall is not discrimination. Coactivation
+matches `query_only` recall (80/200 both) because context already clears its
+floor on every attack row; requiring *both* channels collapses benign FP from
+45% (context alone) to 2.5% — slightly better than query alone's 3.0%. Context
+alone looks like a perfect detector and is close to useless; coactivation is
+what makes the context channel usable. Artifact:
+`step4 dataset/detector_config_comparison.json`.
 
 ## 5. The defenses that hold
 
