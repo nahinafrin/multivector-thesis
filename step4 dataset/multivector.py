@@ -2,6 +2,15 @@
 multivector.py — cross-vector risk fusion over the SHARP injection signals,
 hardened so a LOW activation floor stays safe.
 
+STATUS (see RESULTS_multivector_methodology (4).md §4.4 — do not trust this
+docstring's framing over that document): evaluation against the real Step 3 /
+Step 6 scanners shows this detector does NOT validly fire on the sub-threshold
+conjunctive class it targets (0/34 on the labelled slice, 0/4 against the real
+scanners). This is a structural property, not a tuning gap — see §4.4's closed
+argument for why no floor/calibration choice recovers it. Retained as
+defense-in-depth wiring only (it may still refuse on strong co-activation);
+do not present it as working conjunctive sub-threshold detection.
+
 Channels (each in [0,1]):
     query_vector   = max(injection_detection, fusion_risk)   # direct injection / harm
     context_vector = context_injection (max per-chunk score, from Step 6)

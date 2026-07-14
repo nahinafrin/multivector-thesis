@@ -69,7 +69,7 @@ Invoke-Step "benign cost vs full ASR (n=200)" @(
     "--off", "$BenignDir/benign_off.jsonl",
     "--on", "$BenignDir/benign_on.jsonl",
     "--asr-report", "$RunDir/report_full.json",
-    "--out", "$RunDir/benign_cost_report.json"
+    "--out", "$RunDir/benign_cost_full.json"
 )
 
 Invoke-Step "benign cost vs norefuse ASR (n=200)" @(

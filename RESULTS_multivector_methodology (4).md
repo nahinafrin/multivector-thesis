@@ -292,6 +292,15 @@ is held fixed as an existing component and the contribution is mitigation layers
 
 ### 4.10 Detector fire-rule comparison — fusion as FP suppressor
 
+**Naming note — this is a different "coactivation" from §4.4.** §4.4's
+co-activation is `multivector.py`'s sub-threshold condition: both channels
+*below* their block floor yet jointly risky (proven structurally impossible
+to fire validly). The fire rule below is `ExistingInjectionDetector`'s
+`"coactivation"` option: both channels *above* their normal block floor — an
+ordinary two-factor AND-gate, unrelated to sub-threshold detection. Same word,
+opposite condition, two different modules; §4.4's negative result and this
+section's positive one are both correct and do not conflict.
+
 A separate question from mitigation ablations: *why fuse channels at all?* The
 OFF-arm JSONLs already log raw per-channel scores (`detector.query`,
 `detector.context`) for every row, so the live floors (`query_floor=0.20`,
@@ -304,7 +313,7 @@ matches the pipeline's logged `is_attack` on all 200 attack + 200 benign rows.
 | query_only | 40.0% (80/200) | 3.0% (6/200) |
 | context_only | **100.0%** (200/200) | **45.0%** (90/200) |
 | or | 100.0% (200/200) | 45.5% (91/200) |
-| coactivation (fusion, live default) | 40.0% (80/200) | **2.5%** (5/200) |
+| coactivation — both-above-floor AND-gate (fusion, live default) | 40.0% (80/200) | **2.5%** (5/200) |
 
 **Headline: fusion is not a recall booster here — it is a false-positive
 suppressor that costs nothing in recall.** `context_only` / `or` "catch" every
