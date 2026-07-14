@@ -276,10 +276,12 @@ refuse-on-detection.
 (`norefuse`) cuts ASR by only **2.0 pts** (31.0% → 29.0%, McNemar p=0.64, ns)
 while benign false positives rise from **0% → 43%** (p<0.001;
 `benign_cost_norefuse.json`). Full stack including refuse (`full`) cuts ASR by
-**12.0 pts** (31.0% → 19.0%, p=0.002), driven mainly by `refuse_on_detection`
-(24 of 39 fixed). Adjacent ablations on the same OFF arm: `groundonly` −0.5 pts;
-`groundplus` (grounding + refuse, no pre-gen filters) −12.5 pts — refuse
-dominates, not sanitization/tightening/prompts.
+**12.0 pts** (31.0% → 19.0%, p=0.002). The isolation arm `refuseonly` (refuse
+on detection alone, no sanitize / tighten / guarded prompt) lands at the
+**same 19.0%** as `full` (`report_refuseonly.json`) — so nothing beyond refuse
+is buying ASR reduction. Adjacent ablations on the same OFF arm: `groundonly`
+−0.5 pts; `groundplus` (grounding + refuse, no pre-gen filters) −12.5 pts —
+refuse dominates, not sanitization/tightening/prompts.
 
 The n=30 pilot (`planted30v2/report_norefuse.json`, 0.0-point drop) is superseded;
 do not mix n=200 benign cost with n=30 ASR.
