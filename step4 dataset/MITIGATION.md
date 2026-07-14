@@ -142,6 +142,9 @@ Scale whichever configuration wins.
 
 ## Step 6 — scale slice + final thesis run
 
+Use **`build_planted_attacks.py`** (type-matched payloads, measurable OFF ASR), not the
+old `build_multivector_inband.py --planted` builder:
+
 ```powershell
 python build_planted_attacks.py --qa-jsonl data/question-answer/test.jsonl --yesno-only --n 200 --out planted_attacks_200.jsonl
 ```
@@ -162,6 +165,9 @@ python score_mitigation_ab.py --off mitigation_results/planted200/off.jsonl --on
 
 **n=200 ASR (planted200, OFF 31.0%):** full −12.0 pts (p=0.002); norefuse −2.0 pts (p=0.64, ns).
 Pre-gen stack without refuse: benign block 43.0% at n=200 (`benign_cost_norefuse.json`). Do not mix with n=30 ASR.
+
+Reproduction helper (reuses OFF arm): `.\rescale_planted200_arms.ps1`.
+`score_benign_cost.py` warns if `asr_report.n != benign_n`.
 
 Resolve **bge-m3** / SSL before treating numbers as final (not TF-IDF fallback).
 
@@ -192,3 +198,6 @@ mitigation_results/
 - Full A/B when OFF-arm ASR is ~0% (meaningless 0→0 table).
 - n=30 ASR as final without scaling.
 - ASR win without benign cost.
+- **Mixed-n trade-offs** (e.g. n=200 benign false-positive cost paired with n=30
+  `report_norefuse.json` from `planted30v2`). Always use `planted200/report_*.json`
+  for thesis-final ASR figures.

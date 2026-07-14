@@ -1,5 +1,6 @@
 {
   "n": 200,
+  "_stale_tradeoff": "ASR side is n=30 (planted30v2/report_norefuse.json). Re-score with mitigation_results/planted200/report_norefuse.json after rescale_planted200_arms.ps1.",
   "benign_block_off_pct": 0.0,
   "benign_block_on_pct": 43.0,
   "false_positives_added_pct": 43.0,

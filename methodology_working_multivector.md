@@ -1,5 +1,14 @@
 # A Working Methodology for a Local, Adaptive, Multi-Vector RAG Security Extension
 
+> **Detector claims — use `RESULTS_multivector_methodology (4).md`, not this file.**
+> Conjunctive sub-threshold *detection* on injection-signature channels is a
+> **proven negative** (structural impossibility: both channels low exactly where
+> both gates pass; confirmed 0/34 sub-threshold, 0/4 vs real scanners). Sections
+> 4–6 below describe a *superseded* graded-channel fix that assumed the regime
+> was instantiable; keep them only as design history. The defensible detector
+> contribution is the closed argument in RESULTS §4.4, not "high recall, zero
+> marginal value" or a revived conjunctive detector.
+
 ## 0. Purpose and scope
 
 This document specifies a deployable security extension for Retrieval-Augmented
@@ -16,17 +25,11 @@ off-host.
 
 This revision differs from the original methodology in one decisive way. The
 original treated the **multi-vector (conjunctive sub-threshold) detector** as a
-finished contribution, but in evaluation it fired on 0 of 40 of its target
-attacks. The root cause was diagnosed precisely: the injection detectors are
-*near-binary* (they emit ~0.0 or ~1.0 and almost nothing in between), so the
-sub-threshold band the detector needs is a band the detector never *emits*, and
-no post-hoc calibration can recover information the final sigmoid has already
-destroyed. This methodology fixes the **cause** — it reads the detector's
-pre-sigmoid **logit margin** so the risk channels arrive *graded* — and adds a
-**controlled-injection validation** that proves the detector's logic is correct
-independently of whether any single dataset can instantiate the regime. Those
-two changes are what move multi-vector mitigation from "0/40 by construction" to
-a measurable, working defense.
+finished contribution, but evaluation showed it cannot fire on the sub-threshold
+class against a near-binary injection scanner paired with a redacting sanitizer
+(see `RESULTS_multivector_methodology (4).md` §4.4 for the closed argument and
+empirical confirmation). The graded-channel approach in §4 below was an attempted
+fix; it is retained as design history only.
 
 ---
 

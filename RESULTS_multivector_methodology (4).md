@@ -265,6 +265,28 @@ measured, unsolved gap for this pipeline.
 | Semantic-class detection | existing signal flags it | faithfulness/disagreement AUC ≤ 0.62 usable; 0.86 has negative gap | **does not hold** |
 | Semantic-class tested defense (`knowledge_conflict`) | flag poison via parametric conflict | AUC 0.54, gap −0.4, benign median 1.0 (matched baseline) | **does not hold (judge over-fires)** |
 
+### 4.9 Pre-generation filtering stack (mitigation A/B on planted attacks)
+
+Separate from the 220-row conjunctive slice (§4.4), a **planted multi-vector
+attack** harness measures whether turning on pre-generation mitigations (sanitize +
+retrieval tightening + guarded prompts) reduces attack success *without* hard
+refuse-on-detection.
+
+**Matched n=200 (planted200, OFF ASR 31.0%).** Pre-gen stack without refuse
+(`norefuse`) cuts ASR by only **2.0 pts** (31.0% → 29.0%, McNemar p=0.64, ns)
+while benign false positives rise from **0% → 43%** (p<0.001;
+`benign_cost_norefuse.json`). Full stack including refuse (`full`) cuts ASR by
+**12.0 pts** (31.0% → 19.0%, p=0.002), driven mainly by `refuse_on_detection`
+(24 of 39 fixed). Adjacent ablations on the same OFF arm: `groundonly` −0.5 pts;
+`groundplus` (grounding + refuse, no pre-gen filters) −12.5 pts — refuse
+dominates, not sanitization/tightening/prompts.
+
+The n=30 pilot (`planted30v2/report_norefuse.json`, 0.0-point drop) is superseded;
+do not mix n=200 benign cost with n=30 ASR.
+
+**Do not claim** a working conjunctive detector from this harness; the detector
+is held fixed as an existing component and the contribution is mitigation layers.
+
 ## 5. The defenses that hold
 
 **Spotlighting (Step 8).** Retrieved context is wrapped in unforgeable

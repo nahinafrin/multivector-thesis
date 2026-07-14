@@ -131,9 +131,17 @@ def main():
                   f"({bo[0]}% -> {bn[0]}%).")
             ratio = round(asr_drop / fp_added, 1) if fp_added > 0 else float("inf")
             print(f"  security gain per unit benign cost: {ratio}x")
-            report["tradeoff"] = {"asr_drop_pts": asr_drop,
-                                  "benign_fp_added_pts": fp_added,
-                                  "gain_per_cost": ratio}
+            report["tradeoff"] = {
+                "asr_drop_pts": asr_drop,
+                "benign_fp_added_pts": fp_added,
+                "gain_per_cost": ratio,
+                "asr_n": asr.get("n"),
+                "benign_n": n,
+                "asr_report": str(args.asr_report),
+            }
+            if asr.get("n") and asr["n"] != n:
+                print(f"  *** WARNING: ASR report n={asr['n']} != benign n={n} "
+                      f"— do not cite this trade-off as final (see MITIGATION.md).")
         except Exception as e:
             print(f"  [could not read ASR report: {e}]")
 
