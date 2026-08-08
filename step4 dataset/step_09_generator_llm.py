@@ -82,7 +82,7 @@ def _build_runnable_parallel(models: dict[str, str], base_url: str):
     from langchain_core.runnables import RunnableParallel, RunnableLambda
     branches = {}
     for model_name in models:
-        llm = ChatOllama(model=model_name, base_url=base_url, temperature=0.2)
+        llm = ChatOllama(model=model_name, base_url=base_url, temperature=0.2, seed=42)
         branches[model_name] = llm | RunnableLambda(lambda m: m.content)
     return RunnableParallel(branches)
 
@@ -160,7 +160,7 @@ def select_fusion(candidates: dict[str, str],
         "Do not invent facts.\n\n"
         f"{joined}\n\nFused answer:"
     )
-    llm = ChatOllama(model=fuser_model, base_url=base_url, temperature=0.0)
+    llm = ChatOllama(model=fuser_model, base_url=base_url, temperature=0.0, seed=42)
     return llm.invoke(fuse_prompt).content
 
 

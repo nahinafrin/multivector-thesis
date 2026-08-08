@@ -96,6 +96,7 @@ def process_adaptive(question: str, *, mode: str = "adaptive",
     # optional poisoned-context injection (harness hook, same as _segment) ---
     if poison_chunk:
         st.context = list(st.context) + [poison_chunk]
+        st.meta["poison_injected"] = poison_chunk
 
     # --- sanitization (adaptive strictness) -------------------------------- #
     # Step 6 reads input_risk(); we additionally pin the tier's strictness so the
@@ -230,11 +231,13 @@ def main() -> None:
     ap.add_argument("--mode", choices=["adaptive", "static", "none"],
                     default="adaptive")
     ap.add_argument("--base-url", default="http://localhost:11434")
+    ap.add_argument("--index", default="./kb_wiki")
     ap.add_argument("--disable-semantic-gate", action="store_true",
                     help="Skip step_03d (miscalibrated -- see gate_diagnosis.txt)")
     args = ap.parse_args()
 
     from pipeline_common import read_jsonl
+    ensure_index(args.index)
     import traceback
 
     n_ok, n_err = 0, 0

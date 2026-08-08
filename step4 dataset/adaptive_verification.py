@@ -113,7 +113,7 @@ def _policy_check(state, *, base_url: str) -> None:
         )
         r = requests.post(f"{base_url}/api/generate",
                           json={"model": "llama3.2:3b", "prompt": prompt,
-                                "stream": False, "options": {"temperature": 0.0}},
+                                "stream": False, "options": {"temperature": 0.0, "seed": 42}},
                           timeout=60)
         verdict = (r.json().get("response", "") or "").strip().upper()
         failed = verdict.startswith("FAIL")
