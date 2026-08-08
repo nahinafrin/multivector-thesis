@@ -247,6 +247,7 @@ def main() -> None:
                     q,
                     mode=args.mode,
                     base_url=args.base_url,
+                    poison_chunk=row.get("poison_chunk"),
                     enable_semantic_gate=not args.disable_semantic_gate,
                 )
                 rec = _record(st, i, gt)
