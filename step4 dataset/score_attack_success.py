@@ -116,6 +116,8 @@ def score_file(path: str) -> dict:
     rows = [json.loads(l) for l in open(path, encoding="utf-8") if l.strip()]
     by_kind: dict[str, list[dict]] = defaultdict(list)
     for r in rows:
+        if "error" in r:
+            continue
         if r.get("kind") in ATTACK_KINDS:
             by_kind[r["kind"]].append(_row_verdict(r))
 

@@ -12,6 +12,16 @@ The function signature mirrors process() so the rest of the harness is unaffecte
 """
 from __future__ import annotations
 
+import argparse
+import json
+import sys
+from pathlib import Path
+
+_HERE = Path(__file__).resolve().parent
+_DATASET_DIR = (_HERE.parent / "dataset").resolve()
+if str(_DATASET_DIR) not in sys.path:
+    sys.path.insert(1, str(_DATASET_DIR))
+
 import step_01_user_input as s1
 import step_02_normalization as s2
 import step_03c_fusion_gate as s3c
@@ -39,7 +49,9 @@ except Exception:                      # pragma: no cover
 def process_adaptive(question: str, *, mode: str = "adaptive",
                      poison_chunk: str | None = None,
                      query_suffix: str | None = None,
-                     base_url: str = "http://localhost:11434") -> PipelineState:
+                     base_url: str = "http://localhost:11434",
+                     enable_semantic_gate: bool = True,
+                     semantic_gate_backend: str = "nli") -> PipelineState:
     """Run one query through the adaptive pipeline in the given security `mode`.
 
     mode: "adaptive" | "static" | "none"  (see AdaptivePolicy).
@@ -57,9 +69,18 @@ def process_adaptive(question: str, *, mode: str = "adaptive",
     st = s3c.run(st)
     if st.blocked:
         return s13.run(st)
-    st = s3d.run(st, backend="nli")
-    if st.blocked:
-        return s13.run(st)
+    if enable_semantic_gate:
+        st = s3d.run(st, backend=semantic_gate_backend)
+        if st.blocked:
+            return s13.run(st)
+    else:
+        st.meta["semantic_intent_decision"] = "SKIPPED"
+        st.meta["semantic_intent_reason"] = (
+            "step_03d disabled for this run: demo self-test showed 2/4 "
+            "misclassified (FP 0.947 on a plain factual question, FN 0.166 "
+            "on a reframed attack -- see gate_diagnosis.txt). Excluded from "
+            "gating until recalibrated."
+        )
 
     # --- first risk assessment from input-side signals --------------------- #
     cfg = policy.assess(st)            # selects tier from cumulative (input) risk
@@ -138,3 +159,119 @@ def _apply_similarity_threshold(st, threshold: float) -> None:
         st.meta["retrieval_scores"] = kept_scores
     else:
         st.meta["retrieval_starved"] = True
+
+
+def _record(st: PipelineState, index: int, ground_truth: str | None) -> dict:
+    """Flatten the state into one auditable JSONL row exposing every stage."""
+    g = st.meta.get("grounding", {})
+    return {
+        "index": index,
+        "question": st.raw_prompt,
+        "ground_truth": ground_truth,
+        "gate": {
+            "decision": st.meta.get("fusion_decision"),
+            "fusion_risk": st.scores.get("fusion_risk", 0.0),
+            "injection_score": st.scores.get("injection_detection", 0.0),
+            "category": st.meta.get("llamaguard_category"),
+            "would_have_blocked": bool(st.meta.get("gate_would_have_blocked", False)),
+            "block_reason": st.meta.get("gate_block_reason"),
+        },
+        "retrieval": {
+            "raw_chunks": st.meta.get("raw_chunks", []),
+            "sanitized_chunks": st.meta.get("sanitized_chunks", []),
+            "sanitization_strictness": st.meta.get("sanitization_strictness"),
+            "sanitization_dropped": st.meta.get("sanitization_dropped", 0),
+            "poison_injected": st.meta.get("poison_injected"),
+            "poison_redacted": (
+                st.meta.get("poison_injected") is not None
+                and st.meta.get("poison_injected") not in st.ranked_context
+            ),
+            "ranked_chunks": st.ranked_context,
+            "rerank_scores": st.meta.get("rerank_scores", []),
+            "rerank_min_score": st.meta.get("rerank_min_score"),
+            "canary": st.meta.get("canary"),
+        },
+        "generation": {
+            "answer": st.meta.get("answer", ""),
+            "disagreement": st.scores.get("disagreement", 0.0),
+            "isolate_aggregate": st.meta.get("isolate_aggregate"),
+            "knowledge_conflict": st.scores.get("knowledge_conflict"),
+            "parametric_answer": st.meta.get("parametric_answer"),
+            "knowledge_conflict_reason": st.meta.get("knowledge_conflict_reason"),
+        },
+        "grounding": g,
+        "multivector": st.meta.get("multivector", {}),
+        "meta": {
+            "semantic_intent_decision": st.meta.get("semantic_intent_decision"),
+            "semantic_intent_reason": st.meta.get("semantic_intent_reason"),
+            "semantic_intent": st.scores.get("semantic_intent"),
+            "semantic_intent_error": st.meta.get("semantic_intent_error"),
+            "context_scale": st.meta.get("context_scale"),
+        },
+        "controller": st.meta.get("controller", {}),
+        "output_sanitization": st.meta.get("output_sanitization", {}),
+        "dlp": st.meta.get("dlp", {}),
+        "final_response": st.meta.get("final_response", ""),
+        "blocked": st.blocked,
+        "block_stage": st.block_stage or None,
+        "block_reason": st.block_reason or None,
+        "abstained": st.abstained,
+        "abstain_stage": st.abstain_stage or None,
+        "abstain_reason": st.abstain_reason or None,
+    }
+
+
+def main() -> None:
+    ap = argparse.ArgumentParser(description="Adaptive pipeline runner")
+    ap.add_argument("--in", dest="in_file", required=True,
+                    help="Input JSONL with question rows")
+    ap.add_argument("--out", dest="out_file", required=True,
+                    help="Output JSONL path")
+    ap.add_argument("--mode", choices=["adaptive", "static", "none"],
+                    default="adaptive")
+    ap.add_argument("--base-url", default="http://localhost:11434")
+    ap.add_argument("--disable-semantic-gate", action="store_true",
+                    help="Skip step_03d (miscalibrated -- see gate_diagnosis.txt)")
+    args = ap.parse_args()
+
+    from pipeline_common import read_jsonl
+    import traceback
+
+    n_ok, n_err = 0, 0
+    with open(args.out_file, "w", encoding="utf-8") as fout:
+        for i, row in enumerate(read_jsonl(args.in_file), start=1):
+            q = row.get("question") or row.get("prompt") or ""
+            gt = row.get("ground_truth") or row.get("answer")
+            try:
+                st = process_adaptive(
+                    q,
+                    mode=args.mode,
+                    base_url=args.base_url,
+                    enable_semantic_gate=not args.disable_semantic_gate,
+                )
+                rec = _record(st, i, gt)
+                n_ok += 1
+            except Exception as e:
+                print(f"[ERROR] row {i} source={row.get('source')!r} id={row.get('id')!r}: {e!r}")
+                traceback.print_exc()
+                rec = {"index": i, "question": q, "error": repr(e), "error_type": type(e).__name__}
+                n_err += 1
+            rec["kind"] = row.get("kind")
+            rec["expectation"] = row.get("expectation")
+            rec["success_marker"] = row.get("success_marker")
+            rec["true_answer"] = row.get("true_answer")
+            rec["source"] = row.get("source")
+            rec["external"] = row.get("external")
+            rec["source_id"] = row.get("source_id")
+            rec["attack_type"] = row.get("attack_type")
+            rec["poison_chunk"] = row.get("poison_chunk")
+            rec["id"] = row.get("id", i)
+            fout.write(json.dumps(rec, ensure_ascii=False) + "\n")
+            fout.flush()
+            if i % 5 == 0:
+                print(f"  ...{i} processed ({n_ok} ok, {n_err} errors)")
+    print(f"[done] wrote {args.out_file}  ({n_ok} ok, {n_err} errors)")
+
+
+if __name__ == "__main__":
+    main()
