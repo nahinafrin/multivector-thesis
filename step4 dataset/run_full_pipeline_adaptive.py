@@ -15,6 +15,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+import time
 from pathlib import Path
 
 _HERE = Path(__file__).resolve().parent
@@ -232,6 +233,8 @@ def main() -> None:
                     default="adaptive")
     ap.add_argument("--base-url", default="http://localhost:11434")
     ap.add_argument("--index", default="./kb_wiki")
+    ap.add_argument("--resume", action="store_true",
+                    help="Skip rows whose id is already in --out and append the rest")
     ap.add_argument("--disable-semantic-gate", action="store_true",
                     help="Skip step_03d (miscalibrated -- see gate_diagnosis.txt)")
     args = ap.parse_args()
@@ -240,9 +243,32 @@ def main() -> None:
     ensure_index(args.index)
     import traceback
 
+    rows = list(read_jsonl(args.in_file))
+    total = len(rows)
+    results_path = str(Path(args.out_file).resolve())
+
+    done_ids: set[int | str] = set()
+    if args.resume and Path(results_path).exists():
+        with open(results_path, "r", encoding="utf-8") as fin:
+            for line in fin:
+                try:
+                    rec = json.loads(line)
+                    if "id" in rec:
+                        done_ids.add(rec["id"])
+                except (json.JSONDecodeError, TypeError):
+                    continue
+        print(f"[resume] {len(done_ids)} rows already in {results_path}")
+
     n_ok, n_err = 0, 0
-    with open(args.out_file, "w", encoding="utf-8") as fout:
-        for i, row in enumerate(read_jsonl(args.in_file), start=1):
+    completed_now = 0
+    open_mode = "a" if args.resume else "w"
+    t0 = time.time()
+    with open(args.out_file, open_mode, encoding="utf-8") as fout:
+        for i, row in enumerate(rows, start=1):
+            row_id = row.get("id", i)
+            if row_id in done_ids:
+                continue
+            completed_now += 1
             q = row.get("question") or row.get("prompt") or ""
             gt = row.get("ground_truth") or row.get("answer")
             try:
@@ -269,10 +295,16 @@ def main() -> None:
             rec["source_id"] = row.get("source_id")
             rec["attack_type"] = row.get("attack_type")
             rec["poison_chunk"] = row.get("poison_chunk")
-            rec["id"] = row.get("id", i)
+            rec["id"] = row_id
             fout.write(json.dumps(rec, ensure_ascii=False) + "\n")
             fout.flush()
             if i % 5 == 0:
+                elapsed = time.time() - t0
+                rate = completed_now / elapsed if elapsed > 0 else 0.0
+                remaining = total - i
+                eta = remaining / rate if rate > 0 else 0.0
+                print(f"\n[{i}/{total}] new={completed_now} elapsed={elapsed:.1f}s "
+                      f"rate={rate:.2f} q/s eta={eta:.0f}s")
                 print(f"  ...{i} processed ({n_ok} ok, {n_err} errors)")
     print(f"[done] wrote {args.out_file}  ({n_ok} ok, {n_err} errors)")
 
