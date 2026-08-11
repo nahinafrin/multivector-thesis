@@ -1,0 +1,18 @@
+﻿Python: Python 3.11.9
+Ollama CLI: ollama version is 0.32.7
+
+--- ollama list (model digests) ---
+NAME               ID              SIZE      MODIFIED   
+qwen2.5:3b         357c53fb659c    1.9 GB    5 days ago    
+mistral:7b         6577803aa9a0    4.4 GB    5 days ago    
+llama-guard3:1b    494147e06bf9    1.6 GB    5 days ago    
+llama3.2:3b        a80c4f17acd5    2.0 GB    5 days ago    
+
+--- OS ---
+
+Caption                   Version    OSArchitecture
+-------                   -------    --------------
+Microsoft Windows 11 Home 10.0.26200 64-bit        
+
+
+
