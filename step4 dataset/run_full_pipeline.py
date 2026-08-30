@@ -256,6 +256,7 @@ def _record(st: PipelineState, index: int, ground_truth: str | None) -> dict:
             "decision": st.meta.get("fusion_decision"),
             "fusion_risk": st.scores.get("fusion_risk", 0.0),
             "injection_score": st.scores.get("injection_detection", 0.0),
+            "injection_graded": st.scores.get("injection_graded"),
             "category": st.meta.get("llamaguard_category"),
             "would_have_blocked": bool(st.meta.get("gate_would_have_blocked", False)),
             "block_reason": st.meta.get("gate_block_reason"),
@@ -274,6 +275,8 @@ def _record(st: PipelineState, index: int, ground_truth: str | None) -> dict:
             "rerank_scores": st.meta.get("rerank_scores", []),
             "rerank_min_score": st.meta.get("rerank_min_score"),
             "canary": st.meta.get("canary"),
+            "context_injection": st.scores.get("context_injection", 0.0),
+            "context_graded": st.scores.get("context_graded"),
         },
         "generation": {
             "answer": st.meta.get("answer", ""),
