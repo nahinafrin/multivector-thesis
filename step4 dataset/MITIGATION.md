@@ -7,8 +7,28 @@ OFF vs ON** — plus benign cost and layer ablation.
 All commands run from `step4 dataset/`. **Results go in separate directories**
 (`--run-dir`) so runs never overwrite each other.
 
-> **PowerShell:** use **one command per line**. Do not use bash `\` line continuation.
-> Multi-line in PowerShell requires a trailing backtick `` ` `` — single-line is safer.
+> **Shell compatibility:** All commands below are plain Python and work verbatim on
+> Windows (PowerShell), macOS, and Linux. In PowerShell, single-line commands are
+> simpler (no line-continuation `\` needed). When running multi-line commands in
+> bash/zsh, use `\` for continuation or wrap in a shell script.
+
+---
+
+## Environment verification
+
+Before running any A/B test, verify that all critical components are properly
+configured and loaded:
+
+```python
+python preflight_env_check.py
+# exits 0 on success, writes environment_manifest.json
+# exits 1 if bge_m3, reranker, injection_detector, or ollama models fail
+```
+
+**Important:** Commit or attach the generated `environment_manifest.json` 
+alongside every result file (`report_*.json`, `*_cost_report.json`). This 
+documents which environment produced which numbers and makes results fully 
+reproducible. See the preflight script's docstring for troubleshooting.
 
 ---
 
@@ -19,7 +39,7 @@ detector_interface.py       mitigation_pipeline.py
 run_mitigation_ab.py        score_mitigation_ab.py
 check_off_asr.py            inspect_mitigation_run.py
 run_benign_cost.py          score_benign_cost.py
-preflight_check.py
+preflight_check.py          preflight_env_check.py
 ```
 
 ---
