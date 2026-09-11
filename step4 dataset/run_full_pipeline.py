@@ -107,7 +107,8 @@ def process(question: str, *, k: int = 5, top_n: int = 3,
             ia_scorer: "s9a.IsolateAggregator | None" = None,
             ia_min_agreement: int = 2,
             use_semantic_intent: bool = True,
-            semantic_intent_backend: str = "nli") -> PipelineState:
+            semantic_intent_backend: str = "nli",
+            defense_profile: str = "full") -> PipelineState:
     """Run one question through the whole pipeline on a single state.
 
     If `poison_chunk` is given, it is spliced into the retrieved context after
@@ -177,18 +178,26 @@ def process(question: str, *, k: int = 5, top_n: int = 3,
         # tighten on this segment WITHOUT us having to duplicate their adaptive
         # logic. Detection (controller escalation / hard refuse) is wired
         # separately in risk_feedback_controller.
-        raw_channels = input_channels(state)
-        channels = _CALIBRATION.apply_channels(raw_channels)
-        mv = multivector_risk(channels)
-        if not _CALIBRATION.is_identity():
-            mv["raw_channels"] = {c: round(v, 4) for c, v in raw_channels.items()}
-            mv["calibrated"] = True
-        state.meta["multivector"] = mv
-        if mv["is_multivector"]:
-            state.scores["effective_risk"] = max(state.input_risk(),
-                                                 float(mv["joint_risk"]))
+        if defense_profile == "full":
+            raw_channels = input_channels(state)
+            channels = _CALIBRATION.apply_channels(raw_channels)
+            mv = multivector_risk(channels)
+            if not _CALIBRATION.is_identity():
+                mv["raw_channels"] = {c: round(v, 4) for c, v in raw_channels.items()}
+                mv["calibrated"] = True
+            state.meta["multivector"] = mv
+            if mv["is_multivector"]:
+                state.scores["effective_risk"] = max(state.input_risk(),
+                                                     float(mv["joint_risk"]))
+        else:
+            state.meta["multivector"] = {
+                "is_multivector": False,
+                "defense_profile": defense_profile,
+                "note": "multivector detector disabled for this external-baseline profile",
+            }
         state = s7.run(state, top_n=top_n)  # reads input_risk() -> adaptive rerank
-        state = s8.run(state)
+        if defense_profile != "llmguard_only":
+            state = s8.run(state)
         if generator == "isolate":
             state = s9a.run(state, ia_scorer, min_agreement=ia_min_agreement)
         else:
@@ -362,9 +371,16 @@ def main() -> None:
     ap.add_argument("--semantic-intent-backend", choices=["nli", "llm"], default="nli",
                     help="Step 3d backend: 'nli' (local zero-shot, no Ollama) or "
                          "'llm' (single yes/no judge via Ollama).")
+    ap.add_argument("--defense-profile",
+                    choices=["full", "llmguard_only", "spotlight_only"],
+                    default="full",
+                    help="External-baseline profile for run_baseline_comparison.py. "
+                         "'full' is byte-identical to today's default pipeline.")
     args = ap.parse_args()
 
     use_controller = not args.no_controller
+    if args.defense_profile != "full":
+        use_controller = False  # baseline profiles never use the closed-loop controller
     controller_cfg = None
     if use_controller and (args.max_attempts is not None or args.no_multivector_signal):
         cfg_kwargs: dict[str, object] = {}
@@ -393,7 +409,8 @@ def main() -> None:
                        ia_scorer=ia_scorer,
                        ia_min_agreement=args.ia_min_agreement,
                        use_semantic_intent=args.use_semantic_intent,
-                       semantic_intent_backend=args.semantic_intent_backend)
+                       semantic_intent_backend=args.semantic_intent_backend,
+                       defense_profile=args.defense_profile)
 
     if args.question:
         st = _run(args.question)
