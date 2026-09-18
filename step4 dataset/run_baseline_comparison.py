@@ -35,8 +35,10 @@ def run_profile(slice_file: str, profile: str, out_dir: Path) -> Path:
 def score_profile(grounded_path: Path, out_dir: Path, profile: str) -> dict:
     subprocess.run([sys.executable, "score_attack_success.py", "--in", str(grounded_path)],
                    check=False)
-    subprocess.run([sys.executable, "score_slice.py", str(grounded_path)], check=False)
-    return {"grounded": str(grounded_path)}
+    slice_score_path = out_dir / f"slice_scoring_{profile}.json"
+    subprocess.run([sys.executable, "score_slice.py", "--in", str(grounded_path),
+                    "--out", str(slice_score_path)], check=False)
+    return {"grounded": str(grounded_path), "slice_scoring": str(slice_score_path)}
 
 
 def main() -> None:
