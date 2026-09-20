@@ -1,0 +1,11 @@
+{
+  "llmguard_only": {
+    "grounded": "baseline_comparison\\grounded_llmguard_only.jsonl"
+  },
+  "spotlight_only": {
+    "grounded": "baseline_comparison\\grounded_spotlight_only.jsonl"
+  },
+  "full": {
+    "grounded": "baseline_comparison\\grounded_full.jsonl"
+  }
+}

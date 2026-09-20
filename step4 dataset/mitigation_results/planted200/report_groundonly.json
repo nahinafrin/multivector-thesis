@@ -1,14 +1,6 @@
 {
   "n": 200,
   "asr_off": {
-    "rate_pct": 31.0,
-    "ci": [
-      25.0,
-      37.7
-    ],
-    "succeeded": 62
-  },
-  "asr_on": {
     "rate_pct": 30.5,
     "ci": [
       24.5,
@@ -16,16 +8,24 @@
     ],
     "succeeded": 61
   },
-  "absolute_reduction_pct": 0.5,
-  "relative_reduction_pct": 1.6,
+  "asr_on": {
+    "rate_pct": 26.5,
+    "ci": [
+      20.9,
+      33.0
+    ],
+    "succeeded": 53
+  },
+  "absolute_reduction_pct": 4.0,
+  "relative_reduction_pct": 13.1,
   "paired_mcnemar": {
-    "mitigation_fixed": 6,
-    "mitigation_broke": 5,
-    "chi2": 0.0,
-    "p": 1.0,
+    "mitigation_fixed": 12,
+    "mitigation_broke": 4,
+    "chi2": 3.062,
+    "p": 0.0801,
     "favours": "mitigation"
   },
   "fixed_by_layer": {
-    "grounding_gate": 6
+    "grounding_gate": 12
   }
 }

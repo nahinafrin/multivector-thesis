@@ -180,7 +180,9 @@ python score_mitigation_ab.py --off mitigation_results/planted200/off.jsonl --on
 python score_mitigation_ab.py --off mitigation_results/planted200/off.jsonl --on mitigation_results/planted200/on_norefuse.jsonl --out mitigation_results/planted200/report_norefuse.json
 ```
 
-**n=200 ASR (planted200, OFF 31.0%):** full −12.0 pts (p=0.002); norefuse −2.0 pts (p=0.64, ns).
+**n=200 ASR headline (planted200, fixed neutralization scorer, ground-plus):** mitigation OFF 30.5% -> ON 16.5%, a 14.0-point reduction (45.9% relative; paired McNemar p=2.46e-7). Its freshly verified n=200 benign cost is 9.0 points (0.0% -> 9.0% block rate), for a 1.6x ASR-gain-per-benign-cost ratio.
+
+The full profile measured a stronger apparent ASR reduction (30.5% -> 13.5%), but also a 45.0-point benign block cost. Further investigation identified a likely grounding-judge blind spot for terse polar (yes/no) answers systematically induced by full's guarded-prompt path; the full-arm benign-cost figure is therefore provisional and is not used as the headline result.
 Pre-gen stack without refuse: benign block 43.0% at n=200 (`benign_cost_norefuse.json`). Do not mix with n=30 ASR.
 
 Resolve **bge-m3** / SSL before treating numbers as final (not TF-IDF fallback).

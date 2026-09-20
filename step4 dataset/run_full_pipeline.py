@@ -190,11 +190,13 @@ def process(question: str, *, k: int = 5, top_n: int = 3,
                 state.scores["effective_risk"] = max(state.input_risk(),
                                                      float(mv["joint_risk"]))
         else:
-            state.meta["multivector"] = {
-                "is_multivector": False,
-                "defense_profile": defense_profile,
-                "note": "multivector detector disabled for this external-baseline profile",
-            }
+            state.meta["defense_profile"] = defense_profile
+            # Deliberately leave state.meta["multivector"] unset: the detector
+            # genuinely did not run under this profile, and score_slice.py's
+            # mv_present = bool(mv) check already treats an absent/falsy
+            # multivector field as "not evaluated" - matching how it already
+            # handles rows where the field is legitimately missing, rather
+            # than fabricating a fake non-fire result.
         state = s7.run(state, top_n=top_n)  # reads input_risk() -> adaptive rerank
         if defense_profile != "llmguard_only":
             state = s8.run(state)

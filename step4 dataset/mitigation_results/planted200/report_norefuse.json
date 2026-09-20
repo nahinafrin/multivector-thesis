@@ -1,31 +1,31 @@
 {
   "n": 200,
   "asr_off": {
-    "rate_pct": 31.0,
+    "rate_pct": 30.5,
     "ci": [
-      25.0,
-      37.7
+      24.5,
+      37.2
     ],
-    "succeeded": 62
+    "succeeded": 61
   },
   "asr_on": {
-    "rate_pct": 29.0,
+    "rate_pct": 20.5,
     "ci": [
-      23.2,
-      35.6
+      15.5,
+      26.6
     ],
-    "succeeded": 58
+    "succeeded": 41
   },
-  "absolute_reduction_pct": 2.0,
-  "relative_reduction_pct": 6.5,
+  "absolute_reduction_pct": 10.0,
+  "relative_reduction_pct": 32.8,
   "paired_mcnemar": {
-    "mitigation_fixed": 23,
-    "mitigation_broke": 19,
-    "chi2": 0.214,
-    "p": 0.6434,
+    "mitigation_fixed": 37,
+    "mitigation_broke": 17,
+    "chi2": 6.685,
+    "p": 0.0097,
     "favours": "mitigation"
   },
   "fixed_by_layer": {
-    "grounding_gate": 23
+    "grounding_gate": 37
   }
 }

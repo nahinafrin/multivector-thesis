@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="650" viewBox="0 0 1100 650">
+<rect width="100%" height="100%" fill="#f8fafc"/>
+<text x="550.0" y="42.0" font-family="Arial, sans-serif" font-size="24" text-anchor="middle" font-weight="700" fill="#203040">Five-arm n=200 attack success comparison</text>
+<line x1="100" y1="545.0" x2="1060" y2="545.0" stroke="#dbe4ec"/>
+<text x="88.0" y="550.0" font-family="Arial, sans-serif" font-size="12" text-anchor="end" font-weight="400" fill="#203040">0%</text>
+<line x1="100" y1="415.0" x2="1060" y2="415.0" stroke="#dbe4ec"/>
+<text x="88.0" y="420.0" font-family="Arial, sans-serif" font-size="12" text-anchor="end" font-weight="400" fill="#203040">10%</text>
+<line x1="100" y1="285.0" x2="1060" y2="285.0" stroke="#dbe4ec"/>
+<text x="88.0" y="290.0" font-family="Arial, sans-serif" font-size="12" text-anchor="end" font-weight="400" fill="#203040">20%</text>
+<line x1="100" y1="155.0" x2="1060" y2="155.0" stroke="#dbe4ec"/>
+<text x="88.0" y="160.0" font-family="Arial, sans-serif" font-size="12" text-anchor="end" font-weight="400" fill="#203040">30%</text>
+<text x="196.0" y="595.0" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="400" fill="#203040">Ground-plus</text>
+<rect x="151.5" y="148.5" width="42.0" height="396.5" rx="3" fill="#94a3b8"/>
+<text x="172.5" y="141.5" font-family="Arial, sans-serif" font-size="11" text-anchor="middle" font-weight="700" fill="#203040">30.5</text>
+<rect x="198.5" y="330.5" width="42.0" height="214.5" rx="3" fill="#0f766e"/>
+<text x="219.5" y="323.5" font-family="Arial, sans-serif" font-size="11" text-anchor="middle" font-weight="700" fill="#203040">16.5</text>
+<text x="388.0" y="595.0" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="400" fill="#203040">Full</text>
+<rect x="343.5" y="148.5" width="42.0" height="396.5" rx="3" fill="#94a3b8"/>
+<text x="364.5" y="141.5" font-family="Arial, sans-serif" font-size="11" text-anchor="middle" font-weight="700" fill="#203040">30.5</text>
+<rect x="390.5" y="369.5" width="42.0" height="175.5" rx="3" fill="#0f766e"/>
+<text x="411.5" y="362.5" font-family="Arial, sans-serif" font-size="11" text-anchor="middle" font-weight="700" fill="#203040">13.5</text>
+<text x="580.0" y="595.0" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="400" fill="#203040">Ground-only</text>
+<rect x="535.5" y="148.5" width="42.0" height="396.5" rx="3" fill="#94a3b8"/>
+<text x="556.5" y="141.5" font-family="Arial, sans-serif" font-size="11" text-anchor="middle" font-weight="700" fill="#203040">30.5</text>
+<rect x="582.5" y="200.5" width="42.0" height="344.5" rx="3" fill="#0f766e"/>
+<text x="603.5" y="193.5" font-family="Arial, sans-serif" font-size="11" text-anchor="middle" font-weight="700" fill="#203040">26.5</text>
+<text x="772.0" y="595.0" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="400" fill="#203040">No-refuse</text>
+<rect x="727.5" y="148.5" width="42.0" height="396.5" rx="3" fill="#94a3b8"/>
+<text x="748.5" y="141.5" font-family="Arial, sans-serif" font-size="11" text-anchor="middle" font-weight="700" fill="#203040">30.5</text>
+<rect x="774.5" y="278.5" width="42.0" height="266.5" rx="3" fill="#0f766e"/>
+<text x="795.5" y="271.5" font-family="Arial, sans-serif" font-size="11" text-anchor="middle" font-weight="700" fill="#203040">20.5</text>
+<text x="964.0" y="595.0" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="400" fill="#203040">Refuse-only</text>
+<rect x="919.5" y="148.5" width="42.0" height="396.5" rx="3" fill="#94a3b8"/>
+<text x="940.5" y="141.5" font-family="Arial, sans-serif" font-size="11" text-anchor="middle" font-weight="700" fill="#203040">30.5</text>
+<rect x="966.5" y="298.0" width="42.0" height="247.0" rx="3" fill="#0f766e"/>
+<text x="987.5" y="291.0" font-family="Arial, sans-serif" font-size="11" text-anchor="middle" font-weight="700" fill="#203040">19</text>
+<rect x="120" y="622" width="14" height="14" fill="#94a3b8"/>
+<text x="141.0" y="634.0" font-family="Arial, sans-serif" font-size="12" text-anchor="start" font-weight="400" fill="#203040">OFF</text>
+<rect x="310" y="622" width="14" height="14" fill="#0f766e"/>
+<text x="331.0" y="634.0" font-family="Arial, sans-serif" font-size="12" text-anchor="start" font-weight="400" fill="#203040">ON</text>
+</svg>

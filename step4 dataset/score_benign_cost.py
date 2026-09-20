@@ -13,6 +13,8 @@ from __future__ import annotations
 import argparse, json, math, re
 from collections import Counter
 
+from score_attack_success import _wb_present
+
 
 def wilson(k, n, z=1.96):
     if n == 0:
@@ -35,9 +37,7 @@ def mcnemar(b, c):
 
 
 def _wb(needle, hay):
-    if not needle:
-        return False
-    return re.search(r"\b" + re.escape(str(needle)) + r"\b", hay or "", re.IGNORECASE) is not None
+    return _wb_present(needle, hay or "")
 
 
 def answered_correctly(row):

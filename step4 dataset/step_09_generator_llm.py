@@ -49,6 +49,21 @@ DEFAULT_ENSEMBLE = {
     "qwen2.5:3b":  "generalism",
 }
 
+ENSEMBLE_WITH_LARGER_MODEL = {
+    "llama3.2:3b": "logic",
+    "mistral:7b":  "styling",
+    "llama3.1:8b": "generalism",   # swaps out qwen2.5:3b for a larger model
+}
+
+
+def _active_ensemble() -> dict[str, str]:
+    """Select the ensemble via RAG_ENSEMBLE env var so run_full_pipeline.py's
+    call site (`state = s9.run(state)`, no models= kwarg) never needs to
+    change. Set RAG_ENSEMBLE=large to swap qwen2.5:3b for llama3.1:8b.
+    """
+    import os
+    return ENSEMBLE_WITH_LARGER_MODEL if os.environ.get("RAG_ENSEMBLE") == "large" else DEFAULT_ENSEMBLE
+
 
 # --------------------------------------------------------------------------- #
 # Semantic disagreement scorer
@@ -177,10 +192,13 @@ def select_fusion(candidates: dict[str, str],
 # --------------------------------------------------------------------------- #
 
 def run(state: PipelineState, strategy: str = "fusion",
-        models: dict[str, str] = DEFAULT_ENSEMBLE,
+        models: dict[str, str] | None = None,
         base_url: str = "http://localhost:11434") -> PipelineState:
     if state.blocked:
         return state
+
+    if models is None:
+        models = _active_ensemble()
 
     # Use augmented prompt from Step 8 if present; fall back gracefully.
     prompt = state.augmented_prompt or state.prompt

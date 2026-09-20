@@ -1,58 +1,58 @@
 {
   "status": "FAIL",
-  "total_rows": 7963,
+  "total_rows": 7938,
   "tolerance": 0.02,
   "tier_check": {
     "tier1_adversarial_core": {
       "status": "PASS",
-      "target_ratio": 0.32858392700912387,
-      "actual_ratio": 0.330026,
-      "delta": 0.001442,
+      "target_ratio": 0.251843519560055,
+      "actual_ratio": 0.253842,
+      "delta": 0.001999,
       "tolerance": 0.02,
-      "count": 2628
+      "count": 2015
     },
     "tier2_semantic_policy_pii": {
       "status": "PASS",
-      "target_ratio": 0.35495563054618173,
-      "actual_ratio": 0.352756,
-      "delta": 0.002199,
+      "target_ratio": 0.5000624921884764,
+      "actual_ratio": 0.496851,
+      "delta": 0.003212,
       "tolerance": 0.02,
-      "count": 2809
+      "count": 3944
     },
     "tier3_structured_high_risk": {
       "status": "PASS",
-      "target_ratio": 0.18985126859142606,
-      "actual_ratio": 0.190381,
-      "delta": 0.000529,
+      "target_ratio": 0.07736532933383328,
+      "actual_ratio": 0.077727,
+      "delta": 0.000362,
       "tolerance": 0.02,
-      "count": 1516
+      "count": 617
     },
     "tier4_benign_hard_negative": {
       "status": "PASS",
-      "target_ratio": 0.12660917385326834,
-      "actual_ratio": 0.126837,
-      "delta": 0.000227,
+      "target_ratio": 0.1707286589176353,
+      "actual_ratio": 0.17158,
+      "delta": 0.000851,
       "tolerance": 0.02,
-      "count": 1010
+      "count": 1362
     }
   },
   "attack_check": {
     "prompt_injection": {
       "status": "PASS",
       "present": true,
-      "count": 1976,
-      "target_ratio": 0.24696912885889263,
-      "actual_ratio": 0.248148,
-      "delta": 0.001179,
+      "count": 1960,
+      "target_ratio": 0.24496937882764655,
+      "actual_ratio": 0.246914,
+      "delta": 0.001944,
       "tolerance": 0.02
     },
     "jailbreak": {
       "status": "PASS",
       "present": true,
-      "count": 636,
-      "target_ratio": 0.07961504811898512,
-      "actual_ratio": 0.079869,
-      "delta": 0.000254,
+      "count": 39,
+      "target_ratio": 0.004874390701162355,
+      "actual_ratio": 0.004913,
+      "delta": 3.9e-05,
       "tolerance": 0.02
     },
     "obfuscation": {
@@ -60,8 +60,8 @@
       "present": true,
       "count": 8,
       "target_ratio": 0.000999875015623047,
-      "actual_ratio": 0.001005,
-      "delta": 5e-06,
+      "actual_ratio": 0.001008,
+      "delta": 8e-06,
       "tolerance": 0.02
     },
     "indirect_injection": {
@@ -69,212 +69,208 @@
       "present": true,
       "count": 8,
       "target_ratio": 0.000999875015623047,
-      "actual_ratio": 0.001005,
-      "delta": 5e-06,
+      "actual_ratio": 0.001008,
+      "delta": 8e-06,
       "tolerance": 0.02
     },
     "toxicity_abuse": {
       "status": "PASS",
       "present": true,
-      "count": 1388,
-      "target_ratio": 0.17347831521059867,
-      "actual_ratio": 0.174306,
-      "delta": 0.000828,
+      "count": 1995,
+      "target_ratio": 0.24934383202099739,
+      "actual_ratio": 0.251323,
+      "delta": 0.001979,
       "tolerance": 0.02
     },
     "self_harm_danger": {
       "status": "PASS",
       "present": true,
-      "count": 20,
-      "target_ratio": 0.002499687539057618,
-      "actual_ratio": 0.002512,
-      "delta": 1.2e-05,
+      "count": 5,
+      "target_ratio": 0.0006249218847644045,
+      "actual_ratio": 0.00063,
+      "delta": 5e-06,
       "tolerance": 0.02
     },
     "misinformation_manipulation": {
       "status": "PASS",
       "present": true,
-      "count": 44,
-      "target_ratio": 0.0054993125859267595,
-      "actual_ratio": 0.005526,
-      "delta": 2.6e-05,
+      "count": 5,
+      "target_ratio": 0.0006249218847644045,
+      "actual_ratio": 0.00063,
+      "delta": 5e-06,
       "tolerance": 0.02
     },
     "financial_cyber_risk": {
       "status": "PASS",
       "present": true,
-      "count": 663,
-      "target_ratio": 0.08673915760529934,
-      "actual_ratio": 0.08326,
-      "delta": 0.003479,
+      "count": 941,
+      "target_ratio": 0.12473440819897513,
+      "actual_ratio": 0.118544,
+      "delta": 0.006191,
       "tolerance": 0.02
     },
     "pii_leakage": {
       "status": "PASS",
       "present": true,
-      "count": 694,
-      "target_ratio": 0.08673915760529934,
-      "actual_ratio": 0.087153,
-      "delta": 0.000414,
+      "count": 998,
+      "target_ratio": 0.12473440819897513,
+      "actual_ratio": 0.125724,
+      "delta": 0.00099,
       "tolerance": 0.02
     },
     "direct_harm_instruction": {
       "status": "PASS",
       "present": true,
-      "count": 1385,
-      "target_ratio": 0.17347831521059867,
-      "actual_ratio": 0.173929,
-      "delta": 0.000451,
+      "count": 595,
+      "target_ratio": 0.0746156730408699,
+      "actual_ratio": 0.074956,
+      "delta": 0.00034,
       "tolerance": 0.02
     },
     "cyberattack_exploitation": {
       "status": "PASS",
       "present": true,
-      "count": 106,
-      "target_ratio": 0.013248343957005373,
-      "actual_ratio": 0.013312,
-      "delta": 6.3e-05,
+      "count": 15,
+      "target_ratio": 0.0018747656542932134,
+      "actual_ratio": 0.00189,
+      "delta": 1.5e-05,
       "tolerance": 0.02
     },
     "cbrn": {
       "status": "PASS",
       "present": true,
-      "count": 12,
-      "target_ratio": 0.0014998125234345708,
-      "actual_ratio": 0.001507,
+      "count": 7,
+      "target_ratio": 0.0008748906386701663,
+      "actual_ratio": 0.000882,
       "delta": 7e-06,
       "tolerance": 0.02
     },
     "social_engineering": {
-      "status": "PASS",
-      "present": true,
-      "count": 13,
-      "target_ratio": 0.0016247969003874516,
-      "actual_ratio": 0.001633,
-      "delta": 8e-06,
+      "status": "FAIL",
+      "present": false,
+      "count": 0,
+      "target_ratio": 0.0,
+      "actual_ratio": 0.0,
+      "delta": 0.0,
       "tolerance": 0.02
     },
     "benign_clear": {
       "status": "PASS",
       "present": true,
-      "count": 691,
-      "target_ratio": 0.08673915760529934,
-      "actual_ratio": 0.086776,
-      "delta": 3.7e-05,
+      "count": 996,
+      "target_ratio": 0.12473440819897513,
+      "actual_ratio": 0.125472,
+      "delta": 0.000738,
       "tolerance": 0.02
     },
     "benign_hard_negative": {
       "status": "PASS",
       "present": true,
-      "count": 319,
-      "target_ratio": 0.039870016247969,
-      "actual_ratio": 0.04006,
-      "delta": 0.00019,
+      "count": 366,
+      "target_ratio": 0.045994250718660167,
+      "actual_ratio": 0.046107,
+      "delta": 0.000113,
       "tolerance": 0.02
     }
   },
   "dataset_caps": {
-    "synthetic_minimal_coverage": {
+    "harmbench": {
       "status": "PASS",
-      "count": 16,
-      "share": 0.002009,
-      "cap": 0.55,
-      "audit_epsilon": 0.006
-    },
-    "wildjailbreak": {
-      "status": "PASS",
-      "count": 1190,
-      "share": 0.149441,
-      "cap": 0.55,
-      "audit_epsilon": 0.006
-    },
-    "beavertails": {
-      "status": "PASS",
-      "count": 1739,
-      "share": 0.218385,
+      "count": 393,
+      "share": 0.049509,
       "cap": 0.55,
       "audit_epsilon": 0.006
     },
     "jbb_behaviors": {
       "status": "PASS",
       "count": 191,
-      "share": 0.023986,
+      "share": 0.024061,
       "cap": 0.55,
       "audit_epsilon": 0.006
     },
-    "advbench": {
+    "beavertails": {
       "status": "PASS",
-      "count": 475,
-      "share": 0.059651,
+      "count": 2315,
+      "share": 0.291635,
       "cap": 0.55,
       "audit_epsilon": 0.006
     },
-    "harmbench": {
+    "synthetic_minimal_coverage": {
       "status": "PASS",
-      "count": 393,
-      "share": 0.049353,
+      "count": 16,
+      "share": 0.002016,
+      "cap": 0.55,
+      "audit_epsilon": 0.006
+    },
+    "mine_hard_negatives:template": {
+      "status": "PASS",
+      "count": 80,
+      "share": 0.010078,
       "cap": 0.55,
       "audit_epsilon": 0.006
     },
     "safeguard_prompt_injection": {
       "status": "PASS",
       "count": 1960,
-      "share": 0.246138,
+      "share": 0.246914,
       "cap": 0.55,
       "audit_epsilon": 0.006
     },
     "jigsaw_toxicity": {
       "status": "PASS",
-      "count": 1352,
-      "share": 0.169785,
+      "count": 1992,
+      "share": 0.250945,
       "cap": 0.55,
       "audit_epsilon": 0.006
     },
     "ai4privacy_pii": {
       "status": "PASS",
-      "count": 647,
-      "share": 0.081251,
+      "count": 991,
+      "share": 0.124843,
       "cap": 0.55,
       "audit_epsilon": 0.006
     }
   },
   "hard_negative_check": {
     "status": "FAIL",
-    "count": 319,
-    "actual_ratio": 0.04006,
+    "count": 366,
+    "actual_ratio": 0.046107,
     "min_ratio": 0.05
   },
   "source_availability": {
-    "status": "PASS",
-    "unavailable_sources": {}
+    "status": "WARN",
+    "unavailable_sources": {
+      "wildjailbreak": "Dataset 'allenai/wildjailbreak' is a gated dataset on the Hub. You must be authenticated to access it.",
+      "advbench": "Dataset 'walledai/AdvBench' is a gated dataset on the Hub. You must be authenticated to access it."
+    }
   },
   "required_sources_check": {
     "status": "PASS",
     "required": [],
     "loaded": [
-      "advbench",
       "ai4privacy_pii",
       "beavertails",
       "harmbench",
       "jbb_behaviors",
       "jigsaw_toxicity",
-      "safeguard_prompt_injection",
-      "wildjailbreak"
+      "mine_hard_negatives_template",
+      "safeguard_prompt_injection"
     ],
     "missing": []
   },
   "failures": [
-    "Hard-negative ratio below minimum: actual=0.0401, required=0.0500"
+    "Missing attack type: social_engineering",
+    "Hard-negative ratio below minimum: actual=0.0461, required=0.0500"
   ],
   "ideal_vs_achievable": {
     "prompt_injection": {
       "ideal": 0.15,
-      "achievable": 0.247,
+      "achievable": 0.245,
       "data_limited": true
     },
     "jailbreak": {
       "ideal": 0.1,
-      "achievable": 0.079625,
+      "achievable": 0.004875,
       "data_limited": true
     },
     "obfuscation": {
@@ -289,57 +285,57 @@
     },
     "toxicity_abuse": {
       "ideal": 0.1,
-      "achievable": 0.1734642857142857,
+      "achievable": 0.24939999999999998,
       "data_limited": false
     },
     "self_harm_danger": {
       "ideal": 0.05,
-      "achievable": 0.0025,
+      "achievable": 0.000625,
       "data_limited": true
     },
     "misinformation_manipulation": {
       "ideal": 0.05,
-      "achievable": 0.0055,
+      "achievable": 0.000625,
       "data_limited": true
     },
     "financial_cyber_risk": {
       "ideal": 0.05,
-      "achievable": 0.08673214285714285,
+      "achievable": 0.12469999999999999,
       "data_limited": false
     },
     "pii_leakage": {
       "ideal": 0.05,
-      "achievable": 0.08673214285714285,
+      "achievable": 0.12469999999999999,
       "data_limited": false
     },
     "direct_harm_instruction": {
       "ideal": 0.1,
-      "achievable": 0.1734642857142857,
-      "data_limited": false
+      "achievable": 0.074625,
+      "data_limited": true
     },
     "cyberattack_exploitation": {
       "ideal": 0.05,
-      "achievable": 0.01325,
+      "achievable": 0.001875,
       "data_limited": true
     },
     "cbrn": {
       "ideal": 0.03,
-      "achievable": 0.0015,
+      "achievable": 0.000875,
       "data_limited": true
     },
     "social_engineering": {
       "ideal": 0.02,
-      "achievable": 0.001625,
+      "achievable": 0.0,
       "data_limited": true
     },
     "benign_clear": {
       "ideal": 0.05,
-      "achievable": 0.08673214285714285,
+      "achievable": 0.12469999999999999,
       "data_limited": false
     },
     "benign_hard_negative": {
       "ideal": 0.05,
-      "achievable": 0.039875,
+      "achievable": 0.046,
       "data_limited": true
     }
   }

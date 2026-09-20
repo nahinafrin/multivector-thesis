@@ -18,8 +18,8 @@ Two evaluation protocols currently coexist without being reconciled:
 
   Protocol B — "marker-based, mitigation ASR" (mitigation_run/, planted200/)
       arm_A/B/C_*.jsonl and report_*.json, smaller planted slices, success
-      measured by a success_marker string, headline numbers like ASR 31.0% ->
-      18.5% (40.3% relative reduction, p<0.001).
+    measured by a success_marker string, with the corrected headline numbers
+    ASR 30.5% -> 16.5% (45.9% relative reduction, p<0.001).
 
 Both are legitimate measurements, but they use different slices, different
 success definitions, and were produced at different points in the project's
@@ -65,6 +65,7 @@ def main() -> None:
         "frozen_state": read_json("frozen/thesis_results_locked.json"),
     }
     protocol_b = {
+        "planted200_full": read_json("mitigation_results/planted200/report_full.json"),
         "planted200_groundplus": read_json("mitigation_results/planted200/report_groundplus.json"),
         "mitigation_run_summary": read_json("mitigation_run/mitigation_summary.json"),
         "stress_run_v2_summary": read_json("stress_run_v2/mitigation_summary.json"),
@@ -87,7 +88,7 @@ def main() -> None:
     lines.append("\n## Protocol B — marker/ASR-based (mitigation_run / planted200)")
     lines.append(f"- Source commit for mitigation_summary.json: "
                  f"{git_commit_for('step4 dataset/mitigation_run/mitigation_summary.json')}")
-    for key in ("planted200_groundplus", "mitigation_run_summary", "stress_run_v2_summary"):
+    for key in ("planted200_full", "planted200_groundplus", "mitigation_run_summary", "stress_run_v2_summary"):
         if protocol_b[key]:
             lines.append(f"\n### {key}\n```json\n{json.dumps(protocol_b[key], indent=2)[:2000]}\n```")
         else:
@@ -99,7 +100,7 @@ def main() -> None:
                 "underlying construction, or two different attack designs? (They currently look "
                 "like two different designs — canary-leak vs. marker-emission — say so explicitly "
                 "if so, rather than letting a reader assume they're the same experiment.)")
-    lines.append("- [ ] Is Protocol B's 31.0%->18.5% ASR reduction measured WITH or WITHOUT the "
+    lines.append("- [ ] Is Protocol B's corrected 30.5%->16.5% ASR reduction measured WITH or WITHOUT the "
                 "graded-margin fix from 01_revalidate_multivector_graded.py? State this explicitly.")
     lines.append("- [ ] Pick ONE protocol as the headline claim for the abstract/results section; "
                 "report the other as a secondary/robustness check, dated and labelled as such.")

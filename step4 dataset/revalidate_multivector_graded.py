@@ -77,8 +77,8 @@ def channels_from_row(row: dict, prefer_graded: bool) -> dict[str, float] | None
     return {"query_vector": float(query or 0.0), "context_vector": float(ctx or 0.0)}
 
 
-def fire_report(rows: list[dict], prefer_graded: bool, label: str) -> dict:
-    mv_rows = [r for r in rows if r.get("kind") == "multivector_attack"]
+def fire_report(rows: list[dict], prefer_graded: bool, label: str, kind: str = "multivector_attack") -> dict:
+    mv_rows = [r for r in rows if r.get("kind") == kind]
     gate_blocked = [r for r in mv_rows if r.get("blocked") and r.get("block_stage") in
                     ("step_03_injection_detection", "step_03c_fusion_gate")]
     evaluated = [r for r in mv_rows if r not in gate_blocked]
@@ -99,7 +99,7 @@ def fire_report(rows: list[dict], prefer_graded: bool, label: str) -> dict:
                 subthreshold_fires += 1
 
     print(f"\n=== {label} ===")
-    print(f"  multivector_attack rows total   : {len(mv_rows)}")
+    print(f"  {kind} rows total               : {len(mv_rows)}")
     print(f"  gate-blocked before detector ran : {len(gate_blocked)}")
     print(f"  evaluated by detector            : {len(evaluated)}")
     print(f"  missing graded fields (skipped)  : {missing}")
@@ -117,6 +117,8 @@ def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--old", required=True, help="grounded_controller.jsonl (frozen, squashed scores)")
     ap.add_argument("--new", required=True, help="grounded_controller_graded.jsonl (rerun on current code)")
+    ap.add_argument("--kind", default="multivector_attack",
+                    help="row 'kind' to evaluate, e.g. multivector_attack or benign_control")
     ap.add_argument("--out", default="multivector_graded_revalidation.json")
     args = ap.parse_args()
 
@@ -126,8 +128,8 @@ def main() -> None:
     print(f"[config] DEFAULT_SOFT_PER_CHANNEL={DEFAULT_SOFT_PER_CHANNEL}  "
           f"DEFAULT_JOINT_MIN={DEFAULT_JOINT_MIN}")
 
-    before = fire_report(old_rows, prefer_graded=False, label="BEFORE (squashed scores, frozen run)")
-    after = fire_report(new_rows, prefer_graded=True, label="AFTER (graded margin, current code)")
+    before = fire_report(old_rows, prefer_graded=False, label="BEFORE (squashed scores, frozen run)", kind=args.kind)
+    after = fire_report(new_rows, prefer_graded=True, label="AFTER (graded margin, current code)", kind=args.kind)
 
     verdict = "IMPROVED" if after["fired"] > before["fired"] else (
         "UNCHANGED" if after["fired"] == before["fired"] else "REGRESSED")

@@ -72,15 +72,22 @@ _STOP = frozenset(
     "a an the of to in on at and or but is are was were be been being this that "
     "these those it its as by for with from into over under than then so such".split()
 )
+_POLAR_ANSWERS = frozenset({"yes", "no", "true", "false"})
 
 
 def _content_tokens(text: str) -> set[str]:
     return {t for t in _TOKEN_RE.findall(text.lower()) if t not in _STOP}
 
 
-def lexical_overlap(answer: str, chunks: list[str]) -> float:
-    """Fraction of the answer's content tokens supported by the evidence."""
+def lexical_overlap(answer: str, chunks: list[str], question: str = "") -> float:
+    """Fraction of the answer's content tokens supported by the evidence.
+
+    A bare polar answer carries no content of its own to check, so use the
+    question's content tokens as the topical grounding claim.
+    """
     a = _content_tokens(answer)
+    if not a or a <= _POLAR_ANSWERS:
+        a = _content_tokens(question)
     if not a:
         return 0.0
     evidence = set()
@@ -119,12 +126,17 @@ def _sigmoid(x: float) -> float:
     return 1.0 / (1.0 + math.exp(-x))
 
 
-def model_faithfulness(answer: str, chunks: list[str]) -> float:
-    """Max cross-encoder relevance of the answer against any evidence chunk."""
+def model_faithfulness(answer: str, chunks: list[str], question: str = "") -> float:
+    """Max cross-encoder relevance of the answer against any evidence chunk.
+
+    Pair the answer with its question when available so a bare polar answer
+    gives the cross-encoder a concrete topical hypothesis.
+    """
     if not chunks or not answer.strip():
         return 0.0
     judge = _get_judge()
-    raw = judge.predict([[c, answer] for c in chunks])
+    hypothesis = f"{question} {answer}".strip() if question else answer
+    raw = judge.predict([[c, hypothesis] for c in chunks])
     return max(_sigmoid(float(s)) for s in raw)
 
 
@@ -167,8 +179,8 @@ def run(state: PipelineState) -> PipelineState:
     disagreement = float(state.scores.get("disagreement", 0.0))
     threshold = grounding_threshold(risk, disagreement)
 
-    lex = lexical_overlap(answer, chunks)
-    mdl = model_faithfulness(answer, chunks)
+    lex = lexical_overlap(answer, chunks, question=state.prompt)
+    mdl = model_faithfulness(answer, chunks, question=state.prompt)
     faithfulness = max(lex, mdl)          # hybrid: uncorrelated failures
 
     # Dual-checkpoint: the canary must NOT appear in the answer.
