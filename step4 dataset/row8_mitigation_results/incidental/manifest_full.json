@@ -1,0 +1,19 @@
+{
+  "timestamp_utc": "2026-09-22T22:02:48.313229+00:00",
+  "slice": "row8_mitigation_results/row8_pii_incidental.jsonl",
+  "label": "full",
+  "limit": 30,
+  "off_jsonl": "row8_mitigation_results\\incidental\\off.jsonl",
+  "on_jsonl": "row8_mitigation_results\\incidental\\on_full.jsonl",
+  "on_mitigation_config": {
+    "enabled": true,
+    "sanitize": true,
+    "tighten_retrieval": true,
+    "guarded_prompt": true,
+    "grounding_gate": true,
+    "presidio_mask": true,
+    "dlp": true,
+    "refuse_on_detection": true
+  },
+  "score_command": "python score_mitigation_ab.py --off row8_mitigation_results\\incidental\\off.jsonl --on row8_mitigation_results\\incidental\\on_full.jsonl --out row8_mitigation_results\\incidental\\report_full.json"
+}

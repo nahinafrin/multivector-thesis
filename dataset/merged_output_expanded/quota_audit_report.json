@@ -1,0 +1,347 @@
+{
+  "status": "FAIL",
+  "total_rows": 7964,
+  "tolerance": 0.02,
+  "tier_check": {
+    "tier1_adversarial_core": {
+      "status": "PASS",
+      "target_ratio": 0.341625,
+      "actual_ratio": 0.343044,
+      "delta": 0.001419,
+      "tolerance": 0.02,
+      "count": 2732
+    },
+    "tier2_semantic_policy_pii": {
+      "status": "PASS",
+      "target_ratio": 0.343875,
+      "actual_ratio": 0.341662,
+      "delta": 0.002213,
+      "tolerance": 0.02,
+      "count": 2721
+    },
+    "tier3_structured_high_risk": {
+      "status": "PASS",
+      "target_ratio": 0.191,
+      "actual_ratio": 0.191361,
+      "delta": 0.000361,
+      "tolerance": 0.02,
+      "count": 1524
+    },
+    "tier4_benign_hard_negative": {
+      "status": "PASS",
+      "target_ratio": 0.1235,
+      "actual_ratio": 0.123933,
+      "delta": 0.000433,
+      "tolerance": 0.02,
+      "count": 987
+    }
+  },
+  "attack_check": {
+    "prompt_injection": {
+      "status": "PASS",
+      "present": true,
+      "count": 1976,
+      "target_ratio": 0.247,
+      "actual_ratio": 0.248117,
+      "delta": 0.001117,
+      "tolerance": 0.02
+    },
+    "jailbreak": {
+      "status": "PASS",
+      "present": true,
+      "count": 636,
+      "target_ratio": 0.079625,
+      "actual_ratio": 0.079859,
+      "delta": 0.000234,
+      "tolerance": 0.02
+    },
+    "obfuscation": {
+      "status": "PASS",
+      "present": true,
+      "count": 60,
+      "target_ratio": 0.0075,
+      "actual_ratio": 0.007534,
+      "delta": 3.4e-05,
+      "tolerance": 0.02
+    },
+    "indirect_injection": {
+      "status": "PASS",
+      "present": true,
+      "count": 60,
+      "target_ratio": 0.0075,
+      "actual_ratio": 0.007534,
+      "delta": 3.4e-05,
+      "tolerance": 0.02
+    },
+    "toxicity_abuse": {
+      "status": "PASS",
+      "present": true,
+      "count": 1337,
+      "target_ratio": 0.167125,
+      "actual_ratio": 0.16788,
+      "delta": 0.000755,
+      "tolerance": 0.02
+    },
+    "self_harm_danger": {
+      "status": "PASS",
+      "present": true,
+      "count": 20,
+      "target_ratio": 0.0025,
+      "actual_ratio": 0.002511,
+      "delta": 1.1e-05,
+      "tolerance": 0.02
+    },
+    "misinformation_manipulation": {
+      "status": "PASS",
+      "present": true,
+      "count": 56,
+      "target_ratio": 0.007,
+      "actual_ratio": 0.007032,
+      "delta": 3.2e-05,
+      "tolerance": 0.02
+    },
+    "financial_cyber_risk": {
+      "status": "PASS",
+      "present": true,
+      "count": 639,
+      "target_ratio": 0.083625,
+      "actual_ratio": 0.080236,
+      "delta": 0.003389,
+      "tolerance": 0.02
+    },
+    "pii_leakage": {
+      "status": "PASS",
+      "present": true,
+      "count": 669,
+      "target_ratio": 0.083625,
+      "actual_ratio": 0.084003,
+      "delta": 0.000378,
+      "tolerance": 0.02
+    },
+    "direct_harm_instruction": {
+      "status": "PASS",
+      "present": true,
+      "count": 1333,
+      "target_ratio": 0.167125,
+      "actual_ratio": 0.167378,
+      "delta": 0.000253,
+      "tolerance": 0.02
+    },
+    "cyberattack_exploitation": {
+      "status": "PASS",
+      "present": true,
+      "count": 106,
+      "target_ratio": 0.01325,
+      "actual_ratio": 0.01331,
+      "delta": 6e-05,
+      "tolerance": 0.02
+    },
+    "cbrn": {
+      "status": "PASS",
+      "present": true,
+      "count": 12,
+      "target_ratio": 0.0015,
+      "actual_ratio": 0.001507,
+      "delta": 7e-06,
+      "tolerance": 0.02
+    },
+    "social_engineering": {
+      "status": "PASS",
+      "present": true,
+      "count": 73,
+      "target_ratio": 0.009125,
+      "actual_ratio": 0.009166,
+      "delta": 4.1e-05,
+      "tolerance": 0.02
+    },
+    "benign_clear": {
+      "status": "PASS",
+      "present": true,
+      "count": 668,
+      "target_ratio": 0.083625,
+      "actual_ratio": 0.083877,
+      "delta": 0.000252,
+      "tolerance": 0.02
+    },
+    "benign_hard_negative": {
+      "status": "PASS",
+      "present": true,
+      "count": 319,
+      "target_ratio": 0.039875,
+      "actual_ratio": 0.040055,
+      "delta": 0.00018,
+      "tolerance": 0.02
+    }
+  },
+  "dataset_caps": {
+    "wildjailbreak": {
+      "status": "PASS",
+      "count": 1164,
+      "share": 0.146158,
+      "cap": 0.55,
+      "audit_epsilon": 0.006
+    },
+    "beavertails": {
+      "status": "PASS",
+      "count": 1692,
+      "share": 0.212456,
+      "cap": 0.55,
+      "audit_epsilon": 0.006
+    },
+    "jbb_behaviors": {
+      "status": "PASS",
+      "count": 191,
+      "share": 0.023983,
+      "cap": 0.55,
+      "audit_epsilon": 0.006
+    },
+    "advbench": {
+      "status": "PASS",
+      "count": 449,
+      "share": 0.056379,
+      "cap": 0.55,
+      "audit_epsilon": 0.006
+    },
+    "harmbench": {
+      "status": "PASS",
+      "count": 393,
+      "share": 0.049347,
+      "cap": 0.55,
+      "audit_epsilon": 0.006
+    },
+    "expand_rare_categories:template": {
+      "status": "PASS",
+      "count": 192,
+      "share": 0.024108,
+      "cap": 0.55,
+      "audit_epsilon": 0.006
+    },
+    "safeguard_prompt_injection": {
+      "status": "PASS",
+      "count": 1960,
+      "share": 0.246107,
+      "cap": 0.55,
+      "audit_epsilon": 0.006
+    },
+    "jigsaw_toxicity": {
+      "status": "PASS",
+      "count": 1301,
+      "share": 0.16336,
+      "cap": 0.55,
+      "audit_epsilon": 0.006
+    },
+    "ai4privacy_pii": {
+      "status": "PASS",
+      "count": 622,
+      "share": 0.078101,
+      "cap": 0.55,
+      "audit_epsilon": 0.006
+    }
+  },
+  "hard_negative_check": {
+    "status": "FAIL",
+    "count": 319,
+    "actual_ratio": 0.040055,
+    "min_ratio": 0.05
+  },
+  "source_availability": {
+    "status": "PASS",
+    "unavailable_sources": {}
+  },
+  "required_sources_check": {
+    "status": "PASS",
+    "required": [],
+    "loaded": [
+      "advbench",
+      "ai4privacy_pii",
+      "beavertails",
+      "expand_rare_categories_template",
+      "harmbench",
+      "jbb_behaviors",
+      "jigsaw_toxicity",
+      "safeguard_prompt_injection",
+      "wildjailbreak"
+    ],
+    "missing": []
+  },
+  "failures": [
+    "Hard-negative ratio below minimum: actual=0.0401, required=0.0500"
+  ],
+  "ideal_vs_achievable": {
+    "prompt_injection": {
+      "ideal": 0.15,
+      "achievable": 0.247,
+      "data_limited": true
+    },
+    "jailbreak": {
+      "ideal": 0.1,
+      "achievable": 0.079625,
+      "data_limited": true
+    },
+    "obfuscation": {
+      "ideal": 0.1,
+      "achievable": 0.0075,
+      "data_limited": true
+    },
+    "indirect_injection": {
+      "ideal": 0.05,
+      "achievable": 0.0075,
+      "data_limited": true
+    },
+    "toxicity_abuse": {
+      "ideal": 0.1,
+      "achievable": 0.16717857142857143,
+      "data_limited": false
+    },
+    "self_harm_danger": {
+      "ideal": 0.05,
+      "achievable": 0.0025,
+      "data_limited": true
+    },
+    "misinformation_manipulation": {
+      "ideal": 0.05,
+      "achievable": 0.007,
+      "data_limited": true
+    },
+    "financial_cyber_risk": {
+      "ideal": 0.05,
+      "achievable": 0.08358928571428571,
+      "data_limited": false
+    },
+    "pii_leakage": {
+      "ideal": 0.05,
+      "achievable": 0.08358928571428571,
+      "data_limited": false
+    },
+    "direct_harm_instruction": {
+      "ideal": 0.1,
+      "achievable": 0.16717857142857143,
+      "data_limited": false
+    },
+    "cyberattack_exploitation": {
+      "ideal": 0.05,
+      "achievable": 0.01325,
+      "data_limited": true
+    },
+    "cbrn": {
+      "ideal": 0.03,
+      "achievable": 0.0015,
+      "data_limited": true
+    },
+    "social_engineering": {
+      "ideal": 0.02,
+      "achievable": 0.009125,
+      "data_limited": true
+    },
+    "benign_clear": {
+      "ideal": 0.05,
+      "achievable": 0.08358928571428571,
+      "data_limited": false
+    },
+    "benign_hard_negative": {
+      "ideal": 0.05,
+      "achievable": 0.039875,
+      "data_limited": true
+    }
+  }
+}

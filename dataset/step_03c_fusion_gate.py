@@ -47,17 +47,46 @@ Use as a drop-in for Step 3:
 
 The --sweep mode runs a 2-D grid over (tau_review, tau_block) and reports the
 operating point that maximises F1 while keeping FPs <= --fp-budget.
+
+--normalize (added for the row1/row4/row8 external-validation extension):
+    IMPORTANT -- without this flag, --eval scores row["prompt"] EXACTLY as
+    written in the JSONL. It never runs Step 2 (normalization) first. That is
+    fine for datasets that are already plain text, but it means an obfuscated
+    slice (zero-width chars, fullwidth Unicode, base64-wrapped payloads) is
+    scored on the RAW obfuscated text, not on what the live pipeline would
+    actually see (run_full_pipeline.py always runs Step 2 before Step 3c).
+    Pass --normalize to route every prompt through the real
+    preprocess_dataset.Preprocessor first, so `--eval slice.jsonl` (mitigation
+    OFF, matches current default behaviour) and `--eval slice.jsonl --normalize`
+    (mitigation ON) are a true apples-to-apples A/B on the identical file.
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import logging
 from dataclasses import dataclass, field
 from typing import Optional
 
 from pipeline_common import PipelineState, read_jsonl
 import step_03_injection_detection as s3   # reuse scanner cache + EvalCounts
+
+logger = logging.getLogger(__name__)
+
+_NORMALIZER = None   # lazy singleton; only built if --normalize is used
+
+
+def _get_normalizer():
+    """Lazily build the shared Preprocessor used by --normalize. Kept optional
+    (not a hard import at module load) so this module still runs in contexts
+    where preprocess_dataset's spaCy/ftfy deps aren't installed and --normalize
+    is never requested."""
+    global _NORMALIZER
+    if _NORMALIZER is None:
+        from preprocess_dataset import Preprocessor
+        _NORMALIZER = Preprocessor(use_spacy=True, decode_base64=True)
+    return _NORMALIZER
 
 
 # --------------------------------------------------------------------------- #
@@ -171,6 +200,8 @@ def _llamaguard_soft(prompt: str, cfg: FusionConfig,
         llm = ChatOllama(model=model, base_url=base_url, temperature=0.0)
         verdict = llm.invoke([{"role": "user", "content": prompt}]).content.strip()
     except Exception as e:
+        logger.warning("llamaguard_unavailable model=%s base_url=%s error=%s",
+                       model, base_url, e)
         return cfg.sl_safe, "NONE", f"unavailable ({e})"
 
     lines = [ln.strip() for ln in verdict.splitlines() if ln.strip()]
@@ -383,12 +414,15 @@ class _Sample:
 
 
 def _collect(path: str, limit: Optional[int], threshold: float,
-             cfg: FusionConfig, base_url: str) -> list[_Sample]:
+             cfg: FusionConfig, base_url: str, normalize: bool = False) -> list[_Sample]:
     samples: list[_Sample] = []
+    normalizer = _get_normalizer() if normalize else None
     for i, row in enumerate(read_jsonl(path)):
         if limit is not None and i >= limit:
             break
         prompt = row.get("prompt", "")
+        if normalizer is not None:
+            prompt = normalizer.normalize_text(prompt)
         gt = str(row.get("safety", "")).lower() == "unsafe"
         s_I, inj_detail = _injection_score(prompt, threshold=threshold)
         s_L, cat, _raw = _llamaguard_soft(prompt, cfg, base_url=base_url)
@@ -430,17 +464,18 @@ def _score_at(samples: list[_Sample], cfg: FusionConfig,
 
 def evaluate(path: str, limit: Optional[int] = None, threshold: float = 0.5,
              cfg: Optional[FusionConfig] = None, base_url: str = "http://localhost:11434",
-             treat_review_as_red: bool = False) -> dict:
+             treat_review_as_red: bool = False, normalize: bool = False) -> dict:
     cfg = cfg or FusionConfig()
-    samples = _collect(path, limit, threshold, cfg, base_url)
+    samples = _collect(path, limit, threshold, cfg, base_url, normalize=normalize)
     return _score_at(samples, cfg, treat_review_as_red)
 
 
 def sweep(path: str, limit: Optional[int], threshold: float, cfg: FusionConfig,
-          base_url: str, fp_budget: int, treat_review_as_red: bool) -> dict:
+          base_url: str, fp_budget: int, treat_review_as_red: bool,
+          normalize: bool = False) -> dict:
     """Grid search over (tau_review, tau_block). Caches per-sample scores so
     the grid runs without re-querying Llama-Guard."""
-    samples = _collect(path, limit, threshold, cfg, base_url)
+    samples = _collect(path, limit, threshold, cfg, base_url, normalize=normalize)
 
     grid_review = [round(x * 0.05, 2) for x in range(4, 13)]   # 0.20..0.60
     grid_block  = [round(x * 0.05, 2) for x in range(8, 18)]   # 0.40..0.85
@@ -488,6 +523,10 @@ def main() -> None:
                     help="run a 2-D threshold sweep and pick the F1-optimal point")
     ap.add_argument("--fp-budget", type=int, default=60,
                     help="max false positives allowed during --sweep")
+    ap.add_argument("--normalize", action="store_true",
+                    help="run Step-2 normalization (incl. base64-span decode) on "
+                         "each prompt before scoring -- the mitigation ON arm for "
+                         "the Row-1 obfuscation A/B (see module docstring)")
     args = ap.parse_args()
 
     cfg = FusionConfig(tau_review=args.tau_review, tau_block=args.tau_block)
@@ -509,7 +548,8 @@ def main() -> None:
 
     if args.sweep:
         out = sweep(args.eval_path, args.limit, args.threshold, cfg,
-                    args.base_url, args.fp_budget, args.review_as_red)
+                    args.base_url, args.fp_budget, args.review_as_red,
+                    normalize=args.normalize)
         print("\n=== THRESHOLD SWEEP (fusion gate) ===")
         print(f"FP budget: {args.fp_budget}\n")
         # show top-10 by F1 within budget
@@ -530,8 +570,9 @@ def main() -> None:
 
     res = evaluate(args.eval_path, limit=args.limit, threshold=args.threshold,
                    cfg=cfg, base_url=args.base_url,
-                   treat_review_as_red=args.review_as_red)
-    print("\n=== INPUT GATE COMPARISON ===")
+                   treat_review_as_red=args.review_as_red,
+                   normalize=args.normalize)
+    print(f"\n=== INPUT GATE COMPARISON (normalize={args.normalize}) ===")
     _pretty_report("injection-only:", res["injection_only"])
     _pretty_report("OR-gate       :", res["or_gate"])
     _pretty_report("C3RF (fused)  :", res["fusion"])

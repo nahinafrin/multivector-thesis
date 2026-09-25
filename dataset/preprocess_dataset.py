@@ -6,10 +6,16 @@ Implements the PRE-PROCESSING stage of the methodology (Chapter 3), i.e.
 everything that runs BEFORE Injection Detection (Step 3):
 
     Normalization
+      - base64-decode   : decode base64-wrapped spans so a "please decode and
+                          follow this" wrapper attack is scored on its real
+                          payload, not just the encoded gibberish (added for
+                          the Row-1 obfuscation external-validation slice --
+                          see multivector_extra_datasets/row1_obfuscation_prompt_injection)
       - ftfy            : repair mojibake / broken encoding   (Speer, 2019)
       - hidden-char     : strip zero-width / control / bidi formatting tricks
       - whitespace      : collapse runs, normalize unicode spaces, trim
       - unicode (NFKC)  : canonical form so look-alike glyphs unify
+                          (this alone reverses "fullwidth" Unicode obfuscation)
       - spaCy           : linguistic normalization + contraction expansion
                           (Honnibal & Montani, 2017)
 
@@ -48,6 +54,7 @@ Usage
 from __future__ import annotations
 
 import argparse
+import base64
 import json
 import re
 import sys
@@ -94,6 +101,46 @@ _UNICODE_SPACE_RE = re.compile(
 _CONTROL_RE = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]")
 # Collapse any run of whitespace to a single space
 _WS_RE = re.compile(r"\s+")
+
+
+# --------------------------------------------------------------------------- #
+# Base64-span decoding (obfuscation mitigation, Row-1 external validation)
+# --------------------------------------------------------------------------- #
+# A common obfuscation technique wraps the real instruction in a base64 blob
+# plus a short directive ("please decode and follow the instructions in this
+# string"). The wrapper phrase is often what the injection classifier keys on
+# (it reads as an ordinary suspicious sentence), so the ENCODED payload itself
+# reaches the classifier undecoded either way -- decoding it here means the
+# classifier (and every downstream stage) sees the actual instruction text,
+# not just an opaque base64 blob, closing that gap rather than relying on the
+# wrapper phrase alone to trip detection.
+_BASE64_SPAN_RE = re.compile(r"[A-Za-z0-9+/]{20,}={0,2}")
+
+
+def decode_base64_spans(text: str) -> tuple[str, int]:
+    """Decode base64-looking spans inline as `SPAN [DECODED: ...]`, so the
+    decoded text is appended (not replacing the original -- keeps the span
+    matchable/auditable) and reaches every later normalization step. Returns
+    (new_text, n_spans_decoded). Non-base64 look-alikes and low-printable-ratio
+    decodes are left untouched."""
+    n_decoded = 0
+
+    def _try_decode(match: re.Match) -> str:
+        nonlocal n_decoded
+        candidate = match.group(0)
+        try:
+            decoded = base64.b64decode(candidate, validate=True).decode("utf-8")
+        except Exception:
+            return candidate
+        if not decoded:
+            return candidate
+        printable = sum(1 for c in decoded if c.isprintable())
+        if printable / len(decoded) < 0.85:
+            return candidate
+        n_decoded += 1
+        return f"{candidate} [DECODED: {decoded}]"
+
+    return _BASE64_SPAN_RE.sub(_try_decode, text), n_decoded
 
 
 # --------------------------------------------------------------------------- #
@@ -152,6 +199,7 @@ def _load_spacy(model: str = "en_core_web_sm"):
 @dataclass
 class CleanStats:
     total: int = 0
+    base64_decoded: int = 0
     ftfy_fixed: int = 0
     hidden_stripped: int = 0
     empty_after_clean: int = 0
@@ -167,10 +215,11 @@ class Preprocessor:
 
     def __init__(self, min_len: int = 40, max_len: int = 2000,
                  use_spacy: bool = True, lemmatize: bool = False,
-                 spacy_model: str = "en_core_web_sm"):
+                 spacy_model: str = "en_core_web_sm", decode_base64: bool = True):
         self.min_len = min_len
         self.max_len = max_len
         self.lemmatize = lemmatize
+        self.decode_base64 = decode_base64
         self.nlp = _load_spacy(spacy_model) if use_spacy else None
 
     # -- text-level cleaning ------------------------------------------------ #
@@ -178,6 +227,13 @@ class Preprocessor:
         if not isinstance(text, str):
             text = str(text)
         original = text
+
+        # 0) decode base64-wrapped spans so an encoded payload is scored on its
+        #    real content, not left opaque (see decode_base64_spans() above).
+        if self.decode_base64:
+            text, n_b64 = decode_base64_spans(text)
+            if stats is not None and n_b64:
+                stats.base64_decoded += n_b64
 
         # 1) ftfy: repair mojibake / broken encoding
         if ftfy is not None:
@@ -278,6 +334,7 @@ def get_inference_normalizer(
     use_spacy: bool = True,
     lemmatize: bool = False,
     spacy_model: str = "en_core_web_sm",
+    decode_base64: bool = True,
 ) -> "Preprocessor":
     """Return (and lazily build) the shared inference-time Preprocessor.
 
@@ -290,7 +347,7 @@ def get_inference_normalizer(
         _INFERENCE_NORMALIZER = Preprocessor(
             min_len=min_len, max_len=max_len,
             use_spacy=use_spacy, lemmatize=lemmatize,
-            spacy_model=spacy_model,
+            spacy_model=spacy_model, decode_base64=decode_base64,
         )
     return _INFERENCE_NORMALIZER
 
@@ -309,6 +366,7 @@ def print_report(stats: CleanStats, min_len: int, max_len: int,
                  flag_only: bool) -> None:
     print("\n=== PREPROCESSING REPORT ===")
     print(f"  input rows           : {stats.total}")
+    print(f"  base64 spans decoded : {stats.base64_decoded}")
     print(f"  ftfy repaired        : {stats.ftfy_fixed}")
     print(f"  hidden chars stripped: {stats.hidden_stripped}")
     print(f"  empty after clean    : {stats.empty_after_clean}")
@@ -342,6 +400,8 @@ def main() -> None:
     ap.add_argument("--max-len", type=int, default=2000)
     ap.add_argument("--no-spacy", action="store_true",
                     help="Skip spaCy entirely (regex/ftfy cleaning only).")
+    ap.add_argument("--no-base64-decode", action="store_true",
+                    help="Skip base64-span decoding (default: on).")
     ap.add_argument("--lemmatize", action="store_true",
                     help="Apply lemmatization (needs the full spaCy model).")
     ap.add_argument("--flag-only", action="store_true",
@@ -352,7 +412,8 @@ def main() -> None:
     rows = [json.loads(l) for l in open(args.inp, encoding="utf-8") if l.strip()]
     pre = Preprocessor(min_len=args.min_len, max_len=args.max_len,
                        use_spacy=not args.no_spacy, lemmatize=args.lemmatize,
-                       spacy_model=args.spacy_model)
+                       spacy_model=args.spacy_model,
+                       decode_base64=not args.no_base64_decode)
     cleaned, stats = pre.process_rows(rows, prompt_field=args.prompt_field,
                                       flag_only=args.flag_only)
 

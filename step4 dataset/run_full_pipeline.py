@@ -68,6 +68,7 @@ import step_08_augmented_prompt as s8
 # Generation + output rail (adapt these imports to your filenames)
 import step_09_generator_llm as s9
 import step_09a_isolate_aggregate as s9a
+import step_09c_routed_generator as s9c
 import step_09b_knowledge_conflict as s9b
 import step_10_grounding_judge as s10
 import step_11_output_sanitization as s11
@@ -106,9 +107,11 @@ def process(question: str, *, k: int = 5, top_n: int = 3,
             generator: str = "fused",
             ia_scorer: "s9a.IsolateAggregator | None" = None,
             ia_min_agreement: int = 2,
+            routed_mode: str = "balanced",
             use_semantic_intent: bool = True,
             semantic_intent_backend: str = "nli",
-            defense_profile: str = "full") -> PipelineState:
+            defense_profile: str = "full",
+            fusion_cfg: "s3c.FusionConfig | None" = None) -> PipelineState:
     """Run one question through the whole pipeline on a single state.
 
     If `poison_chunk` is given, it is spliced into the retrieved context after
@@ -130,7 +133,7 @@ def process(question: str, *, k: int = 5, top_n: int = 3,
     # --- input gate: computes the risk that everything downstream reads ---
     st = s1.run(st)
     st = s2.run(st)
-    st = s3c.run(st, treat_review_as_red=treat_review_as_red)
+    st = s3c.run(st, cfg=fusion_cfg, treat_review_as_red=treat_review_as_red)
     if st.blocked:                       # gate refused -> straight to refusal
         if not continue_blocked_for_audit:
             return s13.run(st)
@@ -202,6 +205,8 @@ def process(question: str, *, k: int = 5, top_n: int = 3,
             state = s8.run(state)
         if generator == "isolate":
             state = s9a.run(state, ia_scorer, min_agreement=ia_min_agreement)
+        elif generator in ("routed", "verified"):
+            state = s9c.run(state, ia_scorer, mode=routed_mode, always_v3=(generator == "verified"))
         else:
             state = s9.run(state)        # sets meta["answer"] + scores["disagreement"]
         state = s10.run(state)           # grounding judge; reads input_risk() + disagreement
@@ -239,11 +244,12 @@ def process(question: str, *, k: int = 5, top_n: int = 3,
     if st.abstained:
         return s13.run(st)
 
-    # Step 9b: post-generation knowledge-conflict signal. Measure-only here —
-    # run ONCE on the final st.meta["answer"] (one extra parametric generation
-    # per row), NOT inside the controller loop. To let the controller refuse on
-    # it, move this call into _segment between s9 and s10 instead.
-    st = s9b.run(st, kc_scorer)
+    # Step 9b (knowledge-conflict probe) REMOVED from the default pipeline on
+    # 2026-09-25: it was measure-only (never changed an outcome), cost one extra
+    # generation per query, and mis-flagged correct answers. Kept behind
+    # --kc-backend ollama|stub so older runs stay reproducible; default "off".
+    if kc_scorer is not None:
+        st = s9b.run(st, kc_scorer)
 
     if st.blocked:
         return s13.run(st)
@@ -293,6 +299,7 @@ def _record(st: PipelineState, index: int, ground_truth: str | None) -> dict:
             "answer": st.meta.get("answer", ""),
             "disagreement": st.scores.get("disagreement", 0.0),
             "isolate_aggregate": st.meta.get("isolate_aggregate"),
+            "routed_generator": st.meta.get("routed_generator"),
             "knowledge_conflict": st.scores.get("knowledge_conflict"),
             "parametric_answer": st.meta.get("parametric_answer"),
             "knowledge_conflict_reason": st.meta.get("knowledge_conflict_reason"),
@@ -340,7 +347,9 @@ def main() -> None:
     ap.add_argument("--resume", action="store_true",
                     help="Slice mode: skip ids already present in --out and append "
                          "the rest, so a run can recover after a crash.")
-    ap.add_argument("--generator", choices=["fused", "isolate"], default="fused",
+    ap.add_argument("--routed-mode", choices=["balanced", "safe"], default="balanced",
+                    help="generator=routed: what to do when v3 abstains (see step_09c_routed_generator.py).")
+    ap.add_argument("--generator", choices=["fused", "isolate", "routed", "verified"], default="fused",
                     help="fused: existing Step 9 ensemble. isolate: per-passage "
                          "isolation + majority vote (Step 9A misinformation defense).")
     ap.add_argument("--ia-backend", choices=["ollama", "stub"], default="ollama",
@@ -359,8 +368,9 @@ def main() -> None:
                          "is_multivector escalation). Use for clean three-way "
                          "attribution: --no-controller vs this vs full controller. "
                          "Ignored when --no-controller is set.")
-    ap.add_argument("--kc-backend", choices=["ollama", "stub"], default="ollama",
-                    help="Step 9b knowledge-conflict backend. 'ollama' (default) "
+    ap.add_argument("--kc-backend", choices=["off", "ollama", "stub"], default="off",
+                    help="Step 9b knowledge-conflict probe (removed; 'off' is the default). "
+                         "'ollama' reproduces pre-2026-09-25 runs: it "
                          "runs a real context-free generation + judge against the "
                          "live models; 'stub' is the offline heuristic (NOT "
                          "validation — scores ~0 for any off-table question).")
@@ -378,7 +388,21 @@ def main() -> None:
                     default="full",
                     help="External-baseline profile for run_baseline_comparison.py. "
                          "'full' is byte-identical to today's default pipeline.")
+    ap.add_argument("--tau-review", type=float, default=None,
+                    help="Override Step 3c REVIEW threshold (default 0.35).")
+    ap.add_argument("--tau-block", type=float, default=None,
+                    help="Override Step 3c BLOCK threshold (default 0.60).")
     args = ap.parse_args()
+
+    fusion_cfg = None
+    if args.tau_review is not None or args.tau_block is not None:
+        if args.tau_review is None or args.tau_block is None:
+            ap.error("--tau-review and --tau-block must be given together.")
+        if args.tau_block <= args.tau_review:
+            ap.error(f"--tau-block must exceed --tau-review "
+                     f"(got {args.tau_review}, {args.tau_block}).")
+        fusion_cfg = s3c.FusionConfig(tau_review=args.tau_review,
+                                      tau_block=args.tau_block)
 
     use_controller = not args.no_controller
     if args.defense_profile != "full":
@@ -391,10 +415,11 @@ def main() -> None:
         if args.no_multivector_signal:
             cfg_kwargs["use_multivector"] = False
         controller_cfg = ControllerConfig(**cfg_kwargs)
-    kc_scorer = (s9b.OllamaKnowledgeConflict() if args.kc_backend == "ollama"
+    kc_scorer = (None if args.kc_backend == "off"
+                 else s9b.OllamaKnowledgeConflict() if args.kc_backend == "ollama"
                  else s9b.HeuristicKnowledgeConflict())
     ia_scorer = None
-    if args.generator == "isolate":
+    if args.generator in ("isolate", "routed", "verified"):
         ia_scorer = (s9a.OllamaIsolateAggregator() if args.ia_backend == "ollama"
                      else s9a.StubIsolateAggregator())
 
@@ -410,9 +435,11 @@ def main() -> None:
                        generator=args.generator,
                        ia_scorer=ia_scorer,
                        ia_min_agreement=args.ia_min_agreement,
+                       routed_mode=args.routed_mode,
                        use_semantic_intent=args.use_semantic_intent,
                        semantic_intent_backend=args.semantic_intent_backend,
-                       defense_profile=args.defense_profile)
+                       defense_profile=args.defense_profile,
+                       fusion_cfg=fusion_cfg)
 
     if args.question:
         st = _run(args.question)

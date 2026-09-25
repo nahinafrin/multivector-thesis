@@ -316,8 +316,11 @@ class RiskController:
                 else "k_cap_reached"
             )
             attempts.append(rec)
-            state.block("risk_feedback_controller",
-                        "closed-loop refuse: ungrounded (recovery unlikely to help)")
+            state.blocked = False
+            state.block_stage = ""
+            state.block_reason = ""
+            state.abstain("risk_feedback_controller",
+                          "closed-loop abstain: ungrounded (recovery unlikely to help)")
             break
 
         ctrl = state.meta.setdefault("controller", {})

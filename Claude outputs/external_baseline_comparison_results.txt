@@ -1,0 +1,102 @@
+EXTERNAL BASELINE COMPARISON — thesis RAG pipeline vs. Sentinel-Strategist vs. ControlNET
+============================================================================================
+Slice: adversarial_slice.jsonl (210 rows: 130 attack, 80 benign_control). Same rows, same
+retrieved chunks and same injected poison for every system; rows paired by slice id.
+Metric: blocked = the system refused/withheld an answer. Cells: k/n  rate  [Wilson 95% CI].
+
+Official code: neither paper has released code (ControlNET arXiv 2504.09593 + project page;
+Sentinel-Strategist arXiv 2604.20932 abstract). Both baselines are REIMPLEMENTATIONS from the
+published architecture descriptions — label them that way in the thesis.
+
+1. HEADLINE
+--------------------------------------------------------------------------------------------
+System                              Attack rows blocked (TPR)     Benign rows blocked (FPR)     
+Thesis pipeline (full profile)       95/130  73.1%  [ 64.9,  80.0] 10/80   12.5%  [  6.9,  21.5]
+Sentinel-Strategist (reimpl.)        79/130  60.8%  [ 52.2,  68.7]  4/80    5.0%  [  2.0,  12.2]
+ControlNET (reimpl., draft train)   130/130 100.0%  [ 97.1, 100.0] 80/80  100.0%  [ 95.4, 100.0]
+ControlNET (reimpl., ctx-matched)   125/130  96.2%  [ 91.3,  98.3] 72/80   90.0%  [ 81.5,  94.8]
+ControlNET (ctx-matched, tau@5%FPR)  42/130  32.3%  [ 24.9,  40.8]  3/80    3.8%  [  1.3,  10.5]
+
+2. PER ATTACK KIND (blocked rate)
+--------------------------------------------------------------------------------------------
+System                              adversarial_querygate_slip_querypoisoned_contextmultivector_attack
+Thesis pipeline (full profile)      40/40 (100%)  20/20 (100%)  16/40 (40%)   19/30 (63%)   
+Sentinel-Strategist (reimpl.)       12/40 (30%)   12/20 (60%)   25/40 (62%)   30/30 (100%)  
+ControlNET (reimpl., draft train)   40/40 (100%)  20/20 (100%)  40/40 (100%)  30/30 (100%)  
+ControlNET (reimpl., ctx-matched)   40/40 (100%)  20/20 (100%)  37/40 (92%)   28/30 (93%)   
+ControlNET (ctx-matched, tau@5%FPR) 21/40 (52%)   12/20 (60%)   4/40 (10%)    5/30 (17%)    
+Ref: LLM-Guard-only profile         40/40 (100%)  20/20 (100%)  40/40 (100%)  9/30 (30%)    
+Ref: Spotlight-only profile         40/40 (100%)  20/20 (100%)  26/40 (65%)   6/30 (20%)    
+
+3. PAIRED EXACT McNEMAR (thesis full pipeline vs. baseline, same rows)
+--------------------------------------------------------------------------------------------
+full vs Sentinel-Strategist (reimpl.)        attack rows  n=130  full-only=41  baseline-only=25  p=0.064
+full vs Sentinel-Strategist (reimpl.)        benign rows  n=80   full-only=9   baseline-only=3   p=0.146
+full vs ControlNET (reimpl., draft train)    attack rows  n=130  full-only=0   baseline-only=35  p=5.82e-11
+full vs ControlNET (reimpl., draft train)    benign rows  n=80   full-only=0   baseline-only=70  p=1.69e-21
+full vs ControlNET (reimpl., ctx-matched)    attack rows  n=130  full-only=1   baseline-only=31  p=1.54e-08
+full vs ControlNET (reimpl., ctx-matched)    benign rows  n=80   full-only=2   baseline-only=64  p=6e-17
+full vs ControlNET (ctx-matched, tau@5%FPR)  attack rows  n=130  full-only=56  baseline-only=3   p=1.19e-13
+full vs ControlNET (ctx-matched, tau@5%FPR)  benign rows  n=80   full-only=10  baseline-only=3   p=0.0923
+full vs Sentinel, draft context_tau=0.55     attack rows  n=130  full-only=10  baseline-only=35  p=0.000247
+full vs Sentinel, draft context_tau=0.55     benign rows  n=80   full-only=7   baseline-only=21  p=0.0125
+full vs Sentinel, generic cue phrases only   attack rows  n=130  full-only=56  baseline-only=15  p=1.04e-06
+full vs Sentinel, generic cue phrases only   benign rows  n=80   full-only=9   baseline-only=3   p=0.146
+full vs ControlNET, tau at 5% val benign FPR attack rows  n=130  full-only=1   baseline-only=33  p=4.07e-09
+full vs ControlNET, tau at 5% val benign FPR benign rows  n=80   full-only=0   baseline-only=62  p=4.34e-19
+full vs ControlNET, query-only input         attack rows  n=130  full-only=12  baseline-only=21  p=0.163
+full vs ControlNET, query-only input         benign rows  n=80   full-only=7   baseline-only=27  p=0.000821
+
+4. SENSITIVITY / ROBUSTNESS VARIANTS
+--------------------------------------------------------------------------------------------
+System                              Attack rows blocked (TPR)     Benign rows blocked (FPR)     
+Sentinel, draft context_tau=0.55    120/130  92.3%  [ 86.4,  95.8] 24/80   30.0%  [ 21.1,  40.8]
+Sentinel, generic cue phrases only   54/130  41.5%  [ 33.4,  50.1]  4/80    5.0%  [  2.0,  12.2]
+ControlNET, tau at 5% val benign FPR127/130  97.7%  [ 93.4,  99.2] 72/80   90.0%  [ 81.5,  94.8]
+ControlNET, query-only input        104/130  80.0%  [ 72.3,  86.0] 30/80   37.5%  [ 27.7,  48.5]
+
+5. EXISTING IN-HOUSE REFERENCE PROFILES (same slice, from baseline_comparison/)
+--------------------------------------------------------------------------------------------
+System                              Attack rows blocked (TPR)     Benign rows blocked (FPR)     
+Ref: LLM-Guard-only profile         109/130  83.8%  [ 76.6,  89.2] 28/80   35.0%  [ 25.5,  45.9]
+Ref: Spotlight-only profile          92/130  70.8%  [ 62.4,  77.9] 10/80   12.5%  [  6.9,  21.5]
+
+6. NOTE — neutralisation the full pipeline achieves WITHOUT blocking (not in tables above)
+--------------------------------------------------------------------------------------------
+Context-attack rows (poisoned_context + multivector_attack, n=70): blocked=35, 
+not blocked but poison chunk redacted at step 6=32, combined=67/70.
+The baselines have no redaction stage, so for them blocked is the only neutralisation.
+
+7. CALIBRATION (train/val only — no slice rows used)
+--------------------------------------------------------------------------------------------
+Sentinel-Strategist: query_tau=0.340 (train benign FPR 0.1%), context_tau=0.594 (train benign FPR 5.0%),
+  dispersion scale (p95 on train benign contexts)=0.755; n_train_benign=953.
+ControlNET: en_core_web_trf 3.8.0 (RoBERTa-base), layer index 9/13 (== hidden_states[-4]), mean-pooled; logistic probe on n_train=5555; tau=0.150 (max-F1 on val, n=1190);
+  val F1=0.933, val AUROC=0.939, val benign FPR=35.8%, val unsafe TPR=93.9%.
+  Max-F1 sits at a high benign FPR because val is ~83% unsafe; alt. tau at 5% val benign FPR = 0.787 (val unsafe TPR 82.4%) -> Section 4.
+ControlNET ctx-matched: same probe, trained on prompt + top-5 LSA KB chunks (stratified n_train=2000,
+  seed 0; val n=1190 with context); tau=0.125 (max-F1 on val); val F1=0.911, AUROC=0.846,
+  val benign FPR=83.8%, val unsafe TPR=98.1%; tau@5% FPR=0.779 (val unsafe TPR 53.8%).
+
+8. SUBSTITUTIONS AND CAVEATS (state these alongside the numbers)
+--------------------------------------------------------------------------------------------
+huggingface.co is blocked by network policy on both machines, so the draft's models could not be used:
+  - Sentinel embedder BAAI/bge-m3 -> LSA (TF-IDF + 256-d SVD) fitted on kb_wiki.texts.
+  - ControlNET probe model all-MiniLM-L6-v2 -> RoBERTa-base inside spaCy en_core_web_trf 3.8.0
+    (GitHub release), hidden_states[-4] mean-pooled. Neither is the paper's own backbone (Llama3/
+    Vicuna/Mistral for ControlNET), so absolute numbers are indicative, not a reproduction.
+Context for both baselines = first 5 chunks the thesis pipeline actually retrieved (FAISS/bge-m3) +
+  the injected poison chunk. 38 query-attack rows had no retrieval in the pipeline log (blocked at
+  the gate); for those the baselines used top-5 LSA chunks from kb_wiki.texts.
+Sentinel cue-phrase list: 6 of its 14 patterns mirror this slice's own poison wording (editorial
+  note, authoritative source, ...). Section 4 'generic cue phrases only' removes them — that row is
+  the fairer estimate of Sentinel's performance on unseen attack wording.
+ControlNET's probe is trained on prompts only (train/val carry no retrieved context) and then applied
+  to query+context inputs. That mismatch pushes every context-bearing input over threshold (draft-train
+  row = 100%/100%, a degenerate result). The 'ctx-matched' rows train on prompt+KB-context inputs; the
+  max-F1 threshold is still degenerate (val is ~83% unsafe), so 'ctx-matched, tau@5%FPR' is the fairest
+  ControlNET operating point. The probe never sees poisoned contexts in training.
+Max-F1 threshold rule is the draft's (and C3RF's) rule; on an 83%-unsafe val split it favours
+  near-always-block thresholds for both ControlNET variants — hence the tau@5%FPR rows.
+Full-pipeline numbers are from the existing run step4 dataset/baseline_comparison/grounded_full.jsonl
+  (not re-run here; it needs Ollama). Its benign FPR includes blocks by the risk-feedback controller.

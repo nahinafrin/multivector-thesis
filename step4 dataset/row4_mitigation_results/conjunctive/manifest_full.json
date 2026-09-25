@@ -1,0 +1,19 @@
+{
+  "timestamp_utc": "2026-09-22T16:55:11.202767+00:00",
+  "slice": "row4_mitigation_results/row4_multivector_conjunctive.jsonl",
+  "label": "full",
+  "limit": 30,
+  "off_jsonl": "row4_mitigation_results\\conjunctive\\off.jsonl",
+  "on_jsonl": "row4_mitigation_results\\conjunctive\\on_full.jsonl",
+  "on_mitigation_config": {
+    "enabled": true,
+    "sanitize": true,
+    "tighten_retrieval": true,
+    "guarded_prompt": true,
+    "grounding_gate": true,
+    "presidio_mask": true,
+    "dlp": true,
+    "refuse_on_detection": true
+  },
+  "score_command": "python score_mitigation_ab.py --off row4_mitigation_results\\conjunctive\\off.jsonl --on row4_mitigation_results\\conjunctive\\on_full.jsonl --out row4_mitigation_results\\conjunctive\\report_full.json"
+}
