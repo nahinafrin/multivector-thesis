@@ -1,0 +1,19 @@
+{
+  "timestamp_utc": "2026-10-14T07:01:29.842009+00:00",
+  "slice": "planted_attacks_200.jsonl",
+  "label": "full",
+  "limit": 3,
+  "off_jsonl": "mitigation_results\\ablation_smoke\\off.jsonl",
+  "on_jsonl": "mitigation_results\\ablation_smoke\\on_full.jsonl",
+  "on_mitigation_config": {
+    "enabled": true,
+    "sanitize": true,
+    "tighten_retrieval": true,
+    "guarded_prompt": true,
+    "grounding_gate": true,
+    "presidio_mask": true,
+    "dlp": true,
+    "refuse_on_detection": true
+  },
+  "score_command": "python score_mitigation_ab.py --off mitigation_results\\ablation_smoke\\off.jsonl --on mitigation_results\\ablation_smoke\\on_full.jsonl --out mitigation_results\\ablation_smoke\\report_full.json"
+}

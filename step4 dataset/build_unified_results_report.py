@@ -70,6 +70,7 @@ def main() -> None:
         "mitigation_run_summary": read_json("mitigation_run/mitigation_summary.json"),
         "stress_run_v2_summary": read_json("stress_run_v2/mitigation_summary.json"),
     }
+    ablation = read_json("ablation_table.json")
 
     lines = []
     lines.append("# Unified Results — Protocol A (canary) vs Protocol B (marker/ASR)")
@@ -88,11 +89,76 @@ def main() -> None:
     lines.append("\n## Protocol B — marker/ASR-based (mitigation_run / planted200)")
     lines.append(f"- Source commit for mitigation_summary.json: "
                  f"{git_commit_for('step4 dataset/mitigation_run/mitigation_summary.json')}")
+    lines.append("\n**Headline: planted200 ground-plus.** Fixed-scorer ASR is 30.5% -> 16.5%, "
+                 "a 14.0-point reduction (45.9% relative; paired McNemar p=2.46e-7). "
+                 "The independently completed n=200 benign-cost recheck measured 0.0% -> "
+                 "9.0% blocking, a 9.0-point cost and 1.6x ASR-gain-per-cost.")
+    lines.append("\nThe earlier full profile measured 30.5% -> 13.5% ASR but a 45.0-point "
+                 "benign block cost. This is an older-code result and should not be treated "
+                 "as the current seven-layer full-stack estimate.")
     for key in ("planted200_full", "planted200_groundplus", "mitigation_run_summary", "stress_run_v2_summary"):
         if protocol_b[key]:
             lines.append(f"\n### {key}\n```json\n{json.dumps(protocol_b[key], indent=2)[:2000]}\n```")
         else:
             lines.append(f"\n### {key}\n_(not found / null)_")
+
+    lines.append("\n## Current-code follow-up — seven-layer ablation (n=200 per arm)")
+    if ablation:
+        lines.append("This follow-up uses the current seven-layer pipeline, fixed attack-success "
+                     "scorer, and the planted-200 attack and benign-control arms. It is a "
+                     "versioned follow-up to the earlier Protocol B runs, not a direct "
+                     "like-for-like comparison with their older full-stack configuration. "
+                     "Attack-success p-values below compare each attack arm with undefended, "
+                     "not with the full stack.")
+        lines.append("\n| Configuration | Attack success | Attack fixed / broke (vs undefended) | "
+                     "p (vs undefended) | Benign blocked | Benign correct |")
+        lines.append("|---|---:|---:|---:|---:|---:|")
+        for label, desc in [
+            ("full", "Full: all seven layers"),
+            ("noprompt", "Full minus guarded prompt"),
+            ("norefuse", "Full minus refuse-on-detection"),
+            ("nogrounding", "Full minus grounding gate"),
+            ("nosanitize", "Full minus sanitization"),
+            ("notighten", "Full minus tightened rerank"),
+            ("nopresidio", "Full minus Presidio masking"),
+            ("nodlp", "Full minus DLP"),
+            ("only_refuse", "Refuse-on-detection only"),
+            ("only_grounding", "Grounding gate only"),
+            ("only_sanitize", "Sanitization only"),
+            ("only_tighten", "Tightened rerank only"),
+            ("only_prompt", "Guarded prompt only"),
+            ("only_presidio", "Presidio masking only"),
+            ("only_dlp", "DLP only"),
+        ]:
+            row = ablation.get(label)
+            if not row:
+                lines.append(f"| {desc} | not run | | | | |")
+                continue
+            attack = (f"{row['asr']}/{row['n']} ({100 * row['asr'] / row['n']:.1f}%)"
+                      if row.get("n") else "not run")
+            fixed_broke = (f"{row['fixed']} / {row['broke']}"
+                           if "fixed" in row else "not run")
+            p_value = (f"{row['p']:.3g}" if "p" in row else "not run")
+            benign_n = row.get("benign_n", 0)
+            blocked = (f"{row['benign_blocked']}/{benign_n} "
+                       f"({100 * row['benign_blocked'] / benign_n:.1f}%)"
+                       if benign_n else "not run")
+            correct = (f"{row['benign_correct']}/{benign_n} "
+                       f"({100 * row['benign_correct'] / benign_n:.1f}%)"
+                       if benign_n else "not run")
+            lines.append(f"| {desc} | {attack} | {fixed_broke} | {p_value} | {blocked} | {correct} |")
+        lines.append("\nUndefended baseline: 61/200 attack successes (30.5%); 115/200 benign answers "
+                     "correct (57.5%). The full stack measured 7/200 attack successes (3.5%) "
+                     "and 17/200 benign rows blocked (8.5%). Removing sanitization produced the "
+                     "largest leave-one-out ASR increase (22/200, 11.0%); the guarded-prompt-only "
+                     "arm had 106/200 successes (53.0%). All runs used a single seed. Treat "
+                     "leave-one-out differences as descriptive; the reported exact p-values are "
+                     "against undefended, not pairwise tests against full.")
+        lines.append("\nRaw counts: `step4 dataset/ablation_table.json`; run outputs and manifests: "
+                     "`step4 dataset/mitigation_results/ablation200/`.")
+    else:
+        lines.append("_(step4 dataset/ablation_table.json not found — run "
+                     "`score_ablation_study.py` first)_")
 
     lines.append("\n## Reconciliation checklist (fill in by hand before publishing)")
     lines.append("- [ ] Which protocol's neutralization number is the one cited in the abstract?")

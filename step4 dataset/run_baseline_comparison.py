@@ -2,9 +2,11 @@
 """
 run_baseline_comparison.py
 =============================
-Runs the pipeline under three defense profiles (llmguard_only, spotlight_only,
-full) against the same slice, so the project's own contribution is measured
-against an external baseline rather than only ablations of itself.
+Runs the pipeline under three internal pipeline profiles
+(llmguard_only, spotlight_only, full) against the same slice. These profiles
+are not an external-detector-only baseline: the local input gate and output
+rail still run. For a detector-only LLM Guard comparison, use
+run_external_guard_baseline.py.
 
 USAGE
 ------

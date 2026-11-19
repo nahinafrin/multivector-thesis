@@ -27,7 +27,15 @@ The most defensible n=200 mitigation headline is the **ground-plus** configurati
 - benign block cost: **0.0% -> 9.0%**;
 - security-gain / benign-cost ratio: **1.6x**.
 
-The full configuration measured a stronger apparent ASR reduction, **30.5% -> 13.5%**, but its initial benign block cost was **45.0 points**. Further investigation identified a grounding-judge blind spot for terse polar answers induced by the full prompt-shaping path. That full-arm benign-cost interpretation remains provisional and is not used as the headline.
+The earlier full configuration measured a stronger apparent ASR reduction, **30.5% -> 13.5%**, but its initial benign block cost was **45.0 points**. Further investigation identified a grounding-judge blind spot for terse polar answers induced by that older full prompt-shaping path. Treat this as an older-code result, not the current stack's benign-cost estimate.
+
+A later, controlled follow-up used the current seven-layer implementation, fixed scorer,
+and the same 200-row planted-attack and 200-row benign-control arms. In that version,
+the full stack measured **3.5% attack success** and **8.5% benign blocking** (7/200 and
+17/200, respectively). This supersedes the older-code full-stack result as the estimate
+for the current implementation; it does not change the ground-plus result above into a
+like-for-like comparison, because the pipeline version and mitigation configuration
+differ.
 
 ## System Progression
 
@@ -102,7 +110,8 @@ flowchart LR
 | Marker scorer correction | 200 planted rows | Original 31.0% OFF -> 18.5% was corrected to 30.5% OFF -> 16.5% for ground-plus | Numeric normalization and refutation handling changed the trusted headline. |
 | Ground-plus mitigation | 200 planted attack rows | 61/200 -> 33/200 successes; 30.5% -> 16.5%; 14.0-point reduction; p=2.46e-7 | Primary security result. |
 | Ground-plus benign cost | 200 clean QA rows | 0.0% -> 9.0% block rate; 11 broken / 3 fixed; 1.6x gain/cost | Primary utility trade-off. |
-| Full mitigation secondary arm | 200 planted + 200 clean QA rows | 30.5% -> 13.5% ASR; apparent 45.0-point benign cost | Stronger apparent ASR, but benign cost remains provisional because of the terse-polar grounding blind spot. |
+| Earlier full mitigation arm | 200 planted + 200 clean QA rows | 30.5% -> 13.5% ASR; apparent 45.0-point benign cost | Older-code result; cost remains provisional because of the terse-polar grounding blind spot. |
+| Current-code seven-layer ablation | 30 configurations; 200 attack + 200 benign rows per arm | Full: 7/200 attack successes (3.5%); 17/200 benign rows blocked (8.5%) | Later, controlled follow-up; do not pool with older-code full or ground-plus rows. |
 
 ### Overall Result
 
@@ -114,7 +123,7 @@ xychart-beta
     bar [30.5, 16.5, 0.0, 9.0]
 ```
 
-**Overall conclusion:** the ground-plus configuration is the most defensible primary result. It cuts measured attack success from **30.5% to 16.5%** while increasing benign blocking from **0.0% to 9.0%**, giving a **14.0-point security reduction** and a **1.6x security-gain-per-benign-cost ratio**. The full arm remains secondary until its grounding-sensitive benign-cost measurement is independently replayed with preserved retrieval evidence.
+**Overall conclusion:** ground-plus remains the primary result for the original Protocol B comparison: it cuts measured attack success from **30.5% to 16.5%** while increasing benign blocking from **0.0% to 9.0%**, a **14.0-point security reduction** and **1.6x security-gain-per-benign-cost ratio**. The later seven-layer ablation is a separate current-code follow-up: its full stack measured **3.5% ASR** and **8.5% benign blocking**. Do not interpret these as a direct head-to-head comparison because the implementation and configuration differ.
 
 ### Thesis Figure Files
 
@@ -138,10 +147,43 @@ python "step4 dataset\generate_thesis_figures.py"
 | Configuration | ASR OFF | ASR ON | ASR reduction | Benign block cost | Gain / cost | Status |
 |---|---:|---:|---:|---:|---:|---|
 | Ground-plus | 30.5% | 16.5% | 14.0 pts | 9.0 pts | 1.6x | **Primary headline** |
-| Full | 30.5% | 13.5% | 17.0 pts | 45.0 pts | 0.4x | Secondary; benign cost provisional |
+| Earlier full (older code) | 30.5% | 13.5% | 17.0 pts | 45.0 pts | 0.4x | Historical; benign cost provisional |
 | Ground-only | 30.5% | 26.5% | 4.0 pts | Not rechecked at n=200 | Not available | Ablation |
 | No-refuse | 30.5% | 20.5% | 10.0 pts | Existing artifact only | Not final | Ablation |
 | Refuse-only | 30.5% | 19.0% | 11.5 pts | Not rechecked at n=200 | Not available | Ablation |
+
+### Current-Code Seven-Layer Ablation
+
+This follow-up evaluated all seven layers with leave-one-out and add-one-in configurations
+on the same 200-row attack and 200-row benign arms. The undefended baseline was 61/200
+attack successes (30.5%) and 115/200 benign answers correct (57.5%). The full stack
+measured 7/200 attack successes (3.5%), 17/200 benign rows blocked (8.5%), and 104/200
+benign answers correct (52.0%).
+
+| Configuration | Attack success | Benign blocked | What the comparison suggests |
+|---|---:|---:|---|
+| Full: all seven layers | 3.5% (7/200) | 8.5% (17/200) | Current-code full-stack reference |
+| Full minus sanitization | 11.0% (22/200) | 7.5% (15/200) | Largest observed leave-one-out ASR increase |
+| Full minus grounding gate | 6.5% (13/200) | 2.5% (5/200) | Higher ASR, lower benign blocking |
+| Full minus refuse-on-detection | 6.0% (12/200) | 7.0% (14/200) | Higher ASR |
+| Full minus tightened rerank | 6.0% (12/200) | 6.5% (13/200) | Higher ASR |
+| Full minus guarded prompt | 5.5% (11/200) | 12.5% (25/200) | Higher ASR, higher benign blocking |
+| Full minus Presidio masking | 4.0% (8/200) | 8.5% (17/200) | Small observed ASR difference |
+| Full minus DLP | 3.5% (7/200) | 8.5% (17/200) | Same observed rates as full |
+| Guarded prompt only | 53.0% (106/200) | 0.0% (0/200) | Worse ASR than undefended |
+
+The add-one-in runs measured 15.0% ASR for grounding alone, 16.0% for sanitization
+alone, 18.0% for refuse-on-detection alone, 24.5% for tightened rerank alone, and
+29.5% each for Presidio alone and DLP alone. These are single-seed results. The scorer's
+exact p-values test each configuration against undefended; they are not pairwise
+significance tests against the full stack, so leave-one-out differences should be
+described as observed differences rather than statistically confirmed layer effects.
+The older full result's 45.0% benign-blocking estimate belongs to the older pipeline
+and is not an estimate for this current seven-layer version.
+
+Detailed counts and the generated results table are in
+[ablation_table.json](./step4%20dataset/ablation_table.json); per-run data and manifests
+are in [ablation200](./step4%20dataset/mitigation_results/ablation200/).
 
 ### Earlier n=30v2 Ground-plus Check
 
@@ -164,8 +206,9 @@ Three self-audits materially improved the reliability of the conclusions:
 
 ## Limitations and Reproducibility Caveats
 
-- The n=200 ground-plus headline is the primary claim; several supporting experiments remain n=8 or n=30 and should be described as directional.
-- Full's 45.0-point benign cost is provisional because the stored rows do not preserve the ranked evidence needed for exact offline grounding replay.
+- The ground-plus result is the primary headline for the original Protocol B; the current-code seven-layer ablation is a separate follow-up with a different full-stack implementation.
+- The 30-run ablation uses one seed. Its exact p-values compare each arm against undefended, not leave-one-out configurations against the full stack.
+- The older full arm's 45.0-point benign cost is specific to that older pipeline and should not be attributed to the current seven-layer implementation.
 - The hard-negative quota remains below target in the locally reproducible degraded-source environment: gated HuggingFace sources require authentication, and `social_engineering` is not registered in the source registry.
 - Some experiments depend on Ollama, local model availability, CPU/GPU state, Windows Task Scheduler, and PowerShell behavior.
 - The canary-based protocol and marker/ASR protocol measure different failure surfaces and should not be collapsed into one number.

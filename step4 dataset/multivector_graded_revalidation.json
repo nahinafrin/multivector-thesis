@@ -1,0 +1,21 @@
+{
+  "before": {
+    "label": "BEFORE (squashed scores, frozen run)",
+    "total": 30,
+    "gate_blocked": 0,
+    "evaluated": 30,
+    "fired": 0,
+    "subthreshold_fired": 0,
+    "missing_graded": 0
+  },
+  "after": {
+    "label": "AFTER (graded margin, current code)",
+    "total": 30,
+    "gate_blocked": 0,
+    "evaluated": 30,
+    "fired": 24,
+    "subthreshold_fired": 24,
+    "missing_graded": 0
+  },
+  "verdict": "IMPROVED"
+}

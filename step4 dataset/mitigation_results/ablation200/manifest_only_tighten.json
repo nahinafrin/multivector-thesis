@@ -1,0 +1,19 @@
+{
+  "timestamp_utc": "2026-10-14T22:11:06.858858+00:00",
+  "slice": "planted_attacks_200.jsonl",
+  "label": "only_tighten",
+  "limit": null,
+  "off_jsonl": "C:\\Users\\sarke\\Desktop\\Multivector methodology-local api extension - Copy\\step4 dataset\\mitigation_results\\ablation200\\off.jsonl",
+  "on_jsonl": "C:\\Users\\sarke\\Desktop\\Multivector methodology-local api extension - Copy\\step4 dataset\\mitigation_results\\ablation200\\on_only_tighten.jsonl",
+  "on_mitigation_config": {
+    "enabled": true,
+    "sanitize": false,
+    "tighten_retrieval": true,
+    "guarded_prompt": false,
+    "grounding_gate": false,
+    "presidio_mask": false,
+    "dlp": false,
+    "refuse_on_detection": false
+  },
+  "score_command": "python score_mitigation_ab.py --off C:\\Users\\sarke\\Desktop\\Multivector methodology-local api extension - Copy\\step4 dataset\\mitigation_results\\ablation200\\off.jsonl --on C:\\Users\\sarke\\Desktop\\Multivector methodology-local api extension - Copy\\step4 dataset\\mitigation_results\\ablation200\\on_only_tighten.jsonl --out C:\\Users\\sarke\\Desktop\\Multivector methodology-local api extension - Copy\\step4 dataset\\mitigation_results\\ablation200\\report_only_tighten.json"
+}

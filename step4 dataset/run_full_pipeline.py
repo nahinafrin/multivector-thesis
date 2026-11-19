@@ -386,7 +386,9 @@ def main() -> None:
     ap.add_argument("--defense-profile",
                     choices=["full", "llmguard_only", "spotlight_only"],
                     default="full",
-                    help="External-baseline profile for run_baseline_comparison.py. "
+                    help="Pipeline comparison profile for run_baseline_comparison.py. "
+                         "The llmguard_only profile still uses the local input gate "
+                         "and output rail; it is not a detector-only external baseline. "
                          "'full' is byte-identical to today's default pipeline.")
     ap.add_argument("--tau-review", type=float, default=None,
                     help="Override Step 3c REVIEW threshold (default 0.35).")

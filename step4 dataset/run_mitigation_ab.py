@@ -54,7 +54,29 @@ def _cfg_dict(cfg: MitigationConfig) -> dict:
             "refuse_on_detection": cfg.refuse_on_detection}
 
 
+ONLY_LAYERS = {  # --only <name>  ->  MitigationConfig field (add-one-in ablation)
+    "sanitize": "sanitize", "tighten": "tighten_retrieval", "prompt": "guarded_prompt",
+    "grounding": "grounding_gate", "presidio": "presidio_mask", "dlp": "dlp",
+    "refuse": "refuse_on_detection",
+}
+
+
 def build_on_config(args) -> MitigationConfig:
+    only = getattr(args, "only", None)
+    if only:                                   # exactly one layer on, all others off
+        flags = {f: False for f in ONLY_LAYERS.values()}
+        flags[ONLY_LAYERS[only]] = True
+        return MitigationConfig(enabled=True, **flags)
+    layers = getattr(args, "layers", None)
+    if layers:                                 # exactly these layers on (combination ablation)
+        names = [x.strip() for x in layers.split(",") if x.strip()]
+        bad = [x for x in names if x not in ONLY_LAYERS]
+        if bad:
+            raise SystemExit(f"--layers: unknown layer(s) {bad}; choose from {sorted(ONLY_LAYERS)}")
+        flags = {f: False for f in ONLY_LAYERS.values()}
+        for x in names:
+            flags[ONLY_LAYERS[x]] = True
+        return MitigationConfig(enabled=True, **flags)
     if args.only_grounding:
         return MitigationConfig(enabled=True, sanitize=False, tighten_retrieval=False,
                                 guarded_prompt=False, grounding_gate=True,
@@ -75,6 +97,10 @@ def build_on_config(args) -> MitigationConfig:
 def auto_label(args) -> str:
     if args.label:
         return args.label
+    if getattr(args, "only", None):
+        return f"only_{args.only}"
+    if getattr(args, "layers", None):
+        return "combo_" + "_".join(x.strip() for x in args.layers.split(",") if x.strip())
     if args.only_grounding:
         return "groundonly"
     disabled = []
@@ -215,6 +241,11 @@ def main():
     ap.add_argument("--no-dlp", action="store_true")
     ap.add_argument("--only-grounding", action="store_true",
                     help="ON arm = grounding gate only")
+    ap.add_argument("--only", choices=sorted(ONLY_LAYERS), default=None,
+                    help="ON arm = exactly this one layer (add-one-in ablation)")
+    ap.add_argument("--layers", default=None,
+                    help="ON arm = exactly these layers, comma-separated, e.g. grounding,refuse "
+                         f"(choices: {', '.join(sorted(ONLY_LAYERS))})")
     args = ap.parse_args()
 
     label = auto_label(args)

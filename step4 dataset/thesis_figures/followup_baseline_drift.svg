@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="650" viewBox="0 0 1100 650">
+<rect width="100%" height="100%" fill="#f8fafc"/>
+<text x="550.0" y="42.0" font-family="Arial, sans-serif" font-size="24" text-anchor="middle" font-weight="700" fill="#203040">Undefended baseline drift: July versus current code</text>
+<line x1="100" y1="545.0" x2="1060" y2="545.0" stroke="#dbe4ec"/>
+<text x="88.0" y="550.0" font-family="Arial, sans-serif" font-size="12" text-anchor="end" font-weight="400" fill="#203040">0%</text>
+<line x1="100" y1="499.5" x2="1060" y2="499.5" stroke="#dbe4ec"/>
+<text x="88.0" y="504.5" font-family="Arial, sans-serif" font-size="12" text-anchor="end" font-weight="400" fill="#203040">10%</text>
+<line x1="100" y1="454.0" x2="1060" y2="454.0" stroke="#dbe4ec"/>
+<text x="88.0" y="459.0" font-family="Arial, sans-serif" font-size="12" text-anchor="end" font-weight="400" fill="#203040">20%</text>
+<line x1="100" y1="408.5" x2="1060" y2="408.5" stroke="#dbe4ec"/>
+<text x="88.0" y="413.5" font-family="Arial, sans-serif" font-size="12" text-anchor="end" font-weight="400" fill="#203040">30%</text>
+<line x1="100" y1="363.0" x2="1060" y2="363.0" stroke="#dbe4ec"/>
+<text x="88.0" y="368.0" font-family="Arial, sans-serif" font-size="12" text-anchor="end" font-weight="400" fill="#203040">40%</text>
+<line x1="100" y1="317.5" x2="1060" y2="317.5" stroke="#dbe4ec"/>
+<text x="88.0" y="322.5" font-family="Arial, sans-serif" font-size="12" text-anchor="end" font-weight="400" fill="#203040">50%</text>
+<line x1="100" y1="272.0" x2="1060" y2="272.0" stroke="#dbe4ec"/>
+<text x="88.0" y="277.0" font-family="Arial, sans-serif" font-size="12" text-anchor="end" font-weight="400" fill="#203040">60%</text>
+<line x1="100" y1="226.5" x2="1060" y2="226.5" stroke="#dbe4ec"/>
+<text x="88.0" y="231.5" font-family="Arial, sans-serif" font-size="12" text-anchor="end" font-weight="400" fill="#203040">70%</text>
+<line x1="100" y1="181.0" x2="1060" y2="181.0" stroke="#dbe4ec"/>
+<text x="88.0" y="186.0" font-family="Arial, sans-serif" font-size="12" text-anchor="end" font-weight="400" fill="#203040">80%</text>
+<line x1="100" y1="135.5" x2="1060" y2="135.5" stroke="#dbe4ec"/>
+<text x="88.0" y="140.5" font-family="Arial, sans-serif" font-size="12" text-anchor="end" font-weight="400" fill="#203040">90%</text>
+<line x1="100" y1="90.0" x2="1060" y2="90.0" stroke="#dbe4ec"/>
+<text x="88.0" y="95.0" font-family="Arial, sans-serif" font-size="12" text-anchor="end" font-weight="400" fill="#203040">100%</text>
+<text x="340.0" y="595.0" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="400" fill="#203040">Attack success</text>
+<rect x="295.5" y="406.2" width="42.0" height="138.8" rx="3" fill="#94a3b8"/>
+<text x="316.5" y="399.2" font-family="Arial, sans-serif" font-size="11" text-anchor="middle" font-weight="700" fill="#203040">30.5</text>
+<rect x="342.5" y="410.8" width="42.0" height="134.2" rx="3" fill="#0f766e"/>
+<text x="363.5" y="403.8" font-family="Arial, sans-serif" font-size="11" text-anchor="middle" font-weight="700" fill="#203040">29.5</text>
+<text x="820.0" y="595.0" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="400" fill="#203040">Benign correct</text>
+<rect x="775.5" y="283.4" width="42.0" height="261.6" rx="3" fill="#94a3b8"/>
+<text x="796.5" y="276.4" font-family="Arial, sans-serif" font-size="11" text-anchor="middle" font-weight="700" fill="#203040">57.5</text>
+<rect x="822.5" y="287.9" width="42.0" height="257.1" rx="3" fill="#0f766e"/>
+<text x="843.5" y="280.9" font-family="Arial, sans-serif" font-size="11" text-anchor="middle" font-weight="700" fill="#203040">56.5</text>
+<rect x="120" y="622" width="14" height="14" fill="#94a3b8"/>
+<text x="141.0" y="634.0" font-family="Arial, sans-serif" font-size="12" text-anchor="start" font-weight="400" fill="#203040">July</text>
+<rect x="310" y="622" width="14" height="14" fill="#0f766e"/>
+<text x="331.0" y="634.0" font-family="Arial, sans-serif" font-size="12" text-anchor="start" font-weight="400" fill="#203040">Current</text>
+</svg>

@@ -1,0 +1,145 @@
+{
+  "latency_s": {
+    "Undefended": {
+      "attack": {
+        "n": 200,
+        "median": 9.17,
+        "mean": 9.58,
+        "p95": 13.05,
+        "max": 46.41
+      },
+      "benign": {
+        "n": 200,
+        "median": 8.62,
+        "mean": 8.84,
+        "p95": 12.16,
+        "max": 16.6
+      }
+    },
+    "Full stack (7 mitigation layers)": {
+      "attack": {
+        "n": 200,
+        "median": 15.44,
+        "mean": 12.0,
+        "p95": 24.73,
+        "max": 31.3
+      },
+      "benign": {
+        "n": 200,
+        "median": 15.25,
+        "mean": 15.43,
+        "p95": 21.3,
+        "max": 37.8
+      }
+    },
+    "Sanitize + grounding + refuse": {
+      "attack": {
+        "n": 200,
+        "median": 15.92,
+        "mean": 12.85,
+        "p95": 29.15,
+        "max": 34.98
+      },
+      "benign": {
+        "n": 200,
+        "median": 18.96,
+        "mean": 19.53,
+        "p95": 29.51,
+        "max": 40.72
+      }
+    },
+    "Sanitize + refuse": {
+      "attack": {
+        "n": 200,
+        "median": 9.72,
+        "mean": 7.55,
+        "p95": 14.91,
+        "max": 17.57
+      },
+      "benign": {
+        "n": 200,
+        "median": 10.73,
+        "mean": 11.0,
+        "p95": 15.11,
+        "max": 28.24
+      }
+    },
+    "Refuse-on-detection only": {
+      "attack": {
+        "n": 200,
+        "median": 7.53,
+        "mean": 6.09,
+        "p95": 12.18,
+        "max": 14.77
+      },
+      "benign": {
+        "n": 200,
+        "median": 8.34,
+        "mean": 8.49,
+        "p95": 11.58,
+        "max": 23.85
+      }
+    },
+    "Sanitization only": {
+      "attack": {
+        "n": 200,
+        "median": 10.92,
+        "mean": 11.29,
+        "p95": 15.45,
+        "max": 29.72
+      },
+      "benign": {
+        "n": 200,
+        "median": 10.56,
+        "mean": 11.02,
+        "p95": 14.74,
+        "max": 51.96
+      }
+    },
+    "Grounding gate only": {
+      "attack": {
+        "n": 200,
+        "median": 16.36,
+        "mean": 17.19,
+        "p95": 25.66,
+        "max": 36.78
+      },
+      "benign": {
+        "n": 200,
+        "median": 16.42,
+        "mean": 17.23,
+        "p95": 25.42,
+        "max": 34.16
+      }
+    }
+  },
+  "full_pipeline_external_n200_s_per_query": 23.82,
+  "profile_run": {
+    "rows": 20,
+    "wall_s": 1119,
+    "s_per_query_incl_model_load": 55.95
+  },
+  "memory": {
+    "samples": 920,
+    "gpu_mem_mib": {
+      "median": 2183.0,
+      "peak": 6298.0
+    },
+    "gpu_util_pct": {
+      "median": 0.0,
+      "peak": 100.0
+    },
+    "python_rss_mib": {
+      "median": 6415.0,
+      "peak": 8000.0
+    },
+    "ollama_rss_mib": {
+      "median": 42.0,
+      "peak": 342.0
+    },
+    "host_ram_total_mib": {
+      "median": 6461.5,
+      "peak": 8272.0
+    }
+  }
+}

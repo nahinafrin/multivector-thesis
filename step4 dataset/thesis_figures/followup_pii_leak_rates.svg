@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1420" height="298" viewBox="0 0 1420 298">
+<rect width="100%" height="100%" fill="#f8fafc"/>
+<text x="710.0" y="42.0" font-family="Arial, sans-serif" font-size="24" text-anchor="middle" font-weight="700" fill="#203040">PII leakage rates in extraction and incidental slices</text>
+<line x1="390.0" y1="92" x2="390.0" y2="228" stroke="#dbe4ec"/>
+<text x="390.0" y="250.0" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="400" fill="#203040">0%</text>
+<line x1="626.2" y1="92" x2="626.2" y2="228" stroke="#dbe4ec"/>
+<text x="626.2" y="250.0" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="400" fill="#203040">5%</text>
+<line x1="862.5" y1="92" x2="862.5" y2="228" stroke="#dbe4ec"/>
+<text x="862.5" y="250.0" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="400" fill="#203040">10%</text>
+<line x1="1098.8" y1="92" x2="1098.8" y2="228" stroke="#dbe4ec"/>
+<text x="1098.8" y="250.0" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="400" fill="#203040">15%</text>
+<line x1="1335.0" y1="92" x2="1335.0" y2="228" stroke="#dbe4ec"/>
+<text x="1335.0" y="250.0" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="400" fill="#203040">20%</text>
+<text x="376.0" y="114.0" font-family="Arial, sans-serif" font-size="13" text-anchor="end" font-weight="400" fill="#203040">Extraction / OFF (n=30)</text>
+<rect x="390" y="101.0" width="0.0" height="16" rx="3" fill="#64748b"/>
+<line x1="390.0" y1="109.0" x2="928.6" y2="109.0" stroke="#203040" stroke-width="2"/>
+<line x1="390.0" y1="104.0" x2="390.0" y2="114.0" stroke="#203040"/>
+<line x1="928.6" y1="104.0" x2="928.6" y2="114.0" stroke="#203040"/>
+<text x="937.6" y="114.0" font-family="Arial, sans-serif" font-size="12" text-anchor="start" font-weight="700" fill="#203040">0.0%</text>
+<text x="376.0" y="148.0" font-family="Arial, sans-serif" font-size="13" text-anchor="end" font-weight="400" fill="#203040">Extraction / ON (n=30)</text>
+<rect x="390" y="135.0" width="0.0" height="16" rx="3" fill="#0f766e"/>
+<line x1="390.0" y1="143.0" x2="928.6" y2="143.0" stroke="#203040" stroke-width="2"/>
+<line x1="390.0" y1="138.0" x2="390.0" y2="148.0" stroke="#203040"/>
+<line x1="928.6" y1="138.0" x2="928.6" y2="148.0" stroke="#203040"/>
+<text x="937.6" y="148.0" font-family="Arial, sans-serif" font-size="12" text-anchor="start" font-weight="700" fill="#203040">0.0%</text>
+<text x="376.0" y="182.0" font-family="Arial, sans-serif" font-size="13" text-anchor="end" font-weight="400" fill="#203040">Incidental / OFF (n=30)</text>
+<rect x="390" y="169.0" width="0.0" height="16" rx="3" fill="#64748b"/>
+<line x1="390.0" y1="177.0" x2="928.6" y2="177.0" stroke="#203040" stroke-width="2"/>
+<line x1="390.0" y1="172.0" x2="390.0" y2="182.0" stroke="#203040"/>
+<line x1="928.6" y1="172.0" x2="928.6" y2="182.0" stroke="#203040"/>
+<text x="937.6" y="182.0" font-family="Arial, sans-serif" font-size="12" text-anchor="start" font-weight="700" fill="#203040">0.0%</text>
+<text x="376.0" y="216.0" font-family="Arial, sans-serif" font-size="13" text-anchor="end" font-weight="400" fill="#203040">Incidental / ON (n=30)</text>
+<rect x="390" y="203.0" width="0.0" height="16" rx="3" fill="#0f766e"/>
+<line x1="390.0" y1="211.0" x2="928.6" y2="211.0" stroke="#203040" stroke-width="2"/>
+<line x1="390.0" y1="206.0" x2="390.0" y2="216.0" stroke="#203040"/>
+<line x1="928.6" y1="206.0" x2="928.6" y2="216.0" stroke="#203040"/>
+<text x="937.6" y="216.0" font-family="Arial, sans-serif" font-size="12" text-anchor="start" font-weight="700" fill="#203040">0.0%</text>
+<text x="390.0" y="280.0" font-family="Arial, sans-serif" font-size="11" text-anchor="start" font-weight="400" fill="#203040">Wilson 95% intervals. Both slices measured 0 leaks; upper bounds reflect the small n=30 samples.</text>
+</svg>

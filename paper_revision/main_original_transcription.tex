@@ -1,0 +1,233 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{xcolor}
+\usepackage{url}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,shapes.geometric,fit,calc}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\usepgfplotslibrary{groupplots}
+
+\begin{document}
+
+\title{Attributing Security in a Local, Zero-Cost Defense-in-Depth Pipeline for Retrieval-Augmented Generation}
+
+\author{\IEEEauthorblockN{Anonymous Authors}}
+
+\maketitle
+
+\begin{abstract}
+Retrieval-Augmented Generation (RAG), although intended to make large language model (LLM) outputs reliable, cannot escape its own vulnerability, since every single retrieved piece of data could be an input channel for the intruder to feed its instructions into the context window. The deployed systems feature different defective layers of protection; nevertheless, the relevant studies do not usually question the effectiveness of these layers. This paper introduces a thirteen-stage local zero-cost defense pipeline for RAG. Each layer is tested against an adversarial collection of on-directional, off-directional, and multimodal injected attacks. A detailed analysis indicates three conclusions. Firstly, the overall effectiveness of the pipeline is 100 percent---the number of leaked canaries equals zero, and the number of non-processed poison chunks equals 74. At the same time, the protection is provided by chunk-by-chunk verification and cleansing instead of employing advanced detectors. Secondly, it is discovered that, albeit theoretically advanced, a particular type of injection signature detector fails to detect events, which is not an encouraging finding. Thirdly, it is proved that, despite seeming to be the most secure solution, instruction injections with the help of ordinary semantic decoys remain in place, thus being a separate attack vector that can still influence the model's behavior despite the applied defenses.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Retrieval-augmented generation, prompt injection, LLM security, defense in depth, indirect injection, local inference, guardrail models.
+\end{IEEEkeywords}
+
+\section{Introduction}
+Recently, large language models have been integrated into systems that read emails or constantly browse online content and query proprietary databases. Retrieval Augmented Generation (RAG) has made this possible in knowledge-challenging tasks: instead of using parametric memory, RAG leverages the data from a retrieval method at the time of querying~\cite{lewis2020rag}. This is now the commonly used architecture for answering questions in business settings, in programming assistants, and chatbots. This kind of architecture provides a security feature that closed models have not: every retrieved piece of information becomes a channel with untrusted communication, just like any regular input. Thus, even a basic attacker who can affect the data that could be retrieved (by editing the wiki, making a review, or poisoning the information source) is capable of delivering instructions directly to the context window without using any instructions from the end user. Greshake et al.\ demonstrated how to do this against production applications for the first time and introduced the term indirect prompt injection~\cite{greshake2023}, which is now included in the OWASP Top 10 list as one of the most dangerous issues in the applications of LLMs~\cite{owasp2025}. Most available security tools related to this threat presume that an organization requires a paid cloud-based service, such as a moderation API, hosted judges, and managed vector storage devices, which contradicts the very essence of RAG security. The reason is that all prompts are being processed via a third-party classifier,r which means that sensitive information is in the hands of more than one player in the process. Therefore, it will be mandatory to adhere to the strict principle of having all parts of the solution function in local circumstances and use non-expensive hardware, meeting the open-weight requirement or having a permissive license beyond free usage.
+
+Real RAG implementations employ various imperfect protective layers instead of just relying on a single layer of protection. However, when the proposed pipeline is successful against an attack, it is not clear what layer was effective---whether the new detector adds any additional advantages to the earlier ones or whether all the other earlier layers could perform the same tasks even if the new layer is removed. Our findings can be summarized as follows: (i) a zero-cost defense-in-depth architecture in which an adaptive risk score is propagated from the input gate to downstream stages, as detailed in Section~\ref{sec:method}; (ii) a negative result showing that a detector based on injection-pattern channels cannot identify coordinated sub-threshold attacks, as demonstrated in Section~\ref{sec:negative}; (iii) a stage-level evaluation that distinguishes measured security from the appearance of sophisticated techniques, presented in Section~\ref{sec:results}; and (iv) the residual threat from signature-free semantic injection, examined in Section~\ref{sec:semantic}.
+
+This study pursues four objectives.
+\begin{enumerate}
+\item[(i)] \textbf{Local, Zero-Cost Pipeline:} Create a RAG pipeline with layers of defense made only from open-source and free-of-charge components.
+\item[(ii)] \textbf{Security Attribution:} Use paired statistics to attribute security results to each stage of the pipeline, rather than reporting accuracy metrics for each detector.
+\item[(iii)] \textbf{Conjunctive Detection Feasibility:} Evaluate the ability of the signature detector to recognize synthetic multi-channel attacks using experimental data and theoretical reasoning.
+\item[(iv)] \textbf{Scope the Residual Gap:} Identify attack types that may still bypass the pipeline and investigate the reasons for their non-detection.
+\end{enumerate}
+
+\section{Related Work}
+Self-RAG trains a system to produce reflection tokens that determine if retrieval and criticism are required~\cite{asai2024selfrag}; Corrective RAG contributes a specific evaluator tasked with scoring the quality of the retrieved results~\cite{yan2024crag}; and FLARE makes further retrievals when the confidence is low~\cite{jiang2023flare}. All these methods utilize a single forward pass to transform it into an iterative process using the slow feedback signal to modify one of the previous decisions. Our closed-loop controller adopts this framework by replacing the answer's quality with an information security risk as the variable being controlled.
+
+According to Perez and Ribeiro, it is possible to manipulate GPT-3 by using handcrafted prompts and the ``ignore previous instructions'' pattern~\cite{perez2022}, while Greshake et al.\ pointed out that the threat of prompt injections extends even further to indirect injection~\cite{greshake2023}. In addition, Liu et al.\ proposed a formal approach to prompt injection in the form of optimization~\cite{liu2024formalizing}. Zou et al.\ stressed that adversarial suffixes can be effectively transferred across different models~\cite{zou2023}.
+
+The refined DeBERTa-v3 injection classifier~\cite{he2021debertav3,protectai2024} offers a fast injection score suitable for CPU execution, while Llama Guard provides a categorical safety verdict~\cite{inan2023llamaguard}. Both fail differently---the injection classifier tends to signal harmless instruction-like language and misses nuanced role-playing actions, while the safety classifier can effectively deal with framing problems but avoids detecting syntax injection. Therefore, a combination of both approaches seems relevant for accessing the input stage.
+
+Spotlighting encases the recovered context in fixed delimiters, allowing the model to handle it as information instead of orders and lowering the chances of success of an attack from more than 50\% to less than 2\% for the GPT models~\cite{hines2024spotlighting}. The dual-LLM pattern~\cite{willison2023dual} and CaMeL~\cite{debenedetti2025camel} separate privileged control from raw untrusted information. Their security does not rely on any classifier being able to detect the attack.
+
+Reference-independent grounding metrics such as RAGAS break an answer into assertions and validate those assertions against the context~\cite{es2023ragas}. Inter-model disparity calculated through Sentence-BERT serves as an additional signal of risk~\cite{reimers2019sbert}. Since configurations are compared across the same rows, we implement McNemar's paired test~\cite{mcnemar1947} with Wilson score intervals for small class proportions~\cite{wilson1927}.
+
+This work can be considered not merely a new method but a carefully evaluated collection of mostly previously known methods, with the main contributions being the security-attribution method, the negative findings of conjunctive detection, and the risk-feedback control design.
+
+This study is prompted by three notable gaps in the existing literature. First, defense-in-depth RAG pipelines have not been evaluated with stage-level attribution, leaving it unclear which layer produces the observed security effect. This gap is addressed through paired statistical verification in Section~\ref{sec:stats}. Second, although conjunctive sub-threshold multivector attacks are a recognized risk, it remains unclear whether a detector based on injection-signature channels can recognize such attacks in theory or practice. This question is examined through a closed-form argument and empirical validation in Section~\ref{sec:negative}. Third, the literature does not provide an evaluated answer-side signal that reliably distinguishes signature-free semantic misinformation from syntactic injection. This residual gap is examined in Section~\ref{sec:semantic}.
+
+\section{Proposed Method}\label{sec:method}
+The system encompasses a conventional RAG core (embed $\rightarrow$ retrieve $\rightarrow$ rerank $\rightarrow$ generate $\rightarrow$ ground) with a defensive cascade of thirteen stages (Table~\ref{tab:stages}). The common theoretical basis is the dynamic risk score that moves ahead: a borderline prompt is not just recorded at the input gate; it generates a risk score, which at the same time causes stricter context sanitizing, reranking, and grounding for this prompt. A clean prompt is practically free; a borderline prompt pays for strict checks downstream; a prompt that is obviously hostile is rejected at the gate before costly retrieval and generation occur. The pipeline is, therefore, adaptive regarding strictness, while staying stable regarding surface area.
+
+\subsection{Forward Cascade}
+Every prompt undergoes a process known as normalization (Stage 2) during which zero-width characters, homoglyphs, and encoding tricks are removed from the prompt. After being normalized, the prompt passes through the three-stage fusion input gate (Stage 3/3c), which combines two elements, namely the DeBERTa-v3 injection score and a categorical Llama-Guard 3 verdict, and arrives at a tri-state decision on whether to allow, review, or block the prompt. A continuous fused risk score is generated at the gate, and this score is taken into account in Stages 6, 7, and 10 for the same evaluation request. Retrieved chunks (in Stages 4 and 5), after being retrieved, undergo scanning separately for the presence of embedding instructions (Stage 6), in order to defend against indirect injections, and for being stamped with a unique canary token. The canary is always there without any justification for appearing in the result and is proof of the program's way of treating the context as instructions rather than data in Stage 10. The surviving pieces are re-ordered in Stage 7, put together using a prompt that prevents the use of context-based instructions in Stage 8, and sent simultaneously to three different local architectures in Stage 9, where their dissimilarity (in terms of their distance measured using sentence embeddings) constitutes a negative risk indicator. The answer is assessed for accountability, and the canary is checked again in Stage 10. At last, a two-stage output rail is employed to mask the PII (Presidio) and apply a DLP network (Stages 11 and 12), after which either a fixed rejection or a grounded answer is produced in Stage 13.
+
+\begin{table*}[t]
+\centering
+\caption{The thirteen-stage cascade and its two extensions. Every model runs locally; no component transmits a prompt, chunk, or answer off-host.}
+\label{tab:stages}
+\begin{tabular}{lll}
+\toprule
+Stage & Function & Local, zero-cost tool \\
+\midrule
+1 & User input / evaluation feed & FastAPI, JSONL \\
+2 & Normalization & \texttt{ftfy}, NFKC, spaCy \\
+3/3c & Injection input gate (fusion) & LLM-Guard (DeBERTa-v3) and Llama-Guard 3 \\
+4 & Query embedding & BAAI/bge-m3 \\
+5 & Vector search & FAISS (Flat / HNSW) \\
+6 & Per-chunk sanitization and canary & LLM-Guard per-chunk scanner \\
+7 & Cross-encoder reranking & BAAI/bge-reranker-v2-m3 \\
+8 & Augmented prompt and spotlighting & LangChain LCEL \\
+9 & Generator ensemble & Ollama: Llama 3.2, Mistral 7B, Qwen2.5 \\
+10 & Hybrid grounding and canary recheck & Lexical overlap and a small-model judge \\
+10A & Multivector risk fusion (extension) & Noisy-OR co-activation detector \\
+10B & Closed-loop risk controller (extension) & Accept, escalate, retry, or refuse \\
+11 & Output sanitization & Presidio and Llama-Guard \\
+12 & DLP scanner & Regular expressions, Luhn validation, and exact-data matching \\
+13 & Safe response & Fixed refusal and audit trail \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\subsection{Extension A: Multi-Vector Risk Fusion}
+This stage is designed to detect the conjunctive subthreshold attack, in which an adversary splits a malicious instruction between a query and a retrieved chunk so that neither channel alone crosses the block threshold. The two channels are normalized to $[0,1]$. The query-channel risk is
+\begin{equation}
+q = \max\left(s_{\mathrm{inj}}, r_{\mathrm{fusion}}\right),
+\end{equation}
+where $q$ is the risk score of the user's query carried from the gate, and the context channel $c$ is the maximum per-chunk injection score from Stage 6. With per-channel floors, the detector only fires when all three conditions are satisfied: (i) each active channel is at or above its minimum floor; (ii) at least $k$ channels are active (default $k=2$); and (iii) the noisy-OR joint risk
+\begin{equation}
+R = 1 - \prod_i (1 - x_i)
+\end{equation}
+Is at or above the minimum joint threshold. The co-activation required in (ii) distinguishes ``one loud vector'' handled in stage 6 from the ``two quiet vectors acting together''. It targets injection-signature channels only and is not expected to detect pure semantic obfuscation.
+
+\subsection{Extension B: Closed-Loop Risk-Feedback Controller}
+This stage turns the retrieval-to-ground segment into a closed loop that revises the verdict based on the late signals the forward pass already computes (ensemble disagreement, grounding faithfulness, canary integrity, co-activation). After each attempt, it selects one of the four actions: accept; escalate-verify (re-run ground-only with a stricter threshold); recover-retry (broaden retrieval and retry, bounded by a cap) when the answer does not look malicious but is ungrounded yet topically related; refuse (on a hard block, a canary leak, an attack-like signal on ungrounded output, or an exhausted recovery path). The controller writes only the effective-risk value the existing forward-pass accessor folds in, so no parallel adaptivity mechanism is added. It is fail-closed: if the controller itself breaks,k s it forces a block.
+
+\section{Experimental Setup}\label{sec:setup}
+\textbf{Datasets.} The retrieval knowledge base is the rag-mini-wikipedia corpus~\cite{ragmini2024}, selected for its compact size, factual veracity, and lack of personal data. The input gate is calibrated against a merged and normalized schema consisting of public prompt-injection, jailbreak, and toxicity datasets. The central evaluation artifact is constructed with a 220-row labelled adversarial slice (Table~\ref{tab:slice}) with explicit, machine-checkable per-row expectations. Testing the pipeline over the almost benign QA set alone would leave the adaptive stages permanently at the base threshold. The slice is the smallest labelled set that exercises all threat regimes simultaneously. The calibration finds extension A to be nearly binary, scoring benign text near 0.0 and injection near 0.9--1.0 with little mass in between, so that the sub-threshold a conjunctive attack must occupy is scant.
+
+\begin{table}[t]
+\centering
+\caption{Constructed 220-row adversarial slice.}
+\label{tab:slice}
+\begin{tabular}{lrl}
+\toprule
+Class & $n$ & Threat model \\
+\midrule
+Benign control & 80 & Specificity \\
+Poisoned context & 40 & B: Indirect \\
+Adversarial query & 40 & A: Direct \\
+Multivector attack & 40 & C: Conjunctive \\
+Gate-slip query & 20 & Semantic (residual) \\
+\midrule
+Total & 220 & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Evaluation criteria.} We evaluate specificity, redaction and canary integrity, detector fire rate against ground truth, and end-to-end neutralization. The 220-row slice is executed twice, with the controller enabled and disabled, yielding two paired and independently scored artifacts. Counts are calculated from explicit per-row fields using the standard-library JSONL reader. All reported figures come from the three frozen artifacts and can be reproduced independently.
+
+\begin{figure}[t]
+\centering
+\fbox{\parbox{0.9\columnwidth}{\centering Original Fig.~1 (raster workflow diagram)}}
+\caption{RAG defense pipeline implementation workflow.}
+\label{fig:workflow}
+\end{figure}
+
+\section{Results and Discussion}\label{sec:results}
+\subsection{Specificity, Indirect Injection, and Gate Adaptivity}
+On the 80 benign rows, the fusion gate flags zero, meaning the specificity remains clean. At the downstream stage, the controlled run reports 10 benign false refusals (vs.\ 14 baseline), of which around 6 are attributed to disagreement-at-risk signal, 3 to ungrounded recovery refusals, and 1 to an out-of-memory error instead of a security decision. Indirect-injection defense is one of the results' headlines. In total, across all 40 poisoned-context rows in both runs, 40/40 chunks were redacted at stage 6, and all 40 canaries remained intact at stage 10, all while the benign queries were still answered. Defense is achieved through sanitization and canary verification, not classifier recall. In case of direct injection, the gate alone flags 29--30 of the 40 malicious queries,s and all 40 are eventually blocked once the risk-adjusted downstream tightening applies, which is direct evidence that the forward-propagated risk score defends beyond the gate.
+
+\subsection{A Proven Negative Result: Conjunctive Detection}\label{sec:negative}
+The multi-vector detector was specifically built for the conjunctive class, and the result indicates that the detector does not fire on the cases it targets for a structural reason (Table~\ref{tab:negative}).
+
+\textbf{Measured.} Out of 40 multivector rows, 6 were blocked by the gate before the detector runs. 1 of the remaining 34 triggers the detector, but it is invalid because both channels are individually supra-threshold (q-0.7, c=1.0); hence it is a measurement of hard detection instead of coordination of sub-threshold signals. The firing condition is not met in any of the 34 rows.
+
+\textbf{Why calibration cannot rescue it.} After Platt scaling was rejected, the query fell back to identity. Class separation is -0.30 raw and -0.39 after calibration. Negative separation implies that there is an overlap between the attack and harmless distributions, and therefore no monotonic transformation can provide the usable graded batch of signals. The context channel was never calibrated successfully.
+
+\textbf{Empirical confirmation.} Newly created conjunctive payloads run through the unchanged stage 3 and stage 6 produce 0 valid fires of the 4 candidate pairs: 2 fired only because both channels scored 1.0 (single-channel, already blocked by gate), and the remaining 2 did not fire because stage 6 dropped the poisoned chunk first. The controls performed their function correctly.
+
+\textbf{Closed-form argument.} A valid conjunctive fire needs the query to pass through stage 3 (low injection score) and the chunk to survive stage 6 (low injection score). Hence, any coordination signal found based on the injection signature strength is low on the rows that pass both gates, so it cannot fire on the rows a genuine sub-threshold must occupy. Getting a high coordination signal while both individual signals remain below base score requires measuring something other than injection signature (e.g., semantic intent), which is outside the capabilities of the injection signature detector. In turn, any directive payload capable of getting through the coordination signal would be so strong indeed that it would stop the near-binary classifier in at least one channel, which would cause Stage 3 blocking or Stage 6 dropping the chunk being caught in the single channel. No surviving-and dangerous middle band exists. This is not a tuning failure but a structural property of the detector class.
+
+\begin{table}[t]
+\centering
+\caption{Evidence chain for the negative result.}
+\label{tab:negative}
+\begin{tabular}{ll}
+\toprule
+Evidence source & Finding \\
+\midrule
+Slice (34 rows, post-gate) & 1/34 fires, invalid (both supra-threshold) \\
+Sub-threshold condition & Holds on 0/34 rows \\
+Calibration (query channel) & Separation $-0.30$ raw, $-0.39$ calibrated \\
+Calibration (context channel) & Never calibrated \\
+Real-scanner stress (4 pairs) & 0/4 valid; 2 single-channel, 2 no-fire \\
+Closed-form argument & No surviving-and-dangerous band \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{End-to-End Neutralization: The Result That Holds}\label{sec:e2e}
+The meaningful metric is whether a payload has reached the user and not whether a detector was fired. It has been verified independently in each of the 220 rows that there were no canary leaks and that 74 out of 74 poison chunks have been redacted (40 poisoned-context and 34 evaluated multivector rows) with the canary unchanged in all cases. Every attack class row has been neutralized due to blocking (both direct and gate-slip classes) or due to redaction-plus-grounding (indirect and multivector classes) in spite of detection failing on the multivector classes. Once again, the point of a layered defense is to avoid dependence on the most complex detector when an earlier, simpler layer negates the payload anyway. Yet, one caveat is mentioned that the frozen slice predates the per-row metric, and neutralization is measured on a canary signal, which is a marker-tagged re-run would tighten ``neutralized'' from ``canary intact'' to ``canary intact and target string absent''.
+
+\subsection{Statistical Analysis}\label{sec:stats}
+The main assertion is backed up by three paired comparisons (McNemar, same rows). Refusal-on-detection causes a statistically significant drop in attack success (p < .001, n = 200), thus being the only standalone layer to clear a conventional threshold; Wilson intervals accompany small per-chance counts. Grounding on top of refusal returns p = 1.0, meaning that there is no additional decrease. Aggressive pre-generation filtering produces a substantial benign false-positive rate while providing practically no fight against attack success, thus being detrimental to utility. On a separate note, the combination of the two detection models into a co-activation AND-gate (unlike the retracted conjunctive detector) results in the drop of the benign false-positive rate from 45\% to 2.5\% at zero recall cost, signifying that fusion is applicable for specificity but not for detection.
+
+\begin{figure}[t]
+\centering
+\fbox{\parbox{0.9\columnwidth}{\centering Original Fig.~2 (raster bar chart)}}
+\caption{Multivector attack success rate by mitigation arm ($n=200$).}
+\label{fig:asr}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\fbox{\parbox{0.9\columnwidth}{\centering Original Fig.~3 (raster bar chart)}}
+\caption{Absolute attack-success-rate reduction relative to the undefended baseline ($n=200$).}
+\label{fig:reduction}
+\end{figure}
+
+\subsection{Controller versus Baseline}
+The closed-loop controller adds no measurable security over the single-pass baseline (net multivector catch 0 in both runs). Where it differs is utility: it blocks 88 rows vs.\ the baseline's 101, delivering 70 benign rows (vs.\ 66) and 34 poisoned-context rows (vs.\ 28) via recovery retries, at the cost of extra generations on affected rows. Both scoring conventions agree the two configurations are security-equivalent. The accurate claim is therefore ``same security at lower false-refusal cost via recovery,'' not ``additional prevention''---and we report the former rather than the more impressive-sounding latter.
+
+\subsection{The Unsolved Gap: Signature-Free Semantic Injection}\label{sec:semantic}
+The gate-slip class (roleplay/novel-framing around an unsafe prompt) carries near-zero injection signature; 5 of 20 rows (25\%) slip the gate in both runs, a measured residual no injection-signature detector is expected to close. A sharper version is the semantic misinformation class: a benign-looking query paired with a planted-premise chunk that reads as neutral reference text but asserts a false fact. On an 8-row slice (every row confirmed by the real scanners to pass the gate and survive Stage 6), 4 of 8 attacks succeed under both passive and spotlighting Stage 8. Spotlighting reshuffles how rows are neutralized but not how many succeed---exactly as predicted, since spotlighting strips instruction authority and a planted false fact is not an instruction. No answer-side signal separates this class from benign traffic: disagreement AUC is 0.47--0.48 with negative percentile gaps; faithfulness AUC is 0.62 (gap $-0.10$). Spotlight faithfulness AUC rises to 0.86, but with a negative gap at n=8---a higher AUC without a usable threshold, reported as such rather than as a positive result. A purpose-built parametric-consistency check also fails (AUC 0.54). Because this check verifies a claim against the model's own prior and still fails on benign false positives, the remaining viable direction is external provenance or source-trust weighting---not any signal derived from the model's own outputs.
+
+\subsection{Interpretation and Threats to Validity}
+Table~\ref{tab:claims} consolidates every claim against what was measured. The picture is specific and non-obvious: the components that sound most sophisticated (the conjunctive detector, the feedback controller) are not the ones doing the measured security work, and the components that sound least sophisticated (per-chunk sanitization+canary, and plain refuse-on-detection) are. This is the central methodological lesson: a system's architectural ambition and its measured security contribution are separate axes, and only a stage-by-stage, paired, class-decomposed evaluation can tell them apart. On construct validity, canary integrity is a proxy for payload leakage (mitigated by the planned marker re-run). On internal validity, components were developed iteratively against the same slice, mitigated for the negative result by the fresh real-scanner stress test. On external validity, the slice is constructed rather than naturally occurring and small (n=8 for the semantic supplement); generalization to larger corpora, other generators, and adaptive white-box adversaries remains open. Our finding that undifferentiated filtering is disproportionately costly is consistent with concurrent adaptive orchestration work~\cite{palleria2026ado}; an apparent tension with layered frameworks reporting incremental gains from stacking~\cite{saleem2026layered} is named as an open question rather than smoothed into false agreement.
+
+\begin{table}[t]
+\centering
+\caption{Claim versus measured outcome, consolidated.}
+\label{tab:claims}
+\begin{tabular}{p{1.6cm}p{3.6cm}p{1.6cm}}
+\toprule
+Claim & Measured & Status \\
+\midrule
+Benign specificity & 0/80 gate flags; $\approx 6/80$ downstream false positives & Holds at gate \\
+Indirect-injection defense & 40/40 redacted; 40/40 canaries intact & Holds \\
+Gate adaptivity & 29--30 of 40 at gate; 40/40 by cascade & Holds \\
+Conjunctive detection & 1/34 invalid; 0/34 sub-threshold; 0/4 real & Fails structurally \\
+End-to-end neutralization & 0/220 leaks; 74/74 redacted per run & Holds \\
+Closed-loop prevention & Security-equivalent; recovery only & Reframed as utility \\
+Semantic neutralization & 4/8 succeed in both configurations ($n=8$) & Partial \\
+Semantic detection & AUC $\le 0.62$ usable; 0.86 has a negative gap & Fails \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\fbox{\parbox{0.9\columnwidth}{\centering Original Fig.~4 (raster panel chart)}}
+\caption{Headline measured outcomes from the frozen evaluation artifacts.}
+\label{fig:headline}
+\end{figure}
+
+\section{Conclusion}
+We designed, implemented, and rigorously evaluated a local, zero-cost, adaptive defense-in-depth pipeline for RAG security, and characterized with reproducible evidence exactly where its protection holds, degrades, or fails. Three findings of deliberately different character anchor the work. Positive: end-to-end neutralization of injection-style attacks is total across the evaluated slice (0 canary leaks, 74/74 poison chunks redacted per run), achieved primarily through per-chunk sanitization and canary verification, with refusal-on-detection the only individually significant mitigation layer. Negative: the conjunctive sub-threshold detector does not work for a structural reason---no surviving-and-dangerous middle band exists for a detector built on injection-signature channels---proven by a closed-form argument and confirmed empirically. Open: signature-free semantic misinformation succeeds 50\% of the time regardless of spotlighting, and no tested answer-side signal separates it from benign traffic. For practitioners: invest in per-chunk sanitization+canary and refusal-on-detection; do not budget effort for a conjunctive detector against a near-binary classifier; and treat semantic misinformation as an explicitly unmitigated risk requiring external provenance or human review. The broader argument is that a defense-in-depth pipeline should be evaluated the way any multi-component system is---stage by stage, with claims traced to evidence and negative results reported as carefully as positive ones.
+
+\bibliographystyle{IEEEtran}
+\bibliography{refs}
+
+\end{document}

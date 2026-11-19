@@ -100,8 +100,15 @@ def main():
     ap.add_argument("--no-tighten", action="store_true")
     ap.add_argument("--no-prompt", action="store_true")
     ap.add_argument("--no-grounding", action="store_true")
+    ap.add_argument("--no-presidio", action="store_true", help="no Presidio PII masking")
     ap.add_argument("--no-dlp", action="store_true")
     ap.add_argument("--only-grounding", action="store_true")
+    ap.add_argument("--only", choices=["sanitize", "tighten", "prompt", "grounding", "presidio", "dlp", "refuse"],
+                    default=None, help="ON arm = exactly this one layer (add-one-in ablation)")
+    ap.add_argument("--layers", default=None,
+                    help="ON arm = exactly these layers, comma-separated (combination ablation)")
+    ap.add_argument("--off-only", action="store_true",
+                    help="run the undefended (OFF) arm only, then stop")
     args = ap.parse_args()
 
     label = auto_label(args)
@@ -119,6 +126,10 @@ def main():
         print(f"[off] skipped (reusing {out_off})")
         if not Path(out_off).is_file():
             raise SystemExit(f"--skip-off but missing {out_off}")
+
+    if args.off_only:
+        print("[on] skipped (--off-only)")
+        return
 
     run_arm(args.qa, "on", out_on, detector, n=args.n, seed=args.seed,
             base_url=args.base_url, on_cfg=on_cfg)
