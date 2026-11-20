@@ -23,6 +23,7 @@ We agree that most components are known, and we now say so explicitly ("Distinct
 
 * No single layer comes close to the full stack. The best single layers leave 15–18% ASR, against 3.5% for the full stack.
 * The subset sanitize + grounding + refuse reaches 5.5% ASR against 3.5% for the full stack (exact McNemar p = 0.34), with 9.5% vs. 8.5% benign blocking. The two are statistically indistinguishable, so the paper now explicitly recommends this simpler configuration.
+* We repeated the undefended, full-stack, and subset arms with two more generation seeds (7 and 1234) on the same rows. Undefended ASR is 30.3 ± 0.8%, full stack 4.2 ± 0.6%, and subset 6.0 ± 0.9% across the three replicates. The subset is not significantly different from the full stack in any replicate (p = 0.34, 0.27, 0.77), but it is worse in all three, by 1.8 ± 0.8 points, and the paper now states this small cost.
 
 We also compared against three external defenses on the same 210 paired rows (Sec. V-E, "External baselines"):
 
@@ -44,7 +45,7 @@ We justify the stratified slice as an attribution instrument, not a prevalence s
 We agree, and we removed the claim. Sec. V-C now reports two levels:
 
 * **Level 1, canary integrity:** 0/220 leaks and 74/74 redactions. This shows that no instruction reached the generator as an instruction, and nothing more.
-* **Level 2, target-string checks on delivered outputs:** 7/200 planted attacks still succeed under the full stack (3.5%, 95% CI [1.7, 7.0], against 29.5% undefended). On the semantic slice, 14/40 succeed; on PoisonedRAG, 136/150 succeed, against 137/150 for a paired undefended arm. BIPIA blocks 45/50, and we label the 5 unblocked rows as unverified because BIPIA goals are not string-scorable.
+* **Level 2, target-string checks on delivered outputs:** 7/200 planted attacks still succeed under the full stack (3.5%, 95% CI [1.7, 7.0], against 29.5% undefended). On the semantic slice, 14/40 succeed; on PoisonedRAG, 136/150 succeed, against 137/150 for a paired undefended arm. BIPIA blocks 45/50. BIPIA goals are not string-scorable, so we read the 5 unblocked answers manually: 2 followed the injected instruction, 2 did not, and 1 is indeterminable, giving 2–3/50 (4–6%) defended attack success.
 
 The abstract, claims table (Table X), and conclusion were rewritten to match.
 
@@ -122,6 +123,7 @@ A new "Statistical analysis" paragraph (Sec. IV) explains:
 * We state the n for every test.
 * We apply Bonferroni correction to the leave-one-out (α = 0.007) and subset (α = 0.0125) families and flag results that do not survive it. As a result, two semantic-slice attributions are now labeled "suggestive".
 * We define AUC and the percentile gap precisely.
+* Run-to-run variance: the headline Protocol B arms are now replicated under three generation seeds and reported as mean ± SD with per-replicate tests (Sec. V-E, "Replicates"). Ollama GPU generation is not bit-reproducible at a fixed seed, so the paper treats these runs as independent replicates and says so in the threats to validity.
 
 The earlier-code arms are kept and clearly labeled (Sec. V-F). We retract their "refusal is the only significant single layer" result, which the current-code ablation contradicts.
 
@@ -139,5 +141,5 @@ See 4.2. We also added a "Scalability" paragraph covering sequential throughput 
 ---
 
 ### Notes for the authors (remove before submission)
-* Verify the bibliographic details of `yao2025controlnet`, `yi2023bipia`, and `saleem2026layered`. They were reconstructed from arXiv IDs in the repository, not from the papers themselves.
+* Bibliographic details of ControlNET, BIPIA (KDD 2025), PoisonedRAG (USENIX Security 2025), ADO (first author Pallerla) and Saleem et al. (arXiv:2606.19660) were checked against their arXiv pages. The Saleem et al. related-work text and positioning-table row were corrected after reading their full paper: they do evaluate all seven layer subsets, but without significance tests or CIs, and their target model is GPT-4o via API.
 * The original raster figures were not available as source. Figs. 1–4 are rebuilt from the data and need a visual check after compiling (e.g., on Overleaf).

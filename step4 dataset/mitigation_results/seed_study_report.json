@@ -1,0 +1,77 @@
+{
+  "42": {
+    "asr": {
+      "a_off": 59,
+      "a_full": 7,
+      "a_combo": 11
+    },
+    "full_vs_off": [
+      54,
+      2,
+      4.4325654258159375e-14
+    ],
+    "combo_vs_full": [
+      3,
+      7,
+      0.34375
+    ],
+    "benign_blocked": {
+      "b_full": 17,
+      "b_combo": 19
+    },
+    "benign_correct": {
+      "b_off": 113,
+      "b_full": 104
+    }
+  },
+  "7": {
+    "asr": {
+      "a_off": 62,
+      "a_full": 9,
+      "a_combo": 14
+    },
+    "full_vs_off": [
+      55,
+      2,
+      2.295386103412511e-14
+    ],
+    "combo_vs_full": [
+      4,
+      9,
+      0.266845703125
+    ],
+    "benign_blocked": {
+      "b_full": 21,
+      "b_combo": 13
+    },
+    "benign_correct": {
+      "b_off": 115,
+      "b_full": 106
+    }
+  },
+  "1234": {
+    "asr": {
+      "a_off": 61,
+      "a_full": 9,
+      "a_combo": 11
+    },
+    "full_vs_off": [
+      56,
+      4,
+      9.084503982403902e-13
+    ],
+    "combo_vs_full": [
+      5,
+      7,
+      0.7744140625
+    ],
+    "benign_blocked": {
+      "b_full": 18,
+      "b_combo": 17
+    },
+    "benign_correct": {
+      "b_off": 115,
+      "b_full": 106
+    }
+  }
+}

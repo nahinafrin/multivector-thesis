@@ -38,10 +38,15 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from collections import Counter
 from pathlib import Path
 
 from pipeline_common import PipelineState
+
+# Generation seed. Default 42 reproduces every earlier run; set RAG_GEN_SEED to run
+# additional seeds for variance estimates (row sampling seeds are separate and unchanged).
+GEN_SEED = int(os.environ.get("RAG_GEN_SEED", "42"))
 
 DEFAULT_ENSEMBLE = {
     "llama3.2:3b": "logic",
@@ -97,7 +102,7 @@ def _build_runnable_parallel(models: dict[str, str], base_url: str):
     from langchain_core.runnables import RunnableParallel, RunnableLambda
     branches = {}
     for model_name in models:
-        llm = ChatOllama(model=model_name, base_url=base_url, temperature=0.2, seed=42)
+        llm = ChatOllama(model=model_name, base_url=base_url, temperature=0.2, seed=GEN_SEED)
         branches[model_name] = llm | RunnableLambda(lambda m: m.content)
     return RunnableParallel(branches)
 
@@ -175,7 +180,7 @@ def select_fusion(candidates: dict[str, str],
         "Do not invent facts.\n\n"
         f"{joined}\n\nFused answer:"
     )
-    llm = ChatOllama(model=fuser_model, base_url=base_url, temperature=0.0, seed=42)
+    llm = ChatOllama(model=fuser_model, base_url=base_url, temperature=0.0, seed=GEN_SEED)
     return llm.invoke(fuse_prompt).content
 
 
