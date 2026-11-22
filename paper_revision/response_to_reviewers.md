@@ -64,7 +64,7 @@ We added BIPIA (50 rows), PoisonedRAG on NQ, HotpotQA, and MS MARCO (150 rows), 
 
 * **BIPIA:** 45/50 blocked (0/50 undefended) and 33/49 injected chunks redacted.
 * **PoisonedRAG:** no measurable protection. Attack success is 91.3% undefended and 90.7% defended (7 rows fixed, 6 broken, exact McNemar p = 1.0). Because the complete pipeline uses a 3-model ensemble, we also ran a same-generator comparison (llama3.2:3b in both arms, seven defense layers): 91.3% → 85.3% (16 fixed, 7 broken, p = 0.09; 95% CI for the difference [−12.2, +0.2] points). Neither comparison shows a significant reduction. This is PoisonedRAG passages carry no instruction signature and a planted fact is "grounded" in the poisoned passage.
-* **deepset:** the gate catches 11/30 real injections.
+* **deepset:** the gate blocks 14/30 real injections (17/30 including review flags) with 0/30 benign false positives; on the full held-out test split it blocks 23/60 at 1/56 benign false positives. (An earlier draft reported 11/30 from a run whose output was not saved; we re-ran the evaluation with a committed script and per-row outputs.)
 
 We report the weak results with the same prominence as the strong ones.
 

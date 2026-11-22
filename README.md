@@ -80,12 +80,13 @@ All commands below run from `step4 dataset/` with the venv active.
 | 40-row semantic slice (Sec. V-H) | `build_semantic_slice.py`, `run_followup_study.py` | `score_followup_study.py` | `semantic_slice_non_yes_no_40.jsonl`, `mitigation_results/followup_nonyesno40/` |
 | Latency and memory (Table IX) | `resource_profile/sample_resources.ps1` (during a run) | `summarize_overhead.py` | `resource_profile/` |
 | Earlier-code mitigation arms (Sec. V-F) | `run_planted_mitigation.py` | `score_mitigation_ab.py` | `mitigation_results/planted200/` |
-| deepset gate recall (Table VIII)² | — | — | — |
+| deepset gate test (Table VIII)² | `run_deepset_gate_eval.py` | same script | `external_eval/deepset_gate_rows.jsonl`, `deepset_gate_report.json` |
 
 ¹ Needs the BIPIA file from `multivector_extra_datasets/row4_indirect_injection_rag_poisoning/download_row4_repos.py`;
 the derived slices it produces are already committed.<br>
-² The deepset 30 + 30 gate evaluation is not yet backed by a committed script and output file in this
-repository. The earlier row-1 deepset probes are in `archive/row1_deepset_exploration/`.
+² Needs the deepset test split from `python download_datasets.py` (repository root). The per-row gate
+decisions are committed, so the summary can be checked without re-running. Earlier exploratory
+deepset probes are in `archive/row1_deepset_exploration/`.
 
 Most runners print their options with `--help`. Generation uses seed 42 unless `RAG_GEN_SEED` is set.
 

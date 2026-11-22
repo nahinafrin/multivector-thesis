@@ -1,0 +1,38 @@
+{
+  "source": "deepset_prompt_injections_test.jsonl",
+  "seed": 42,
+  "n_per_class": 30,
+  "paper_sample": {
+    "injection": {
+      "n": 30,
+      "blocked": 14,
+      "blocked_or_review": 17,
+      "blocked_ci": "46.7% [30.2, 63.9]",
+      "blocked_or_review_ci": "56.7% [39.2, 72.6]"
+    },
+    "benign": {
+      "n": 30,
+      "blocked": 0,
+      "blocked_or_review": 0,
+      "blocked_ci": "0.0% [0.0, 11.4]",
+      "blocked_or_review_ci": "0.0% [0.0, 11.4]"
+    }
+  },
+  "full_test_split": {
+    "injection": {
+      "n": 60,
+      "blocked": 23,
+      "blocked_or_review": 28,
+      "blocked_ci": "38.3% [27.1, 51.0]",
+      "blocked_or_review_ci": "46.7% [34.6, 59.1]"
+    },
+    "benign": {
+      "n": 56,
+      "blocked": 1,
+      "blocked_or_review": 1,
+      "blocked_ci": "1.8% [0.3, 9.4]",
+      "blocked_or_review_ci": "1.8% [0.3, 9.4]"
+    }
+  },
+  "seconds": 399.7
+}
