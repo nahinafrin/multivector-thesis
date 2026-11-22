@@ -41,8 +41,13 @@ Run standalone:
 from __future__ import annotations
 
 import argparse
+import re
+from typing import TYPE_CHECKING
 
 from pipeline_common import PipelineState
+
+if TYPE_CHECKING:
+    from presidio_analyzer import RecognizerResult
 
 # Scoped entity list: genuinely sensitive identifiers only. DATE_TIME and
 # generic LOCATION/NRP are intentionally absent (they are usually answer content).
@@ -59,6 +64,7 @@ SENSITIVE_ENTITIES = [
     "MEDICAL_LICENSE",
     "US_BANK_NUMBER",
 ]
+_SSN_PATTERN = re.compile(r"\b\d{3}-\d{2}-\d{4}\b")
 
 LLAMAGUARD_MODEL = "llama-guard3:1b"
 BASE_URL = "http://localhost:11434"
@@ -88,13 +94,39 @@ def _get_presidio():
     return _ANALYZER, _ANONYMIZER
 
 
+def _rescue_ssn_from_date_collision(
+    text: str, results: "list[RecognizerResult]"
+) -> "list[RecognizerResult]":
+    """Retag or synthesize SSN-shaped spans before entity filtering."""
+    covered: set[tuple[int, int]] = set()
+    for result in results:
+        span_key = (result.start, result.end)
+        covered.add(span_key)
+        if result.entity_type == "US_SSN":
+            continue
+        span = text[result.start:result.end].strip()
+        if _SSN_PATTERN.fullmatch(span):
+            result.entity_type = "US_SSN"
+            result.score = max(result.score, 0.85)
+    from presidio_analyzer import RecognizerResult
+    for match in _SSN_PATTERN.finditer(text):
+        span_key = (match.start(), match.end())
+        if span_key not in covered:
+            results.append(RecognizerResult(
+                entity_type="US_SSN", start=match.start(), end=match.end(),
+                score=0.85,
+            ))
+    return results
+
+
 def mask_pii(text: str) -> tuple[str, list[dict]]:
     """Mask scoped sensitive entities; return (masked_text, entities)."""
     if not text.strip():
         return text, []
     analyzer, anonymizer = _get_presidio()
-    results = analyzer.analyze(text=text, entities=SENSITIVE_ENTITIES,
-                               language="en")
+    raw_results = analyzer.analyze(text=text, language="en")
+    raw_results = _rescue_ssn_from_date_collision(text, raw_results)
+    results = [r for r in raw_results if r.entity_type in SENSITIVE_ENTITIES]
     entities = [{"type": r.entity_type, "start": r.start, "end": r.end,
                  "score": round(float(r.score), 3)} for r in results]
     if not results:
@@ -167,6 +199,9 @@ def main() -> None:
     ap = argparse.ArgumentParser(description="Step 11: Output Sanitization")
     ap.add_argument("--demo", action="store_true")
     args = ap.parse_args()
+    if not args.demo:
+        ap.print_help()
+        return
 
     samples = [
         "World War I began in 1914. Contact the historian at jane.doe@example.com.",

@@ -1,0 +1,72 @@
+{
+  "input": "baseline_comparison\\grounded_llmguard_only.jsonl",
+  "overall_attack_rows": 130,
+  "overall_neutralized": 130,
+  "overall_neutralization_rate": 1.0,
+  "per_kind": {
+    "poisoned_context": {
+      "n": 40,
+      "neutralized": 40,
+      "neutralization_rate": 1.0,
+      "blocked": 40,
+      "answered_clean": 0,
+      "marker_emitted": 0,
+      "ambiguous_marker_and_truth": 0,
+      "canary_leaked": 0,
+      "marker_unavailable": 40,
+      "detector_fired": 0,
+      "detector_evaluated": 40,
+      "coordination_present": 0,
+      "coordination_mean": null,
+      "coordination_max": null
+    },
+    "multivector_attack": {
+      "n": 30,
+      "neutralized": 30,
+      "neutralization_rate": 1.0,
+      "blocked": 9,
+      "answered_clean": 21,
+      "marker_emitted": 0,
+      "ambiguous_marker_and_truth": 0,
+      "canary_leaked": 0,
+      "marker_unavailable": 0,
+      "detector_fired": 0,
+      "detector_evaluated": 30,
+      "coordination_present": 0,
+      "coordination_mean": null,
+      "coordination_max": null
+    },
+    "adversarial_query": {
+      "n": 40,
+      "neutralized": 40,
+      "neutralization_rate": 1.0,
+      "blocked": 40,
+      "answered_clean": 0,
+      "marker_emitted": 0,
+      "ambiguous_marker_and_truth": 0,
+      "canary_leaked": 0,
+      "marker_unavailable": 40,
+      "detector_fired": 0,
+      "detector_evaluated": 15,
+      "coordination_present": 0,
+      "coordination_mean": null,
+      "coordination_max": null
+    },
+    "gate_slip_query": {
+      "n": 20,
+      "neutralized": 20,
+      "neutralization_rate": 1.0,
+      "blocked": 20,
+      "answered_clean": 0,
+      "marker_emitted": 0,
+      "ambiguous_marker_and_truth": 0,
+      "canary_leaked": 0,
+      "marker_unavailable": 20,
+      "detector_fired": 0,
+      "detector_evaluated": 7,
+      "coordination_present": 0,
+      "coordination_mean": null,
+      "coordination_max": null
+    }
+  }
+}

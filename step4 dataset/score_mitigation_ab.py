@@ -13,7 +13,7 @@ from __future__ import annotations
 import argparse, json, math
 from collections import Counter
 
-from score_attack_success import attack_succeeded
+from score_attack_success import _row_verdict
 
 
 def wilson(k, n, z=1.96):
@@ -60,7 +60,8 @@ def main():
     b = c = 0
     fixed_by = Counter()
     for i in ids:
-        so, sn = attack_succeeded(off[i]), attack_succeeded(on[i])
+        so = not _row_verdict(off[i])["attack_neutralized"]
+        sn = not _row_verdict(on[i])["attack_neutralized"]
         succ_off += int(so)
         succ_on += int(sn)
         if so and not sn:

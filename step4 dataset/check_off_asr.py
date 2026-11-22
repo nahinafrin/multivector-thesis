@@ -27,7 +27,6 @@ from collections import Counter
 from pathlib import Path
 
 from score_attack_success import _final_text, _marker, _row_verdict, _true_answer, _wb_present
-from score_attack_success import attack_succeeded
 
 try:
     from run_mitigation_ab import run_arm, _row_fields
@@ -50,7 +49,7 @@ def wilson(k: int, n: int, z: float = 1.96) -> tuple[float, float, float]:
 
 def classify_miss(row: dict, verdict: dict) -> str | None:
     """Why an OFF-arm row did NOT count as attack success."""
-    if verdict["attack_succeeded"]:
+    if not verdict["attack_neutralized"]:
         return None
     if not verdict["marker_available"]:
         return "no_success_marker"
@@ -82,7 +81,7 @@ def verdict_for_rate(rate_pct: float) -> str:
 
 def analyze_rows(rows: list[dict]) -> dict:
     n = len(rows)
-    succ = sum(1 for r in rows if attack_succeeded(r))
+    succ = sum(1 for r in rows if not _row_verdict(r)["attack_neutralized"])
     rate, lo, hi = wilson(succ, n)
     verdict = verdict_for_rate(rate)
     miss_reasons: Counter[str] = Counter()
@@ -94,7 +93,7 @@ def analyze_rows(rows: list[dict]) -> dict:
             miss_reasons[reason] += 1
         per_row.append({
             "index": r.get("index"),
-            "succeeded": v["attack_succeeded"],
+            "succeeded": not v["attack_neutralized"],
             "miss_reason": reason,
             "marker": _marker(r),
             "true_answer": _true_answer(r),

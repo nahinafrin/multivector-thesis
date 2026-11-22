@@ -1,0 +1,127 @@
+# Attributing Security in a Local, Zero-Cost Defense-in-Depth Pipeline for RAG
+
+Code, data slices, frozen per-row outputs, and scoring scripts for the paper
+*Attributing Security in a Local, Zero-Cost Defense-in-Depth Pipeline for Retrieval-Augmented
+Generation: Instruction Injection Is Contained, Knowledge Corruption Is Not*
+(manuscript and reviewer response in [`paper_revision/`](paper_revision/)).
+
+The pipeline is a thirteen-stage prompt-injection defense for RAG that runs entirely on one
+laptop with open-weight models and no API calls. The paper attributes its security stage by
+stage, with paired tests on identical rows. In short:
+
+* **Instruction injection is contained.** Attack success on delivered answers drops from
+  30.3 ± 0.8 % to 4.2 ± 0.6 % (three generation seeds, n = 200 each), and 45/50 BIPIA attacks
+  are blocked.
+* **Three cheap layers do most of the work.** Per-chunk sanitization, grounding, and refusal on
+  detection are not significantly different from the full stack (6.0 ± 0.9 % ASR).
+* **Knowledge corruption is not contained.** On PoisonedRAG the defended pipeline is no better
+  than undefended RAG (90.7 % vs. 91.3 %, p = 1.0).
+
+## Repository layout
+
+| Path | Contents |
+|---|---|
+| [`step4 dataset/`](step4%20dataset/) | The pipeline (`step_02_…` to `step_13_…`), evaluation runners, slices, frozen outputs, and scoring scripts. **Everything needed to reproduce the paper lives here.** |
+| [`external_baselines/`](external_baselines/) | ControlNET and Sentinel–Strategist (ADO) baseline code and their comparison results. |
+| [`dataset/`](dataset/) | Builds the merged prompt-injection / jailbreak / toxicity data used to calibrate the input gate. |
+| [`paper_revision/`](paper_revision/) | `main.tex`, `refs.bib`, the reviewer response, and `build_pdf.py` (renders a PDF without LaTeX). |
+| [`docs/`](docs/) | Methodology notes, consolidated results, and the reconciliation notes written during the study. |
+| [`download_datasets.py`](download_datasets.py) | Re-downloads the third-party datasets that are not stored in the repository. |
+| [`archive/`](archive/) | Earlier exploratory scripts (row-1 obfuscation / deepset gate probes, legacy root scripts). Not needed to reproduce the paper; paths inside may need adjusting. |
+
+## Environment
+
+All results were produced on one laptop: AMD Ryzen 5 7640HS, 16 GB RAM, NVIDIA RTX 4060
+Laptop (8 GB), Windows 11, Python 3.11.9, Ollama 0.40.16. Full versions are in Table V of the
+paper and in [`step4 dataset/requirements_lock_venv311.txt`](step4%20dataset/requirements_lock_venv311.txt)
+(the exact `pip freeze` of the environment used).
+
+```powershell
+cd "step4 dataset"
+py -3.11 -m venv .venv311
+.venv311\Scripts\Activate.ps1
+pip install -r requirements_lock_venv311.txt
+python -m spacy download en_core_web_lg
+
+# Local LLMs (Q4_K_M generators, Q8_0 guard), served by Ollama
+ollama pull llama3.2:3b
+ollama pull mistral:7b
+ollama pull qwen2.5:3b
+ollama pull llama-guard3:1b
+```
+
+The rag-mini-wikipedia knowledge base and its FAISS index are committed
+(`step4 dataset/data/`, `step4 dataset/kb_wiki.faiss`).
+
+## Reproducing the paper
+
+There are two ways to check a number.
+
+1. **Re-score the frozen outputs (minutes, no GPU).** Every run's per-row outputs are committed as
+   JSONL. The scoring scripts read them with the standard library and print the paper's numbers.
+2. **Re-run the models (hours, GPU).** The runner scripts regenerate those JSONL files. Ollama GPU
+   generation is not bit-reproducible even at a fixed seed, so re-runs match the paper
+   statistically, not row for row. The paper measures this spread (Sec. V-E, "Replicates").
+
+All commands below run from `step4 dataset/` with the venv active.
+
+| Paper result | Run (regenerates outputs) | Score (reads frozen outputs) | Frozen outputs |
+|---|---|---|---|
+| Protocol A slice, specificity, redaction, canaries (Sec. V-A, V-C, V-D; Tables IV, X) | `build_adversarial_slice.py`, `run_full_pipeline.py` | `score_slice.py` | `adversarial_slice.jsonl`, `grounded*.jsonl`, `frozen/` |
+| Conjunctive detector, saturated vs. graded (Sec. V-B, Table VI) | `revalidate_multivector_graded.py` | same script | `multivector_graded_revalidation.json`, `grounded_controller_graded.jsonl` |
+| Graded detector on external BIPIA conjunctive rows (Table VI) | `build_row4_conjunctive.py`¹ | `score_row4_detection.py` | `row4_mitigation_results/` |
+| Ablation: leave-one-out and single-layer arms (Table VII, Figs. 2–3) | `run_ablation_study.py` | `score_ablation_study.py` | `mitigation_results/ablation200/`, `ablation_table.json` |
+| Ablation: layer subsets (Table VII) | `run_followup_study.py` | `score_followup_study.py` | `mitigation_results/followup200/` |
+| Seed replicates (Sec. V-E, "Replicates") | `run_seed_study.py` | `score_seed_study.py` | `mitigation_results/seed7/`, `seed1234/`, `seed_study_report.json` |
+| LLM-Guard detector baseline (Sec. V-E) | `run_external_guard_baseline.py` | same script | `baseline_comparison/llmguard_detector_baseline.json` |
+| ControlNET and ADO baselines (Sec. V-E) | `../external_baselines/baseline_controlnet.py`, `run_ado_official_on_slice.py` | `../external_baselines/compare_paper_faithful.py` | `../external_baselines/*_results.txt` |
+| PoisonedRAG and BIPIA, complete pipeline (Table VIII) | `convert_external_datasets.py`, `run_full_pipeline.py` | `final_n200_summary.py` | `external_validation_n200.jsonl`, `ext_n200_results.jsonl` |
+| Same rows undefended and same-generator (Table VIII) | `run_mitigation_ab.py --slice external_validation_n200.harness.jsonl` | `score_external_paired.py` | `mitigation_results/external200/` |
+| 40-row semantic slice (Sec. V-H) | `build_semantic_slice.py`, `run_followup_study.py` | `score_followup_study.py` | `semantic_slice_non_yes_no_40.jsonl`, `mitigation_results/followup_nonyesno40/` |
+| Latency and memory (Table IX) | `resource_profile/sample_resources.ps1` (during a run) | `summarize_overhead.py` | `resource_profile/` |
+| Earlier-code mitigation arms (Sec. V-F) | `run_planted_mitigation.py` | `score_mitigation_ab.py` | `mitigation_results/planted200/` |
+| deepset gate recall (Table VIII)² | — | — | — |
+
+¹ Needs the BIPIA file from `multivector_extra_datasets/row4_indirect_injection_rag_poisoning/download_row4_repos.py`;
+the derived slices it produces are already committed.<br>
+² The deepset 30 + 30 gate evaluation is not yet backed by a committed script and output file in this
+repository. The earlier row-1 deepset probes are in `archive/row1_deepset_exploration/`.
+
+Most runners print their options with `--help`. Generation uses seed 42 unless `RAG_GEN_SEED` is set.
+
+### Rendering the paper without LaTeX
+
+```powershell
+cd paper_revision
+python build_pdf.py     # writes main.pdf via headless Edge/Chrome (KaTeX math, SVG figures)
+```
+
+Overleaf with `IEEEtran` remains the reference build for submission.
+
+## Data and licences
+
+Third-party data used in the paper is listed below. Small derived slices and the raw
+PoisonedRAG/BIPIA inputs they were built from (`step4 dataset/external_datasets_raw_source/`) are
+committed. Larger datasets are not stored here; `python download_datasets.py` re-creates them.
+
+| Dataset / model | Use | Licence |
+|---|---|---|
+| [rag-datasets/rag-mini-wikipedia](https://huggingface.co/datasets/rag-datasets/rag-mini-wikipedia) | Knowledge base and benign questions | CC-BY-3.0 |
+| [PoisonedRAG](https://github.com/sleeepeer/PoisonedRAG) (Zou et al., USENIX Security 2025) | External knowledge-corruption set | MIT |
+| [BIPIA](https://github.com/microsoft/BIPIA) (Yi et al., KDD 2025) | External indirect-injection set | MIT (some sub-datasets CC-BY-SA-4.0; see upstream) |
+| [deepset/prompt-injections](https://huggingface.co/datasets/deepset/prompt-injections) | External gate test | Apache-2.0 |
+| [protectai/deberta-v3-base-prompt-injection-v2](https://huggingface.co/protectai/deberta-v3-base-prompt-injection-v2) | Injection scanner | Apache-2.0 |
+| Llama 3.2, Llama Guard 3, Mistral 7B, Qwen2.5 | Generators and safety classifier (via Ollama) | Their respective model licences |
+
+No human participants were involved and no personal data was collected. All attack and benign
+rows come from public datasets or were constructed synthetically.
+
+## Licence
+
+The code and the constructed evaluation slices in this repository are released under the
+[MIT Licence](LICENSE). Third-party datasets and models keep their own licences (table above).
+
+## Citation
+
+If you use this code or the evaluation slices, please cite the paper (citation details will be
+added on publication).

@@ -72,21 +72,46 @@ _STOP = frozenset(
     "a an the of to in on at and or but is are was were be been being this that "
     "these those it its as by for with from into over under than then so such".split()
 )
+_POLAR_ANSWERS = frozenset({"yes", "no", "true", "false"})
 
 
 def _content_tokens(text: str) -> set[str]:
     return {t for t in _TOKEN_RE.findall(text.lower()) if t not in _STOP}
 
 
-def lexical_overlap(answer: str, chunks: list[str]) -> float:
-    """Fraction of the answer's content tokens supported by the evidence."""
+def lexical_overlap(answer: str, chunks: list[str], question: str = "") -> float:
+    """Fraction of the answer's content tokens supported by the evidence.
+
+    A bare polar answer carries no content of its own to check, so use the
+    question's content tokens as the topical grounding claim.
+    """
     a = _content_tokens(answer)
+    if not a or a <= _POLAR_ANSWERS:
+        a = _content_tokens(question)
     if not a:
         return 0.0
     evidence = set()
     for c in chunks:
         evidence |= _content_tokens(c)
     return len(a & evidence) / len(a)
+
+
+def chunk_lexical_overlap(answer: str, chunks: list[str], question: str = "") -> list[float]:
+    """Per-chunk lexical support scores for the answer against each evidence chunk."""
+    a = _content_tokens(answer)
+    if not a or a <= _POLAR_ANSWERS:
+        a = _content_tokens(question)
+    if not a:
+        return [0.0 for _ in chunks]
+
+    scores: list[float] = []
+    for chunk in chunks:
+        chunk_tokens = _content_tokens(chunk)
+        if not chunk_tokens:
+            scores.append(0.0)
+            continue
+        scores.append(len(a & chunk_tokens) / len(a))
+    return scores
 
 
 # --------------------------------------------------------------------------- #
@@ -119,13 +144,31 @@ def _sigmoid(x: float) -> float:
     return 1.0 / (1.0 + math.exp(-x))
 
 
-def model_faithfulness(answer: str, chunks: list[str]) -> float:
-    """Max cross-encoder relevance of the answer against any evidence chunk."""
+def model_faithfulness(answer: str, chunks: list[str], question: str = "") -> float:
+    """Max cross-encoder relevance of the answer against any evidence chunk.
+
+    Pair the answer with its question when available so a bare polar answer
+    gives the cross-encoder a concrete topical hypothesis.
+    """
     if not chunks or not answer.strip():
         return 0.0
     judge = _get_judge()
-    raw = judge.predict([[c, answer] for c in chunks])
+    hypothesis = f"{question} {answer}".strip() if question else answer
+    raw = judge.predict([[c, hypothesis] for c in chunks])
     return max(_sigmoid(float(s)) for s in raw)
+
+
+def chunk_model_faithfulness(answer: str, chunks: list[str], question: str = "") -> list[float]:
+    """Per-chunk cross-encoder relevance scores for the answer against each evidence chunk."""
+    if not chunks or not answer.strip():
+        return [0.0 for _ in chunks]
+    judge = _get_judge()
+    hypothesis = f"{question} {answer}".strip() if question else answer
+    raw = judge.predict([[c, hypothesis] for c in chunks])
+    if isinstance(raw, (float, int)):
+        raw = [raw]
+    flat = [float(v) for v in raw]
+    return [_sigmoid(v) for v in flat]
 
 
 # --------------------------------------------------------------------------- #
@@ -167,8 +210,11 @@ def run(state: PipelineState) -> PipelineState:
     disagreement = float(state.scores.get("disagreement", 0.0))
     threshold = grounding_threshold(risk, disagreement)
 
-    lex = lexical_overlap(answer, chunks)
-    mdl = model_faithfulness(answer, chunks)
+    lex = lexical_overlap(answer, chunks, question=state.prompt)
+    mdl = model_faithfulness(answer, chunks, question=state.prompt)
+    chunk_lex = chunk_lexical_overlap(answer, chunks, question=state.prompt)
+    chunk_mdl = chunk_model_faithfulness(answer, chunks, question=state.prompt)
+    chunk_phi = [max(l, m) for l, m in zip(chunk_lex, chunk_mdl)]
     faithfulness = max(lex, mdl)          # hybrid: uncorrelated failures
 
     # Dual-checkpoint: the canary must NOT appear in the answer.
@@ -188,7 +234,14 @@ def run(state: PipelineState) -> PipelineState:
         "canary_intact": canary_intact,
         "passed": passed,
     }
+    grounding_detail = {
+        "lexical_overlap": [round(v, 4) for v in chunk_lex],
+        "chunk_phis": [round(v, 4) for v in chunk_phi],
+        "chunk_trusts": [1.0 for _ in chunks],
+        "chunk_sources": ["retrieved_chunk" for _ in chunks],
+    }
     state.meta["grounding"] = grounding
+    state.meta["grounding_detail"] = grounding_detail
     state.scores["faithfulness"] = faithfulness
     state.scores["grounding_threshold"] = threshold
     state.log("step_10_grounding_judge", **grounding)

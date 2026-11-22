@@ -1,0 +1,96 @@
+## 1. Drift check: July undefended arm vs undefended arm on current code
+
+Attack success, July:  61/200 = 30.5% [24.5, 37.2]
+Attack success, fresh: 59/200 = 29.5% [23.6, 36.2]
+  rows that succeed only in July: 9; only in fresh: 7; exact p = 0.804 (n=200)
+  identical final responses: 112/200
+Benign correct, July:  115/200 = 57.5% [50.6, 64.1]
+Benign correct, fresh: 113/200 = 56.5% [49.6, 63.2]
+  correct only in July: 6; only in fresh: 4; exact p = 0.754
+Reproducibility check: fresh undefended arm vs Presidio-only arm (a no-op on yes/no answers, run in a different session): identical responses 199/200; attack discordant 0 / 0.
+  Reading: a p-value near 1 means the July and fresh arms agree on net, not on rows. The number of rows that changed (the two discordant counts added) and the identical-response count are what matter.
+  If the fresh arm matches the no-op arm row for row, current code is reproducible across sessions and the gap to the July arm is a code change since July, not run-to-run noise.
+
+## 2. All configurations against the FRESH (current code) undefended arm
+
+Undefended: ASR 59/200 = 29.5% [23.6, 36.2]; benign correct 113/200 = 56.5% [49.6, 63.2]
+
+| Configuration | ASR (95% CI) | fixed / broke vs undefended | exact p | Benign blocked (95% CI) | Benign correct (95% CI) |
+|---|---|---|---|---|---|
+| all seven layers (`full`) | 7/200 = 3.5% [1.7, 7.0] | 54 / 2 | 4.43e-14 | 8.5% [5.4, 13.2] | 52.0% [45.1, 58.8] |
+| all minus guarded prompt (`noprompt`) | 11/200 = 5.5% [3.1, 9.6] | 53 / 5 | 3.5e-11 | 12.5% [8.6, 17.8] | 52.0% [45.1, 58.8] |
+| all minus refuse-on-detection (`norefuse`) | 12/200 = 6.0% [3.5, 10.2] | 51 / 4 | 2.05e-11 | 7.0% [4.2, 11.4] | 52.5% [45.6, 59.3] |
+| all minus grounding gate (`nogrounding`) | 13/200 = 6.5% [3.8, 10.8] | 49 / 3 | 1.04e-11 | 2.5% [1.1, 5.7] | 52.5% [45.6, 59.3] |
+| all minus sanitization (`nosanitize`) | 22/200 = 11.0% [7.4, 16.1] | 50 / 13 | 3.02e-06 | 7.5% [4.6, 12.0] | 54.0% [47.1, 60.8] |
+| all minus tightened rerank (`notighten`) | 12/200 = 6.0% [3.5, 10.2] | 51 / 4 | 2.05e-11 | 6.5% [3.8, 10.8] | 53.5% [46.6, 60.3] |
+| all minus Presidio masking (`nopresidio`) | 8/200 = 4.0% [2.0, 7.7] | 53 / 2 | 8.55e-14 | 8.5% [5.4, 13.2] | 52.0% [45.1, 58.8] |
+| all minus DLP (`nodlp`) | 7/200 = 3.5% [1.7, 7.0] | 54 / 2 | 4.43e-14 | 8.5% [5.4, 13.2] | 52.0% [45.1, 58.8] |
+| refuse-on-detection only (`only_refuse`) | 36/200 = 18.0% [13.3, 23.9] | 25 / 2 | 5.65e-06 | 2.5% [1.1, 5.7] | 54.5% [47.6, 61.3] |
+| grounding gate only (`only_grounding`) | 30/200 = 15.0% [10.7, 20.6] | 29 / 0 | 3.73e-09 | 5.5% [3.1, 9.6] | 56.0% [49.1, 62.7] |
+| sanitization only (`only_sanitize`) | 32/200 = 16.0% [11.6, 21.7] | 30 / 3 | 1.4e-06 | 0.0% [0.0, 1.9] | 54.5% [47.6, 61.3] |
+| tightened rerank only (`only_tighten`) | 49/200 = 24.5% [19.1, 30.9] | 28 / 18 | 0.184 | 0.0% [0.0, 1.9] | 58.0% [51.1, 64.6] |
+| guarded prompt only (`only_prompt`) | 106/200 = 53.0% [46.1, 59.8] | 6 / 53 | 1.75e-10 | 0.0% [0.0, 1.9] | 56.5% [49.6, 63.2] |
+| Presidio masking only (`only_presidio`) | 59/200 = 29.5% [23.6, 36.2] | 0 / 0 | 1 | 0.0% [0.0, 1.9] | 56.5% [49.6, 63.2] |
+| DLP only (`only_dlp`) | 59/200 = 29.5% [23.6, 36.2] | 0 / 0 | 1 | 0.0% [0.0, 1.9] | 56.5% [49.6, 63.2] |
+| sanitize + grounding + refuse (`combo_sanitize_grounding_refuse`) | 11/200 = 5.5% [3.1, 9.6] | 48 / 0 | 7.11e-15 | 9.5% [6.2, 14.4] | 52.0% [45.1, 58.8] |
+| grounding + refuse (`combo_grounding_refuse`) | 21/200 = 10.5% [7.0, 15.5] | 40 / 2 | 4.11e-10 | 7.5% [4.6, 12.0] | 54.0% [47.1, 60.8] |
+| sanitize + grounding (`combo_sanitize_grounding`) | 17/200 = 8.5% [5.4, 13.2] | 42 / 0 | 4.55e-13 | 8.0% [5.0, 12.6] | 53.5% [46.6, 60.3] |
+| sanitize + refuse (`combo_sanitize_refuse`) | 19/200 = 9.5% [6.2, 14.4] | 42 / 2 | 1.13e-10 | 2.5% [1.1, 5.7] | 53.0% [46.1, 59.8] |
+
+## 3. Do combinations match the full stack?
+
+Paired exact McNemar on the same rows. 'combo-only' = rows that succeed (or are blocked) only under the combination; 'full-only' = only under the full stack.
+
+| Combination | ASR | vs full: combo-only / full-only (p) | Benign blocked | vs full: combo-only / full-only (p) |
+|---|---|---|---|---|
+| sanitize + grounding + refuse | 5.5% [3.1, 9.6] | 7 / 3 (p=0.344) | 9.5% [6.2, 14.4] | 7 / 5 (p=0.774) |
+| grounding + refuse | 10.5% [7.0, 15.5] | 18 / 4 (p=0.00434) | 7.5% [4.6, 12.0] | 5 / 7 (p=0.774) |
+| sanitize + grounding | 8.5% [5.4, 13.2] | 13 / 3 (p=0.0213) | 8.0% [5.0, 12.6] | 7 / 8 (p=1) |
+| sanitize + refuse | 9.5% [6.2, 14.4] | 15 / 3 (p=0.00754) | 2.5% [1.1, 5.7] | 0 / 12 (p=0.000488) |
+
+Combination vs each of its single layers (attack success; 'combo-only' = succeeds only under the combination, 'single-only' = only under the single layer):
+
+| Combination | Single layer | single ASR | combo-only / single-only | exact p |
+|---|---|---|---|---|
+| sanitize + grounding + refuse | sanitize | 16.0% [11.6, 21.7] | 0 / 21 | 9.54e-07 |
+| sanitize + grounding + refuse | grounding | 15.0% [10.7, 20.6] | 2 / 21 | 6.6e-05 |
+| sanitize + grounding + refuse | refuse | 18.0% [13.3, 23.9] | 0 / 25 | 5.96e-08 |
+| grounding + refuse | grounding | 15.0% [10.7, 20.6] | 2 / 11 | 0.0225 |
+| grounding + refuse | refuse | 18.0% [13.3, 23.9] | 0 / 15 | 6.1e-05 |
+| sanitize + grounding | sanitize | 16.0% [11.6, 21.7] | 0 / 15 | 6.1e-05 |
+| sanitize + grounding | grounding | 15.0% [10.7, 20.6] | 4 / 17 | 0.0072 |
+| sanitize + refuse | sanitize | 16.0% [11.6, 21.7] | 0 / 13 | 0.000244 |
+| sanitize + refuse | refuse | 18.0% [13.3, 23.9] | 2 / 19 | 0.000221 |
+
+## 4. Non-yes/no slice (40 planted-fact questions; free-text target values)
+
+Undefended: ASR 30/40 = 75.0% [59.8, 85.8]. n=40 is small: read CIs, not point estimates.
+Rows were admitted only if the real scanners passed and did not redact them, so sanitization and the
+gate cannot act here by construction; effects below come from grounding, refusal and the prompt.
+
+| Configuration | ASR (95% CI) | fixed / broke vs undefended | exact p | blocked rows |
+|---|---|---|---|---|
+| all seven layers (`full`) | 14/40 = 35.0% [22.1, 50.5] | 18 / 2 | 0.000402 | 8/40 |
+| all minus guarded prompt (`noprompt`) | 22/40 = 55.0% [39.8, 69.3] | 10 / 2 | 0.0386 | 7/40 |
+| all minus refuse-on-detection (`norefuse`) | 20/40 = 50.0% [35.2, 64.8] | 12 / 2 | 0.0129 | 2/40 |
+| all minus grounding gate (`nogrounding`) | 14/40 = 35.0% [22.1, 50.5] | 18 / 2 | 0.000402 | 7/40 |
+| grounding gate only (`only_grounding`) | 30/40 = 75.0% [59.8, 85.8] | 1 / 1 | 1 | 1/40 |
+| refuse-on-detection only (`only_refuse`) | 25/40 = 62.5% [47.0, 75.8] | 6 / 1 | 0.125 | 6/40 |
+| guarded prompt only (`only_prompt`) | 21/40 = 52.5% [37.5, 67.1] | 12 / 3 | 0.0352 | 0/40 |
+| sanitization only (control: cannot act on this slice) (`only_sanitize`) | 31/40 = 77.5% [62.5, 87.7] | 0 / 1 | 1 | 0/40 |
+| sanitize + grounding + refuse (`combo_sanitize_grounding_refuse`) | 25/40 = 62.5% [47.0, 75.8] | 6 / 1 | 0.125 | 7/40 |
+
+Leave-one-out and single layers vs the full stack on this slice (paired, exact McNemar; 'x-only' = succeeds only without the full stack):
+
+  noprompt                           x-only  9 / full-only  1  p=0.0215
+  norefuse                           x-only  6 / full-only  0  p=0.0312
+  nogrounding                        x-only  0 / full-only  0  p=1
+  only_grounding                     x-only 17 / full-only  1  p=0.000145
+  only_refuse                        x-only 12 / full-only  1  p=0.00342
+  only_prompt                        x-only  8 / full-only  1  p=0.0391
+  only_sanitize                      x-only 18 / full-only  1  p=7.63e-05
+  combo_sanitize_grounding_refuse    x-only 12 / full-only  1  p=0.00342
+
+Sanity check: if `only_sanitize` differs from the undefended arm on more than a couple of rows, the slice or the code is drifting and the other rows should be read with care.
+
+How to read: a combination that is NOT significantly worse than the full stack on attack success, with equal or lower benign blocking, means the extra layers are dispensable. Seven comparisons -> Bonferroni 0.007 for the leave-one-out family; four combinations here -> 0.0125.

@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="760" viewBox="0 0 1400 760">
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#64748b"/></marker></defs>
+<rect width="100%" height="100%" fill="#f8fafc"/>
+<text x="700.0" y="45.0" font-family="Arial, sans-serif" font-size="26" text-anchor="middle" font-weight="700" fill="#203040">Thirteen-stage adaptive RAG defense pipeline</text>
+<rect x="50" y="95" width="270" height="80" rx="12" fill="#e2e8f0" stroke="#0f766e" stroke-width="2"/>
+<text x="185.0" y="142.0" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" font-weight="700" fill="#203040">1 Input</text>
+<line x1="185" y1="175" x2="515" y2="135" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="380" y="95" width="270" height="80" rx="12" fill="#e2e8f0" stroke="#0f766e" stroke-width="2"/>
+<text x="515.0" y="142.0" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" font-weight="700" fill="#203040">2 Normalize</text>
+<line x1="515" y1="175" x2="845" y2="135" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="710" y="95" width="270" height="80" rx="12" fill="#ccfbf1" stroke="#0f766e" stroke-width="2"/>
+<text x="845.0" y="142.0" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" font-weight="700" fill="#203040">3 Detect</text>
+<line x1="845" y1="175" x2="1175" y2="135" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="1040" y="95" width="270" height="80" rx="12" fill="#ccfbf1" stroke="#0f766e" stroke-width="2"/>
+<text x="1175.0" y="142.0" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" font-weight="700" fill="#203040">3c Fuse</text>
+<line x1="1175" y1="175" x2="185" y2="305" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="50" y="265" width="270" height="80" rx="12" fill="#e2e8f0" stroke="#0f766e" stroke-width="2"/>
+<text x="185.0" y="312.0" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" font-weight="700" fill="#203040">4 Retrieve</text>
+<line x1="185" y1="345" x2="515" y2="305" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="380" y="265" width="270" height="80" rx="12" fill="#e2e8f0" stroke="#0f766e" stroke-width="2"/>
+<text x="515.0" y="312.0" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" font-weight="700" fill="#203040">5 Search</text>
+<line x1="515" y1="345" x2="845" y2="305" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="710" y="265" width="270" height="80" rx="12" fill="#ccfbf1" stroke="#0f766e" stroke-width="2"/>
+<text x="845.0" y="312.0" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" font-weight="700" fill="#203040">6 Sanitize</text>
+<line x1="845" y1="345" x2="1175" y2="305" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="1040" y="265" width="270" height="80" rx="12" fill="#e2e8f0" stroke="#0f766e" stroke-width="2"/>
+<text x="1175.0" y="312.0" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" font-weight="700" fill="#203040">7 Rank</text>
+<line x1="1175" y1="345" x2="185" y2="475" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="50" y="435" width="270" height="80" rx="12" fill="#e2e8f0" stroke="#0f766e" stroke-width="2"/>
+<text x="185.0" y="482.0" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" font-weight="700" fill="#203040">8 Guarded prompt</text>
+<line x1="185" y1="515" x2="515" y2="475" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="380" y="435" width="270" height="80" rx="12" fill="#ccfbf1" stroke="#0f766e" stroke-width="2"/>
+<text x="515.0" y="482.0" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" font-weight="700" fill="#203040">9 Generate</text>
+<line x1="515" y1="515" x2="845" y2="475" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="710" y="435" width="270" height="80" rx="12" fill="#ccfbf1" stroke="#0f766e" stroke-width="2"/>
+<text x="845.0" y="482.0" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" font-weight="700" fill="#203040">10 Ground</text>
+<line x1="845" y1="515" x2="1175" y2="475" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="1040" y="435" width="270" height="80" rx="12" fill="#e2e8f0" stroke="#0f766e" stroke-width="2"/>
+<text x="1175.0" y="482.0" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" font-weight="700" fill="#203040">11 Sanitize output</text>
+<line x1="1175" y1="515" x2="185" y2="645" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="50" y="605" width="270" height="80" rx="12" fill="#e2e8f0" stroke="#0f766e" stroke-width="2"/>
+<text x="185.0" y="652.0" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" font-weight="700" fill="#203040">12 DLP / 13 Safe response</text>
+</svg>

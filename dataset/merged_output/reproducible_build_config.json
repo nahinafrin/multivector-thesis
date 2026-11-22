@@ -32,14 +32,13 @@
   "strict_audit": false,
   "warn_only": true,
   "loaded_sources": [
-    "advbench",
     "ai4privacy_pii",
     "beavertails",
     "harmbench",
     "jbb_behaviors",
     "jigsaw_toxicity",
-    "safeguard_prompt_injection",
-    "wildjailbreak"
+    "mine_hard_negatives:template",
+    "safeguard_prompt_injection"
   ],
   "required_sources": []
 }

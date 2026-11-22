@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="780" viewBox="0 0 1180 780">
+<rect width="100%" height="100%" fill="#f8fafc"/>
+<text x="590.0" y="42.0" font-family="Arial, sans-serif" font-size="24" text-anchor="middle" font-weight="700" fill="#203040">Current-code attack success versus benign blocking</text>
+<circle cx="110" cy="72" r="6" fill="#475569" stroke="#203040" stroke-width="1"/>
+<text x="121.0" y="76.0" font-family="Arial, sans-serif" font-size="11" text-anchor="start" font-weight="400" fill="#203040">Undefended</text>
+<circle cx="315" cy="72" r="6" fill="#0f766e" stroke="#203040" stroke-width="1"/>
+<text x="326.0" y="76.0" font-family="Arial, sans-serif" font-size="11" text-anchor="start" font-weight="400" fill="#203040">Full stack</text>
+<circle cx="520" cy="72" r="6" fill="#2563eb" stroke="#203040" stroke-width="1"/>
+<text x="531.0" y="76.0" font-family="Arial, sans-serif" font-size="11" text-anchor="start" font-weight="400" fill="#203040">Leave-one-out</text>
+<circle cx="725" cy="72" r="6" fill="#d97706" stroke="#203040" stroke-width="1"/>
+<text x="736.0" y="76.0" font-family="Arial, sans-serif" font-size="11" text-anchor="start" font-weight="400" fill="#203040">Single layer</text>
+<circle cx="930" cy="72" r="6" fill="#8b5cf6" stroke="#203040" stroke-width="1"/>
+<text x="941.0" y="76.0" font-family="Arial, sans-serif" font-size="11" text-anchor="start" font-weight="400" fill="#203040">Combination</text>
+<line x1="100.0" y1="95" x2="100.0" y2="670" stroke="#dbe4ec"/>
+<text x="100.0" y="693.0" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="400" fill="#203040">0%</text>
+<line x1="266.7" y1="95" x2="266.7" y2="670" stroke="#dbe4ec"/>
+<text x="266.7" y="693.0" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="400" fill="#203040">10%</text>
+<line x1="433.3" y1="95" x2="433.3" y2="670" stroke="#dbe4ec"/>
+<text x="433.3" y="693.0" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="400" fill="#203040">20%</text>
+<line x1="600.0" y1="95" x2="600.0" y2="670" stroke="#dbe4ec"/>
+<text x="600.0" y="693.0" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="400" fill="#203040">30%</text>
+<line x1="766.7" y1="95" x2="766.7" y2="670" stroke="#dbe4ec"/>
+<text x="766.7" y="693.0" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="400" fill="#203040">40%</text>
+<line x1="933.3" y1="95" x2="933.3" y2="670" stroke="#dbe4ec"/>
+<text x="933.3" y="693.0" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="400" fill="#203040">50%</text>
+<line x1="1100.0" y1="95" x2="1100.0" y2="670" stroke="#dbe4ec"/>
+<text x="1100.0" y="693.0" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="400" fill="#203040">60%</text>
+<line x1="100" y1="670.0" x2="1100" y2="670.0" stroke="#dbe4ec"/>
+<text x="88.0" y="675.0" font-family="Arial, sans-serif" font-size="12" text-anchor="end" font-weight="400" fill="#203040">0%</text>
+<line x1="100" y1="555.0" x2="1100" y2="555.0" stroke="#dbe4ec"/>
+<text x="88.0" y="560.0" font-family="Arial, sans-serif" font-size="12" text-anchor="end" font-weight="400" fill="#203040">5%</text>
+<line x1="100" y1="440.0" x2="1100" y2="440.0" stroke="#dbe4ec"/>
+<text x="88.0" y="445.0" font-family="Arial, sans-serif" font-size="12" text-anchor="end" font-weight="400" fill="#203040">10%</text>
+<line x1="100" y1="325.0" x2="1100" y2="325.0" stroke="#dbe4ec"/>
+<text x="88.0" y="330.0" font-family="Arial, sans-serif" font-size="12" text-anchor="end" font-weight="400" fill="#203040">15%</text>
+<line x1="100" y1="210.0" x2="1100" y2="210.0" stroke="#dbe4ec"/>
+<text x="88.0" y="215.0" font-family="Arial, sans-serif" font-size="12" text-anchor="end" font-weight="400" fill="#203040">20%</text>
+<line x1="100" y1="95.0" x2="1100" y2="95.0" stroke="#dbe4ec"/>
+<text x="88.0" y="100.0" font-family="Arial, sans-serif" font-size="12" text-anchor="end" font-weight="400" fill="#203040">25%</text>
+<text x="600.0" y="738.0" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" font-weight="700" fill="#203040">Attack success rate</text>
+<text x="0" y="0" transform="translate(28 382.5) rotate(-90)" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" font-weight="700" fill="#203040">Benign rows blocked</text>
+<circle cx="591.7" cy="670.0" r="6" fill="#475569" stroke="#203040" stroke-width="1"/>
+<text x="600.7" y="662.0" font-family="Arial, sans-serif" font-size="11" text-anchor="start" font-weight="700" fill="#203040">Undefended (fresh)</text>
+<circle cx="158.3" cy="474.5" r="6" fill="#0f766e" stroke="#203040" stroke-width="1"/>
+<text x="167.3" y="466.5" font-family="Arial, sans-serif" font-size="11" text-anchor="start" font-weight="700" fill="#203040">all seven layers</text>
+<circle cx="191.7" cy="382.5" r="6" fill="#2563eb" stroke="#203040" stroke-width="1"/>
+<circle cx="200.0" cy="509.0" r="6" fill="#2563eb" stroke="#203040" stroke-width="1"/>
+<circle cx="208.3" cy="612.5" r="6" fill="#2563eb" stroke="#203040" stroke-width="1"/>
+<circle cx="283.3" cy="497.5" r="6" fill="#2563eb" stroke="#203040" stroke-width="1"/>
+<text x="292.3" y="489.5" font-family="Arial, sans-serif" font-size="11" text-anchor="start" font-weight="700" fill="#203040">all minus sanitization</text>
+<circle cx="200.0" cy="520.5" r="6" fill="#2563eb" stroke="#203040" stroke-width="1"/>
+<circle cx="166.7" cy="474.5" r="6" fill="#2563eb" stroke="#203040" stroke-width="1"/>
+<circle cx="158.3" cy="474.5" r="6" fill="#2563eb" stroke="#203040" stroke-width="1"/>
+<circle cx="400.0" cy="612.5" r="6" fill="#d97706" stroke="#203040" stroke-width="1"/>
+<circle cx="350.0" cy="543.5" r="6" fill="#d97706" stroke="#203040" stroke-width="1"/>
+<circle cx="366.7" cy="670.0" r="6" fill="#d97706" stroke="#203040" stroke-width="1"/>
+<circle cx="508.3" cy="670.0" r="6" fill="#d97706" stroke="#203040" stroke-width="1"/>
+<circle cx="983.3" cy="670.0" r="6" fill="#d97706" stroke="#203040" stroke-width="1"/>
+<text x="992.3" y="662.0" font-family="Arial, sans-serif" font-size="11" text-anchor="start" font-weight="700" fill="#203040">guarded prompt only</text>
+<circle cx="591.7" cy="670.0" r="6" fill="#d97706" stroke="#203040" stroke-width="1"/>
+<circle cx="591.7" cy="670.0" r="6" fill="#d97706" stroke="#203040" stroke-width="1"/>
+<circle cx="191.7" cy="451.5" r="6" fill="#8b5cf6" stroke="#203040" stroke-width="1"/>
+<circle cx="275.0" cy="497.5" r="6" fill="#8b5cf6" stroke="#203040" stroke-width="1"/>
+<circle cx="241.7" cy="486.0" r="6" fill="#8b5cf6" stroke="#203040" stroke-width="1"/>
+<circle cx="258.3" cy="612.5" r="6" fill="#8b5cf6" stroke="#203040" stroke-width="1"/>
+<text x="100.0" y="765.0" font-family="Arial, sans-serif" font-size="11" text-anchor="start" font-weight="400" fill="#203040">Each point is one configuration; all arms are scored on the matched n=200 follow-up set.</text>
+</svg>

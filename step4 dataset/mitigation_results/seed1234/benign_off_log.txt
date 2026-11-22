@@ -1,0 +1,5 @@
+[config] label='full'  ON-arm active layers: ['sanitize', 'tighten_retrieval', 'guarded_prompt', 'grounding_gate', 'presidio_mask', 'dlp', 'refuse_on_detection']
+[kb] loaded persisted index: 3200 passages from ./kb_wiki.faiss
+[spacy] loaded 'en_core_web_sm' (lemmatization enabled)
+[off] wrote 200 benign rows -> C:\Users\sarke\Desktop\Multivector methodology-local api extension - Copy\step4 dataset\mitigation_results\seed1234\benign_off.jsonl
+[on] skipped (--off-only)

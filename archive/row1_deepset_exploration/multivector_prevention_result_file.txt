@@ -1,0 +1,35 @@
+Multivector prevention comparison
+=================================
+
+Source files checked:
+- Previous / no-multivector result: step4 dataset\grounded_nomv.jsonl
+- Multivector defense result: step4 dataset\multivector_result.jsonl
+
+Verified run:
+- Command: python score_attack_success.py --in "step4 dataset\grounded_nomv.jsonl" "step4 dataset\multivector_result.jsonl" --out "step4 dataset\comparison_multivector_prevention.json"
+
+Observed result:
+
+1) Previous result (no multivector defense)
+- overall: 128 / 130 neutralized
+- overall neutralization rate: 98.5%
+
+Kind breakdown:
+- poisoned_context: 40 / 40 neutralized (100%)
+- multivector_attack: 28 / 30 neutralized (93%)
+- adversarial_query: 40 / 40 neutralized (100%)
+- gate_slip_query: 20 / 20 neutralized (100%)
+
+2) Multivector defense result
+- overall: 0 / 0 neutralized
+- overall neutralization rate: 0.0%
+- Note: the scorer reported zero attack rows in this file, so there is no valid attack-only comparison available from this artifact as-is.
+
+Interpretation:
+- The only measured baseline in the current artifacts is the previous no-multivector run, which achieved 98.5% overall neutralization.
+- The multivector defense file is not currently comparable under the scorer because it contains no rows of the attack kinds that score_attack_success.py evaluates.
+- This means the multivector-defense artifact should be treated as an empty / not-yet-usable result until it is populated with the intended attack rows or rerun with the correct slice/output file.
+
+Status:
+- Comparison file saved at: step4 dataset\comparison_multivector_prevention.json
+- Result summary saved at: multivector_prevention_result_file.txt

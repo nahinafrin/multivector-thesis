@@ -7,8 +7,28 @@ OFF vs ON** — plus benign cost and layer ablation.
 All commands run from `step4 dataset/`. **Results go in separate directories**
 (`--run-dir`) so runs never overwrite each other.
 
-> **PowerShell:** use **one command per line**. Do not use bash `\` line continuation.
-> Multi-line in PowerShell requires a trailing backtick `` ` `` — single-line is safer.
+> **Shell compatibility:** All commands below are plain Python and work verbatim on
+> Windows (PowerShell), macOS, and Linux. In PowerShell, single-line commands are
+> simpler (no line-continuation `\` needed). When running multi-line commands in
+> bash/zsh, use `\` for continuation or wrap in a shell script.
+
+---
+
+## Environment verification
+
+Before running any A/B test, verify that all critical components are properly
+configured and loaded:
+
+```python
+python preflight_env_check.py
+# exits 0 on success, writes environment_manifest.json
+# exits 1 if bge_m3, reranker, injection_detector, or ollama models fail
+```
+
+**Important:** Commit or attach the generated `environment_manifest.json` 
+alongside every result file (`report_*.json`, `*_cost_report.json`). This 
+documents which environment produced which numbers and makes results fully 
+reproducible. See the preflight script's docstring for troubleshooting.
 
 ---
 
@@ -19,7 +39,7 @@ detector_interface.py       mitigation_pipeline.py
 run_mitigation_ab.py        score_mitigation_ab.py
 check_off_asr.py            inspect_mitigation_run.py
 run_benign_cost.py          score_benign_cost.py
-preflight_check.py
+preflight_check.py          preflight_env_check.py
 ```
 
 ---
@@ -143,20 +163,27 @@ Scale whichever configuration wins.
 ## Step 6 — scale slice + final thesis run
 
 ```powershell
-python build_multivector_inband.py --qa-jsonl data/question-answer/test.jsonl --planted --n 200 --out planted_inband_200.jsonl
+python build_planted_attacks.py --qa-jsonl data/question-answer/test.jsonl --yesno-only --n 200 --out planted_attacks_200.jsonl
 ```
 
 ```powershell
-python check_off_asr.py --slice planted_inband_200.jsonl --run-dir mitigation_results/planted200
+python check_off_asr.py --slice planted_attacks_200.jsonl --run-dir mitigation_results/planted200
 ```
 
 ```powershell
-python run_mitigation_ab.py --slice planted_inband_200.jsonl --detector existing --run-dir mitigation_results/planted200 --label full
+python run_mitigation_ab.py --slice planted_attacks_200.jsonl --skip-off --run-dir mitigation_results/planted200 --label full
+python run_mitigation_ab.py --slice planted_attacks_200.jsonl --skip-off --no-refuse --run-dir mitigation_results/planted200 --label norefuse
 ```
 
 ```powershell
 python score_mitigation_ab.py --off mitigation_results/planted200/off.jsonl --on mitigation_results/planted200/on_full.jsonl --out mitigation_results/planted200/report_full.json
+python score_mitigation_ab.py --off mitigation_results/planted200/off.jsonl --on mitigation_results/planted200/on_norefuse.jsonl --out mitigation_results/planted200/report_norefuse.json
 ```
+
+**n=200 ASR headline (planted200, fixed neutralization scorer, ground-plus):** mitigation OFF 30.5% -> ON 16.5%, a 14.0-point reduction (45.9% relative; paired McNemar p=2.46e-7). Its freshly verified n=200 benign cost is 9.0 points (0.0% -> 9.0% block rate), for a 1.6x ASR-gain-per-benign-cost ratio.
+
+The full profile measured a stronger apparent ASR reduction (30.5% -> 13.5%), but also a 45.0-point benign block cost. Further investigation identified a likely grounding-judge blind spot for terse polar (yes/no) answers systematically induced by full's guarded-prompt path; the full-arm benign-cost figure is therefore provisional and is not used as the headline result.
+Pre-gen stack without refuse: benign block 43.0% at n=200 (`benign_cost_norefuse.json`). Do not mix with n=30 ASR.
 
 Resolve **bge-m3** / SSL before treating numbers as final (not TF-IDF fallback).
 

@@ -1,24 +1,23 @@
 {
   "n": 200,
   "benign_block_off_pct": 0.0,
-  "benign_block_on_pct": 9.5,
-  "false_positives_added_pct": 9.5,
+  "benign_block_on_pct": 2.5,
+  "false_positives_added_pct": 2.5,
   "benign_correct_off_pct": 57.5,
-  "benign_correct_on_pct": 51.0,
+  "benign_correct_on_pct": 56.0,
   "paired": {
-    "broke": 14,
-    "fixed": 1,
-    "chi2": 9.6,
-    "p": 0.0019
+    "broke": 5,
+    "fixed": 2,
+    "chi2": 0.571,
+    "p": 0.4497
   },
   "broken_by_cause": {
-    "other_block": 7,
-    "degraded_not_blocked": 4,
+    "degraded_not_blocked": 2,
     "refuse_on_detection": 3
   },
   "tradeoff": {
-    "asr_drop_pts": 23.3,
-    "benign_fp_added_pts": 9.5,
-    "gain_per_cost": 2.5
+    "asr_drop_pts": 12.0,
+    "benign_fp_added_pts": 2.5,
+    "gain_per_cost": 4.8
   }
 }

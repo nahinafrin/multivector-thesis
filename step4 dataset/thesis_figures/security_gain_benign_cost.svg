@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="680" viewBox="0 0 1000 680">
+<rect width="100%" height="100%" fill="#f8fafc"/>
+<text x="500.0" y="42.0" font-family="Arial, sans-serif" font-size="24" text-anchor="middle" font-weight="700" fill="#203040">Security gain versus benign cost</text>
+<line x1="100.0" y1="90" x2="100.0" y2="580" stroke="#dbe4ec"/>
+<line x1="100" y1="580.0" x2="940" y2="580.0" stroke="#dbe4ec"/>
+<text x="100.0" y="605.0" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="400" fill="#203040">0</text>
+<text x="88.0" y="585.0" font-family="Arial, sans-serif" font-size="12" text-anchor="end" font-weight="400" fill="#203040">0</text>
+<line x1="268.0" y1="90" x2="268.0" y2="580" stroke="#dbe4ec"/>
+<line x1="100" y1="482.0" x2="940" y2="482.0" stroke="#dbe4ec"/>
+<text x="268.0" y="605.0" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="400" fill="#203040">10</text>
+<text x="88.0" y="487.0" font-family="Arial, sans-serif" font-size="12" text-anchor="end" font-weight="400" fill="#203040">10</text>
+<line x1="436.0" y1="90" x2="436.0" y2="580" stroke="#dbe4ec"/>
+<line x1="100" y1="384.0" x2="940" y2="384.0" stroke="#dbe4ec"/>
+<text x="436.0" y="605.0" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="400" fill="#203040">20</text>
+<text x="88.0" y="389.0" font-family="Arial, sans-serif" font-size="12" text-anchor="end" font-weight="400" fill="#203040">20</text>
+<line x1="604.0" y1="90" x2="604.0" y2="580" stroke="#dbe4ec"/>
+<line x1="100" y1="286.0" x2="940" y2="286.0" stroke="#dbe4ec"/>
+<text x="604.0" y="605.0" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="400" fill="#203040">30</text>
+<text x="88.0" y="291.0" font-family="Arial, sans-serif" font-size="12" text-anchor="end" font-weight="400" fill="#203040">30</text>
+<line x1="772.0" y1="90" x2="772.0" y2="580" stroke="#dbe4ec"/>
+<line x1="100" y1="188.0" x2="940" y2="188.0" stroke="#dbe4ec"/>
+<text x="772.0" y="605.0" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="400" fill="#203040">40</text>
+<text x="88.0" y="193.0" font-family="Arial, sans-serif" font-size="12" text-anchor="end" font-weight="400" fill="#203040">40</text>
+<line x1="940.0" y1="90" x2="940.0" y2="580" stroke="#dbe4ec"/>
+<line x1="100" y1="90.0" x2="940" y2="90.0" stroke="#dbe4ec"/>
+<text x="940.0" y="605.0" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="400" fill="#203040">50</text>
+<text x="88.0" y="95.0" font-family="Arial, sans-serif" font-size="12" text-anchor="end" font-weight="400" fill="#203040">50</text>
+<text x="520.0" y="655.0" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" font-weight="700" fill="#203040">Benign block cost (percentage points)</text>
+<text x="25.0" y="335.0" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" font-weight="700" fill="#203040">ASR reduction (percentage points)</text>
+<circle cx="251.2" cy="442.8" r="9" fill="#0f766e" stroke="#203040" stroke-width="2"/>
+<text x="264.2" y="432.8" font-family="Arial, sans-serif" font-size="13" text-anchor="start" font-weight="700" fill="#203040">Ground-plus</text>
+<circle cx="856.0" cy="413.4" r="9" fill="#b45309" stroke="#203040" stroke-width="2"/>
+<text x="869.0" y="403.4" font-family="Arial, sans-serif" font-size="13" text-anchor="start" font-weight="700" fill="#203040">Full</text>
+</svg>

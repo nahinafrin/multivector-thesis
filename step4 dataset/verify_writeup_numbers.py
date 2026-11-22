@@ -36,6 +36,9 @@ def load(path: Path) -> list[dict]:
 
 def classify_block(row: dict) -> str:
     """Why was this row blocked? gate / security_signal / multivector / ungrounded / other."""
+    if row.get("abstained"):
+        action = (row.get("controller") or {}).get("final_action") or ""
+        return "abstained_ungrounded" if action == "refuse_ungrounded" else "abstained_other"
     if not row.get("blocked"):
         return "not_blocked"
     fa = (row.get("controller") or {}).get("final_action") or ""

@@ -29,6 +29,16 @@ import argparse
 import uuid
 
 from pipeline_common import PipelineState
+import os as _os
+from supersession_cue import has_supersession_cue as _has_cue_regex
+
+# Ablation switch for the held-out validation (run_validation.cmd): RAG_SUPERSESSION_CUE=0 turns the
+# supersession-cue drop off so the same code can be run with and without the fix. Default: ON.
+SUPERSESSION_CUE_ENABLED = _os.environ.get("RAG_SUPERSESSION_CUE", "1") != "0"
+
+
+def has_supersession_cue(text: str) -> bool:
+    return SUPERSESSION_CUE_ENABLED and _has_cue_regex(text)
 
 _SCANNER_CACHE: dict[float, object] = {}
 
@@ -54,9 +64,25 @@ def _get_scanner(threshold: float):
 
 
 def sanitize_chunk(chunk: str, threshold: float) -> tuple[bool, float]:
+    """Returns (ok, risk). Kept as a 2-tuple for backward compatibility with
+    existing callers (_verify_coordination.py, build_semantic_slice.py,
+    calibrate_payloads.py); the supersession-cue check that also gates ``ok``
+    is applied here but exposed separately via has_supersession_cue() for
+    callers (run(), below) that need to know WHICH check fired.
+
+    ``ok`` is False (drop the chunk) if EITHER the existing prompt-injection
+    scanner crosses ``threshold`` OR the chunk matches the supersession-cue
+    regex (supersession_cue.py) -- a planted false fact framed as a
+    correction/update/revision of the "real" answer, which carries no
+    injection signature at all and so never trips the scanner on its own.
+    See supersession_cue.py's module docstring for why this exists and how
+    it was validated (fresh-attack evaluation, 2026-09-24) before wiring it
+    in here as a second, independent drop criterion alongside the scanner.
+    """
     scanner = _get_scanner(threshold)
     _sanitized, is_valid, risk = scanner.scan(chunk)
-    return bool(is_valid), float(risk)
+    ok = bool(is_valid) and not has_supersession_cue(chunk)
+    return ok, float(risk)
 
 
 def run(state: PipelineState, drop_dirty: bool = True) -> PipelineState:
@@ -73,13 +99,19 @@ def run(state: PipelineState, drop_dirty: bool = True) -> PipelineState:
     raw_chunks = list(state.context)
     kept, dropped = [], []
     chunk_scores: list[float] = []
+    n_dropped_supersession = 0
     for chunk in raw_chunks:
         ok, crisk = sanitize_chunk(chunk, threshold)
         chunk_scores.append(crisk)
         if ok:
             kept.append(chunk)
         else:
-            dropped.append({"risk": round(crisk, 3), "preview": chunk[:60]})
+            cue = has_supersession_cue(chunk)
+            reason = "supersession_cue" if (cue and crisk < threshold) else "injection"
+            if cue:
+                n_dropped_supersession += 1
+            dropped.append({"risk": round(crisk, 3), "reason": reason,
+                            "preview": chunk[:60]})
             if not drop_dirty:
                 kept.append(REDACTION)
 
@@ -115,6 +147,8 @@ def run(state: PipelineState, drop_dirty: bool = True) -> PipelineState:
         "sanitized_chunks": kept,
         "sanitization_strictness": threshold,
         "sanitization_dropped": len(dropped),
+        "sanitization_dropped_supersession_cue": n_dropped_supersession,
+        "supersession_cue_enabled": SUPERSESSION_CUE_ENABLED,
         "canary": canary,
     })
     state.log("step_06_context_sanitization",

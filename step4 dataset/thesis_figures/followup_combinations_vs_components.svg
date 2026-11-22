@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="486" viewBox="0 0 1120 486">
+<rect width="100%" height="100%" fill="#f8fafc"/>
+<text x="560.0" y="42.0" font-family="Arial, sans-serif" font-size="24" text-anchor="middle" font-weight="700" fill="#203040">Paired attack outcomes: combinations versus their single layers</text>
+<text x="465.0" y="87.0" font-family="Arial, sans-serif" font-size="13" text-anchor="middle" font-weight="700" fill="#203040">Combination-only</text>
+<text x="675.0" y="87.0" font-family="Arial, sans-serif" font-size="13" text-anchor="middle" font-weight="700" fill="#203040">Single-layer-only</text>
+<text x="346.0" y="122.5" font-family="Arial, sans-serif" font-size="12" text-anchor="end" font-weight="400" fill="#203040">sanitize + grounding + refuse vs sanitization only</text>
+<rect x="360" y="105" width="200" height="25" rx="3" fill="#bfdbfe"/>
+<text x="460.0" y="122.5" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#203040">0</text>
+<rect x="570" y="105" width="200" height="25" rx="3" fill="#2563eb"/>
+<text x="670.0" y="122.5" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#ffffff">21</text>
+<text x="346.0" y="156.5" font-family="Arial, sans-serif" font-size="12" text-anchor="end" font-weight="400" fill="#203040">sanitize + grounding + refuse vs grounding gate only</text>
+<rect x="360" y="139" width="200" height="25" rx="3" fill="#bfdbfe"/>
+<text x="460.0" y="156.5" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#203040">2</text>
+<rect x="570" y="139" width="200" height="25" rx="3" fill="#2563eb"/>
+<text x="670.0" y="156.5" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#ffffff">21</text>
+<text x="346.0" y="190.5" font-family="Arial, sans-serif" font-size="12" text-anchor="end" font-weight="400" fill="#203040">sanitize + grounding + refuse vs refuse-on-detection only</text>
+<rect x="360" y="173" width="200" height="25" rx="3" fill="#bfdbfe"/>
+<text x="460.0" y="190.5" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#203040">0</text>
+<rect x="570" y="173" width="200" height="25" rx="3" fill="#2563eb"/>
+<text x="670.0" y="190.5" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#ffffff">25</text>
+<text x="346.0" y="224.5" font-family="Arial, sans-serif" font-size="12" text-anchor="end" font-weight="400" fill="#203040">grounding + refuse vs grounding gate only</text>
+<rect x="360" y="207" width="200" height="25" rx="3" fill="#bfdbfe"/>
+<text x="460.0" y="224.5" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#203040">2</text>
+<rect x="570" y="207" width="200" height="25" rx="3" fill="#60a5fa"/>
+<text x="670.0" y="224.5" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#203040">11</text>
+<text x="346.0" y="258.5" font-family="Arial, sans-serif" font-size="12" text-anchor="end" font-weight="400" fill="#203040">grounding + refuse vs refuse-on-detection only</text>
+<rect x="360" y="241" width="200" height="25" rx="3" fill="#bfdbfe"/>
+<text x="460.0" y="258.5" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#203040">0</text>
+<rect x="570" y="241" width="200" height="25" rx="3" fill="#60a5fa"/>
+<text x="670.0" y="258.5" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#203040">15</text>
+<text x="346.0" y="292.5" font-family="Arial, sans-serif" font-size="12" text-anchor="end" font-weight="400" fill="#203040">sanitize + grounding vs sanitization only</text>
+<rect x="360" y="275" width="200" height="25" rx="3" fill="#bfdbfe"/>
+<text x="460.0" y="292.5" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#203040">0</text>
+<rect x="570" y="275" width="200" height="25" rx="3" fill="#60a5fa"/>
+<text x="670.0" y="292.5" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#203040">15</text>
+<text x="346.0" y="326.5" font-family="Arial, sans-serif" font-size="12" text-anchor="end" font-weight="400" fill="#203040">sanitize + grounding vs grounding gate only</text>
+<rect x="360" y="309" width="200" height="25" rx="3" fill="#bfdbfe"/>
+<text x="460.0" y="326.5" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#203040">4</text>
+<rect x="570" y="309" width="200" height="25" rx="3" fill="#60a5fa"/>
+<text x="670.0" y="326.5" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#203040">17</text>
+<text x="346.0" y="360.5" font-family="Arial, sans-serif" font-size="12" text-anchor="end" font-weight="400" fill="#203040">sanitize + refuse vs sanitization only</text>
+<rect x="360" y="343" width="200" height="25" rx="3" fill="#bfdbfe"/>
+<text x="460.0" y="360.5" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#203040">0</text>
+<rect x="570" y="343" width="200" height="25" rx="3" fill="#60a5fa"/>
+<text x="670.0" y="360.5" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#203040">13</text>
+<text x="346.0" y="394.5" font-family="Arial, sans-serif" font-size="12" text-anchor="end" font-weight="400" fill="#203040">sanitize + refuse vs refuse-on-detection only</text>
+<rect x="360" y="377" width="200" height="25" rx="3" fill="#bfdbfe"/>
+<text x="460.0" y="394.5" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#203040">2</text>
+<rect x="570" y="377" width="200" height="25" rx="3" fill="#2563eb"/>
+<text x="670.0" y="394.5" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#ffffff">19</text>
+<text x="360.0" y="468.0" font-family="Arial, sans-serif" font-size="11" text-anchor="start" font-weight="400" fill="#203040">Left = success only under combination; right = success only under single layer (n=200).</text>
+</svg>

@@ -38,16 +38,36 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from collections import Counter
 from pathlib import Path
 
 from pipeline_common import PipelineState
+
+# Generation seed. Default 42 reproduces every earlier run; set RAG_GEN_SEED to run
+# additional seeds for variance estimates (row sampling seeds are separate and unchanged).
+GEN_SEED = int(os.environ.get("RAG_GEN_SEED", "42"))
 
 DEFAULT_ENSEMBLE = {
     "llama3.2:3b": "logic",
     "mistral:7b":  "styling",
     "qwen2.5:3b":  "generalism",
 }
+
+ENSEMBLE_WITH_LARGER_MODEL = {
+    "llama3.2:3b": "logic",
+    "mistral:7b":  "styling",
+    "llama3.1:8b": "generalism",   # swaps out qwen2.5:3b for a larger model
+}
+
+
+def _active_ensemble() -> dict[str, str]:
+    """Select the ensemble via RAG_ENSEMBLE env var so run_full_pipeline.py's
+    call site (`state = s9.run(state)`, no models= kwarg) never needs to
+    change. Set RAG_ENSEMBLE=large to swap qwen2.5:3b for llama3.1:8b.
+    """
+    import os
+    return ENSEMBLE_WITH_LARGER_MODEL if os.environ.get("RAG_ENSEMBLE") == "large" else DEFAULT_ENSEMBLE
 
 
 # --------------------------------------------------------------------------- #
@@ -82,7 +102,7 @@ def _build_runnable_parallel(models: dict[str, str], base_url: str):
     from langchain_core.runnables import RunnableParallel, RunnableLambda
     branches = {}
     for model_name in models:
-        llm = ChatOllama(model=model_name, base_url=base_url, temperature=0.2)
+        llm = ChatOllama(model=model_name, base_url=base_url, temperature=0.2, seed=GEN_SEED)
         branches[model_name] = llm | RunnableLambda(lambda m: m.content)
     return RunnableParallel(branches)
 
@@ -160,7 +180,7 @@ def select_fusion(candidates: dict[str, str],
         "Do not invent facts.\n\n"
         f"{joined}\n\nFused answer:"
     )
-    llm = ChatOllama(model=fuser_model, base_url=base_url, temperature=0.0)
+    llm = ChatOllama(model=fuser_model, base_url=base_url, temperature=0.0, seed=GEN_SEED)
     return llm.invoke(fuse_prompt).content
 
 
@@ -177,10 +197,13 @@ def select_fusion(candidates: dict[str, str],
 # --------------------------------------------------------------------------- #
 
 def run(state: PipelineState, strategy: str = "fusion",
-        models: dict[str, str] = DEFAULT_ENSEMBLE,
+        models: dict[str, str] | None = None,
         base_url: str = "http://localhost:11434") -> PipelineState:
     if state.blocked:
         return state
+
+    if models is None:
+        models = _active_ensemble()
 
     # Use augmented prompt from Step 8 if present; fall back gracefully.
     prompt = state.augmented_prompt or state.prompt

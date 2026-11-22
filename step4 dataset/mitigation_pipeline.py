@@ -13,8 +13,18 @@ WHAT COUNTS AS "MITIGATION" (all toggled together by mitigation=on/off):
   * risk-tightened retrieval / rerank     (Step 7)   — admit fewer, cleaner chunks
   * guarded prompt construction           (Step 8)   — treat context as data
   * grounding verification                (Step 10)  — reject ungrounded answers
-  * DLP / output filtering                (Step 12)  — redact leakage
+  * Presidio PII masking                  (Step 11)  — mask names/emails/phones/etc.
+  * DLP / output filtering                (Step 12)  — redact structured secrets
   * refuse-on-detection policy            (controller)— block when detector fires
+
+NOTE (added for the row1/row4/row8 external-validation extension): Step 11
+(Presidio) was previously missing from this A/B harness entirely — only Step 12's
+regex/Luhn/EDM scanner ran. Step 12 catches structured secrets (credit-card
+numbers, exact-match secrets) but has no NER, so it misses named PII such as
+person names, street addresses, or free-form usernames — exactly the entity
+types the Row-8 PII/data-extraction external validation needs. Step 11 is now
+wired in (toggle: `presidio_mask`), running between grounding (Step 10) and DLP
+(Step 12), matching the methodology's own stage order.
 
 With mitigation OFF, the SAME detector still runs and its verdict is still recorded
 (so you can see detection was available) — but NOTHING acts on it: no sanitization,
@@ -46,6 +56,7 @@ import step_07_context_ranking as s7
 import step_08_augmented_prompt as s8
 import step_09_generator_llm as s9
 import step_10_grounding_judge as s10
+import step_11_output_sanitization as s11
 import step_12_dlp_scanner as s12
 import step_13_safe_response as s13
 
@@ -61,14 +72,15 @@ class MitigationConfig:
     tighten_retrieval: bool = True   # Step 7 risk-tightened rerank floor
     guarded_prompt: bool = True      # Step 8 data-only system prompt
     grounding_gate: bool = True      # Step 10 reject ungrounded answers
+    presidio_mask: bool = True       # Step 11 NER-based PII masking
     dlp: bool = True                 # Step 12 output redaction
     refuse_on_detection: bool = True # block outright when detector fires
 
     @classmethod
     def off(cls) -> "MitigationConfig":
         return cls(enabled=False, sanitize=False, tighten_retrieval=False,
-                   guarded_prompt=False, grounding_gate=False, dlp=False,
-                   refuse_on_detection=False)
+                   guarded_prompt=False, grounding_gate=False, presidio_mask=False,
+                   dlp=False, refuse_on_detection=False)
 
     def active(self, layer: str) -> bool:
         return self.enabled and getattr(self, layer, False)
@@ -158,10 +170,26 @@ def process_with_mitigation(question: str, *,
             st.meta["mitigation_applied"] = applied
             return s13.run(st)
 
+    # --- PII masking (mitigation) -------------------------------------------- #
+    # Step 11: Presidio + spaCy NER masks named PII (emails, phones, SSNs, IBANs,
+    # etc.) in the answer text. Runs before Step 12 so DLP's regex/Luhn/EDM net
+    # scans the already-PII-masked text (matches methodology stage order 11->12).
+    if mitigation.active("presidio_mask"):
+        st = s11.run(st)
+        applied.append("presidio_mask")
+
     # --- output filtering / DLP (mitigation) -------------------------------- #
     if mitigation.active("dlp"):
         st = s12.run(st)
         applied.append("dlp")
+
+    # Keep state.output in sync with whatever Steps 10/11/12 last wrote to
+    # state.meta["answer"]. Previously state.output was only ever set once,
+    # immediately after generation, so any later redaction (Presidio, DLP) or
+    # grounding-driven rewrite was invisible to callers that read state.output
+    # directly (this is what run_mitigation_ab.py's `final_response` field did
+    # before its own fix below) -- fixed here at the source so it can't regress.
+    st.output = st.meta.get("answer", st.output)
 
     st.meta["mitigation_applied"] = applied
     return s13.run(st)

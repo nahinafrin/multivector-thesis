@@ -1,0 +1,19 @@
+{
+  "timestamp_utc": "2026-10-14T09:24:51.155864+00:00",
+  "slice": "planted_attacks_200.jsonl",
+  "label": "norefuse",
+  "limit": null,
+  "off_jsonl": "C:\\Users\\sarke\\Desktop\\Multivector methodology-local api extension - Copy\\step4 dataset\\mitigation_results\\ablation200\\off.jsonl",
+  "on_jsonl": "C:\\Users\\sarke\\Desktop\\Multivector methodology-local api extension - Copy\\step4 dataset\\mitigation_results\\ablation200\\on_norefuse.jsonl",
+  "on_mitigation_config": {
+    "enabled": true,
+    "sanitize": true,
+    "tighten_retrieval": true,
+    "guarded_prompt": true,
+    "grounding_gate": true,
+    "presidio_mask": true,
+    "dlp": true,
+    "refuse_on_detection": false
+  },
+  "score_command": "python score_mitigation_ab.py --off C:\\Users\\sarke\\Desktop\\Multivector methodology-local api extension - Copy\\step4 dataset\\mitigation_results\\ablation200\\off.jsonl --on C:\\Users\\sarke\\Desktop\\Multivector methodology-local api extension - Copy\\step4 dataset\\mitigation_results\\ablation200\\on_norefuse.jsonl --out C:\\Users\\sarke\\Desktop\\Multivector methodology-local api extension - Copy\\step4 dataset\\mitigation_results\\ablation200\\report_norefuse.json"
+}

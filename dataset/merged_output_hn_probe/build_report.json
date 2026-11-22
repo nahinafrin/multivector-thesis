@@ -1,0 +1,131 @@
+{
+  "target_size": 10000,
+  "actual_size_after_dedup": 9854,
+  "split_sizes": {
+    "train": 6896,
+    "val": 1478,
+    "test": 1480
+  },
+  "pool_snapshot": {
+    "benign_clear": 5951,
+    "benign_hard_negative": 368,
+    "cbrn": 7,
+    "cyberattack_exploitation": 15,
+    "direct_harm_instruction": 597,
+    "financial_cyber_risk": 7451,
+    "jailbreak": 39,
+    "misinformation_manipulation": 5,
+    "pii_leakage": 2007,
+    "prompt_injection": 1960,
+    "self_harm_danger": 5,
+    "toxicity_abuse": 2002
+  },
+  "synthetic_minimal_coverage_added": {
+    "obfuscation": 8,
+    "indirect_injection": 8
+  },
+  "data_limited_attacks": [
+    "benign_hard_negative",
+    "cbrn",
+    "cyberattack_exploitation",
+    "direct_harm_instruction",
+    "indirect_injection",
+    "jailbreak",
+    "misinformation_manipulation",
+    "obfuscation",
+    "prompt_injection",
+    "self_harm_danger",
+    "social_engineering",
+    "toxicity_abuse"
+  ],
+  "ideal_distribution": {
+    "prompt_injection": 0.15,
+    "jailbreak": 0.1,
+    "obfuscation": 0.1,
+    "indirect_injection": 0.05,
+    "toxicity_abuse": 0.1,
+    "self_harm_danger": 0.05,
+    "misinformation_manipulation": 0.05,
+    "financial_cyber_risk": 0.05,
+    "pii_leakage": 0.05,
+    "direct_harm_instruction": 0.1,
+    "cyberattack_exploitation": 0.05,
+    "cbrn": 0.03,
+    "social_engineering": 0.02,
+    "benign_clear": 0.05,
+    "benign_hard_negative": 0.05
+  },
+  "achievable_distribution": {
+    "prompt_injection": 0.196,
+    "jailbreak": 0.0039,
+    "obfuscation": 0.0008,
+    "indirect_injection": 0.0008,
+    "toxicity_abuse": 0.2002,
+    "self_harm_danger": 0.0005,
+    "misinformation_manipulation": 0.0005,
+    "financial_cyber_risk": 0.16620000000000001,
+    "pii_leakage": 0.16620000000000001,
+    "direct_harm_instruction": 0.0597,
+    "cyberattack_exploitation": 0.0015,
+    "cbrn": 0.0007,
+    "social_engineering": 0.0,
+    "benign_clear": 0.16620000000000001,
+    "benign_hard_negative": 0.0368
+  },
+  "quotas_planned": {
+    "prompt_injection": 1960,
+    "jailbreak": 39,
+    "obfuscation": 8,
+    "indirect_injection": 8,
+    "toxicity_abuse": 2002,
+    "self_harm_danger": 5,
+    "misinformation_manipulation": 5,
+    "financial_cyber_risk": 1662,
+    "pii_leakage": 1662,
+    "direct_harm_instruction": 597,
+    "cyberattack_exploitation": 15,
+    "cbrn": 7,
+    "social_engineering": 0,
+    "benign_clear": 1662,
+    "benign_hard_negative": 368
+  },
+  "quotas_achieved": {
+    "self_harm_danger": 5,
+    "misinformation_manipulation": 5,
+    "cbrn": 7,
+    "obfuscation": 8,
+    "indirect_injection": 8,
+    "cyberattack_exploitation": 15,
+    "jailbreak": 39,
+    "benign_hard_negative": 366,
+    "direct_harm_instruction": 595,
+    "prompt_injection": 1960,
+    "toxicity_abuse": 2002,
+    "pii_leakage": 1662,
+    "benign_clear": 1658,
+    "financial_cyber_risk": 1524
+  },
+  "source_ingested_counts": {
+    "beavertails": 24556,
+    "harmbench": 400,
+    "jbb_behaviors": 200,
+    "mine_hard_negatives:template": 80,
+    "ai4privacy_pii": 2000,
+    "safeguard_prompt_injection": 2000,
+    "jigsaw_toxicity": 2000
+  },
+  "source_unavailable": {
+    "wildjailbreak": "Dataset 'allenai/wildjailbreak' is a gated dataset on the Hub. You must be authenticated to access it.",
+    "advbench": "Dataset 'walledai/AdvBench' is a gated dataset on the Hub. You must be authenticated to access it."
+  },
+  "loaded_sources": [
+    "ai4privacy_pii",
+    "beavertails",
+    "harmbench",
+    "jbb_behaviors",
+    "jigsaw_toxicity",
+    "mine_hard_negatives:template",
+    "safeguard_prompt_injection"
+  ],
+  "quota_audit_status": "FAIL"
+}

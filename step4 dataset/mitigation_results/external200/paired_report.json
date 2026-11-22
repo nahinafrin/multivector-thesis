@@ -1,0 +1,302 @@
+{
+  "BIPIA-text_attack": {
+    "n": 50,
+    "blocked_off": 0,
+    "blocked_on": 45
+  },
+  "PoisonedRAG (all)": {
+    "n": 150,
+    "undefended_ambiguous_ids": [
+      3,
+      56,
+      71,
+      134
+    ],
+    "amb_as_success": {
+      "asr_off": 137,
+      "asr_on": 136,
+      "fixed": 7,
+      "broke": 6,
+      "p": 1.0,
+      "ci_off": [
+        85.7,
+        94.9
+      ],
+      "ci_on": [
+        84.9,
+        94.4
+      ]
+    },
+    "amb_as_failure": {
+      "asr_off": 133,
+      "asr_on": 136,
+      "fixed": 6,
+      "broke": 9,
+      "p": 0.60723876953125,
+      "ci_off": [
+        82.6,
+        92.8
+      ],
+      "ci_on": [
+        84.9,
+        94.4
+      ]
+    }
+  },
+  "PoisonedRAG-HotpotQA": {
+    "n": 50,
+    "undefended_ambiguous_ids": [
+      56,
+      71
+    ],
+    "amb_as_success": {
+      "asr_off": 46,
+      "asr_on": 47,
+      "fixed": 1,
+      "broke": 2,
+      "p": 1.0,
+      "ci_off": [
+        81.2,
+        96.8
+      ],
+      "ci_on": [
+        83.8,
+        97.9
+      ]
+    },
+    "amb_as_failure": {
+      "asr_off": 44,
+      "asr_on": 47,
+      "fixed": 1,
+      "broke": 4,
+      "p": 0.375,
+      "ci_off": [
+        76.2,
+        94.4
+      ],
+      "ci_on": [
+        83.8,
+        97.9
+      ]
+    }
+  },
+  "PoisonedRAG-MSMARCO": {
+    "n": 50,
+    "undefended_ambiguous_ids": [
+      134
+    ],
+    "amb_as_success": {
+      "asr_off": 45,
+      "asr_on": 45,
+      "fixed": 2,
+      "broke": 2,
+      "p": 1.0,
+      "ci_off": [
+        78.6,
+        95.7
+      ],
+      "ci_on": [
+        78.6,
+        95.7
+      ]
+    },
+    "amb_as_failure": {
+      "asr_off": 44,
+      "asr_on": 45,
+      "fixed": 1,
+      "broke": 2,
+      "p": 1.0,
+      "ci_off": [
+        76.2,
+        94.4
+      ],
+      "ci_on": [
+        78.6,
+        95.7
+      ]
+    }
+  },
+  "PoisonedRAG-NQ": {
+    "n": 50,
+    "undefended_ambiguous_ids": [
+      3
+    ],
+    "amb_as_success": {
+      "asr_off": 46,
+      "asr_on": 44,
+      "fixed": 4,
+      "broke": 2,
+      "p": 0.6875,
+      "ci_off": [
+        81.2,
+        96.8
+      ],
+      "ci_on": [
+        76.2,
+        94.4
+      ]
+    },
+    "amb_as_failure": {
+      "asr_off": 45,
+      "asr_on": 44,
+      "fixed": 4,
+      "broke": 3,
+      "p": 1.0,
+      "ci_off": [
+        78.6,
+        95.7
+      ],
+      "ci_on": [
+        76.2,
+        94.4
+      ]
+    }
+  },
+  "same_generator": {
+    "BIPIA-text_attack": {
+      "n": 50,
+      "blocked_off": 0,
+      "blocked_on": 44
+    },
+    "PoisonedRAG (all)": {
+      "n": 150,
+      "amb_as_success": {
+        "asr_off": 137,
+        "asr_on": 128,
+        "fixed": 16,
+        "broke": 7,
+        "p": 0.0931396484375,
+        "ci_off": [
+          85.7,
+          94.9
+        ],
+        "ci_on": [
+          78.8,
+          90.1
+        ],
+        "blocked_on": 11
+      },
+      "amb_as_failure": {
+        "asr_off": 133,
+        "asr_on": 128,
+        "fixed": 16,
+        "broke": 11,
+        "p": 0.44206833839416504,
+        "ci_off": [
+          82.6,
+          92.8
+        ],
+        "ci_on": [
+          78.8,
+          90.1
+        ],
+        "blocked_on": 11
+      }
+    },
+    "PoisonedRAG-HotpotQA": {
+      "n": 50,
+      "amb_as_success": {
+        "asr_off": 46,
+        "asr_on": 42,
+        "fixed": 6,
+        "broke": 2,
+        "p": 0.2890625,
+        "ci_off": [
+          81.2,
+          96.8
+        ],
+        "ci_on": [
+          71.5,
+          91.7
+        ],
+        "blocked_on": 5
+      },
+      "amb_as_failure": {
+        "asr_off": 44,
+        "asr_on": 42,
+        "fixed": 6,
+        "broke": 4,
+        "p": 0.75390625,
+        "ci_off": [
+          76.2,
+          94.4
+        ],
+        "ci_on": [
+          71.5,
+          91.7
+        ],
+        "blocked_on": 5
+      }
+    },
+    "PoisonedRAG-MSMARCO": {
+      "n": 50,
+      "amb_as_success": {
+        "asr_off": 45,
+        "asr_on": 42,
+        "fixed": 5,
+        "broke": 2,
+        "p": 0.453125,
+        "ci_off": [
+          78.6,
+          95.7
+        ],
+        "ci_on": [
+          71.5,
+          91.7
+        ],
+        "blocked_on": 3
+      },
+      "amb_as_failure": {
+        "asr_off": 44,
+        "asr_on": 42,
+        "fixed": 5,
+        "broke": 3,
+        "p": 0.7265625,
+        "ci_off": [
+          76.2,
+          94.4
+        ],
+        "ci_on": [
+          71.5,
+          91.7
+        ],
+        "blocked_on": 3
+      }
+    },
+    "PoisonedRAG-NQ": {
+      "n": 50,
+      "amb_as_success": {
+        "asr_off": 46,
+        "asr_on": 44,
+        "fixed": 5,
+        "broke": 3,
+        "p": 0.7265625,
+        "ci_off": [
+          81.2,
+          96.8
+        ],
+        "ci_on": [
+          76.2,
+          94.4
+        ],
+        "blocked_on": 3
+      },
+      "amb_as_failure": {
+        "asr_off": 45,
+        "asr_on": 44,
+        "fixed": 5,
+        "broke": 4,
+        "p": 1.0,
+        "ci_off": [
+          78.6,
+          95.7
+        ],
+        "ci_on": [
+          76.2,
+          94.4
+        ],
+        "blocked_on": 3
+      }
+    }
+  }
+}

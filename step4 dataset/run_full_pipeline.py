@@ -68,6 +68,7 @@ import step_08_augmented_prompt as s8
 # Generation + output rail (adapt these imports to your filenames)
 import step_09_generator_llm as s9
 import step_09a_isolate_aggregate as s9a
+import step_09c_routed_generator as s9c
 import step_09b_knowledge_conflict as s9b
 import step_10_grounding_judge as s10
 import step_11_output_sanitization as s11
@@ -106,8 +107,11 @@ def process(question: str, *, k: int = 5, top_n: int = 3,
             generator: str = "fused",
             ia_scorer: "s9a.IsolateAggregator | None" = None,
             ia_min_agreement: int = 2,
+            routed_mode: str = "balanced",
             use_semantic_intent: bool = True,
-            semantic_intent_backend: str = "nli") -> PipelineState:
+            semantic_intent_backend: str = "nli",
+            defense_profile: str = "full",
+            fusion_cfg: "s3c.FusionConfig | None" = None) -> PipelineState:
     """Run one question through the whole pipeline on a single state.
 
     If `poison_chunk` is given, it is spliced into the retrieved context after
@@ -129,7 +133,7 @@ def process(question: str, *, k: int = 5, top_n: int = 3,
     # --- input gate: computes the risk that everything downstream reads ---
     st = s1.run(st)
     st = s2.run(st)
-    st = s3c.run(st, treat_review_as_red=treat_review_as_red)
+    st = s3c.run(st, cfg=fusion_cfg, treat_review_as_red=treat_review_as_red)
     if st.blocked:                       # gate refused -> straight to refusal
         if not continue_blocked_for_audit:
             return s13.run(st)
@@ -177,20 +181,32 @@ def process(question: str, *, k: int = 5, top_n: int = 3,
         # tighten on this segment WITHOUT us having to duplicate their adaptive
         # logic. Detection (controller escalation / hard refuse) is wired
         # separately in risk_feedback_controller.
-        raw_channels = input_channels(state)
-        channels = _CALIBRATION.apply_channels(raw_channels)
-        mv = multivector_risk(channels)
-        if not _CALIBRATION.is_identity():
-            mv["raw_channels"] = {c: round(v, 4) for c, v in raw_channels.items()}
-            mv["calibrated"] = True
-        state.meta["multivector"] = mv
-        if mv["is_multivector"]:
-            state.scores["effective_risk"] = max(state.input_risk(),
-                                                 float(mv["joint_risk"]))
+        if defense_profile == "full":
+            raw_channels = input_channels(state)
+            channels = _CALIBRATION.apply_channels(raw_channels)
+            mv = multivector_risk(channels)
+            if not _CALIBRATION.is_identity():
+                mv["raw_channels"] = {c: round(v, 4) for c, v in raw_channels.items()}
+                mv["calibrated"] = True
+            state.meta["multivector"] = mv
+            if mv["is_multivector"]:
+                state.scores["effective_risk"] = max(state.input_risk(),
+                                                     float(mv["joint_risk"]))
+        else:
+            state.meta["defense_profile"] = defense_profile
+            # Deliberately leave state.meta["multivector"] unset: the detector
+            # genuinely did not run under this profile, and score_slice.py's
+            # mv_present = bool(mv) check already treats an absent/falsy
+            # multivector field as "not evaluated" - matching how it already
+            # handles rows where the field is legitimately missing, rather
+            # than fabricating a fake non-fire result.
         state = s7.run(state, top_n=top_n)  # reads input_risk() -> adaptive rerank
-        state = s8.run(state)
+        if defense_profile != "llmguard_only":
+            state = s8.run(state)
         if generator == "isolate":
             state = s9a.run(state, ia_scorer, min_agreement=ia_min_agreement)
+        elif generator in ("routed", "verified"):
+            state = s9c.run(state, ia_scorer, mode=routed_mode, always_v3=(generator == "verified"))
         else:
             state = s9.run(state)        # sets meta["answer"] + scores["disagreement"]
         state = s10.run(state)           # grounding judge; reads input_risk() + disagreement
@@ -228,11 +244,12 @@ def process(question: str, *, k: int = 5, top_n: int = 3,
     if st.abstained:
         return s13.run(st)
 
-    # Step 9b: post-generation knowledge-conflict signal. Measure-only here —
-    # run ONCE on the final st.meta["answer"] (one extra parametric generation
-    # per row), NOT inside the controller loop. To let the controller refuse on
-    # it, move this call into _segment between s9 and s10 instead.
-    st = s9b.run(st, kc_scorer)
+    # Step 9b (knowledge-conflict probe) REMOVED from the default pipeline on
+    # 2026-09-25: it was measure-only (never changed an outcome), cost one extra
+    # generation per query, and mis-flagged correct answers. Kept behind
+    # --kc-backend ollama|stub so older runs stay reproducible; default "off".
+    if kc_scorer is not None:
+        st = s9b.run(st, kc_scorer)
 
     if st.blocked:
         return s13.run(st)
@@ -256,6 +273,7 @@ def _record(st: PipelineState, index: int, ground_truth: str | None) -> dict:
             "decision": st.meta.get("fusion_decision"),
             "fusion_risk": st.scores.get("fusion_risk", 0.0),
             "injection_score": st.scores.get("injection_detection", 0.0),
+            "injection_graded": st.scores.get("injection_graded"),
             "category": st.meta.get("llamaguard_category"),
             "would_have_blocked": bool(st.meta.get("gate_would_have_blocked", False)),
             "block_reason": st.meta.get("gate_block_reason"),
@@ -274,11 +292,14 @@ def _record(st: PipelineState, index: int, ground_truth: str | None) -> dict:
             "rerank_scores": st.meta.get("rerank_scores", []),
             "rerank_min_score": st.meta.get("rerank_min_score"),
             "canary": st.meta.get("canary"),
+            "context_injection": st.scores.get("context_injection", 0.0),
+            "context_graded": st.scores.get("context_graded"),
         },
         "generation": {
             "answer": st.meta.get("answer", ""),
             "disagreement": st.scores.get("disagreement", 0.0),
             "isolate_aggregate": st.meta.get("isolate_aggregate"),
+            "routed_generator": st.meta.get("routed_generator"),
             "knowledge_conflict": st.scores.get("knowledge_conflict"),
             "parametric_answer": st.meta.get("parametric_answer"),
             "knowledge_conflict_reason": st.meta.get("knowledge_conflict_reason"),
@@ -326,7 +347,9 @@ def main() -> None:
     ap.add_argument("--resume", action="store_true",
                     help="Slice mode: skip ids already present in --out and append "
                          "the rest, so a run can recover after a crash.")
-    ap.add_argument("--generator", choices=["fused", "isolate"], default="fused",
+    ap.add_argument("--routed-mode", choices=["balanced", "safe"], default="balanced",
+                    help="generator=routed: what to do when v3 abstains (see step_09c_routed_generator.py).")
+    ap.add_argument("--generator", choices=["fused", "isolate", "routed", "verified"], default="fused",
                     help="fused: existing Step 9 ensemble. isolate: per-passage "
                          "isolation + majority vote (Step 9A misinformation defense).")
     ap.add_argument("--ia-backend", choices=["ollama", "stub"], default="ollama",
@@ -345,8 +368,9 @@ def main() -> None:
                          "is_multivector escalation). Use for clean three-way "
                          "attribution: --no-controller vs this vs full controller. "
                          "Ignored when --no-controller is set.")
-    ap.add_argument("--kc-backend", choices=["ollama", "stub"], default="ollama",
-                    help="Step 9b knowledge-conflict backend. 'ollama' (default) "
+    ap.add_argument("--kc-backend", choices=["off", "ollama", "stub"], default="off",
+                    help="Step 9b knowledge-conflict probe (removed; 'off' is the default). "
+                         "'ollama' reproduces pre-2026-09-25 runs: it "
                          "runs a real context-free generation + judge against the "
                          "live models; 'stub' is the offline heuristic (NOT "
                          "validation — scores ~0 for any off-table question).")
@@ -359,9 +383,32 @@ def main() -> None:
     ap.add_argument("--semantic-intent-backend", choices=["nli", "llm"], default="nli",
                     help="Step 3d backend: 'nli' (local zero-shot, no Ollama) or "
                          "'llm' (single yes/no judge via Ollama).")
+    ap.add_argument("--defense-profile",
+                    choices=["full", "llmguard_only", "spotlight_only"],
+                    default="full",
+                    help="Pipeline comparison profile for run_baseline_comparison.py. "
+                         "The llmguard_only profile still uses the local input gate "
+                         "and output rail; it is not a detector-only external baseline. "
+                         "'full' is byte-identical to today's default pipeline.")
+    ap.add_argument("--tau-review", type=float, default=None,
+                    help="Override Step 3c REVIEW threshold (default 0.35).")
+    ap.add_argument("--tau-block", type=float, default=None,
+                    help="Override Step 3c BLOCK threshold (default 0.60).")
     args = ap.parse_args()
 
+    fusion_cfg = None
+    if args.tau_review is not None or args.tau_block is not None:
+        if args.tau_review is None or args.tau_block is None:
+            ap.error("--tau-review and --tau-block must be given together.")
+        if args.tau_block <= args.tau_review:
+            ap.error(f"--tau-block must exceed --tau-review "
+                     f"(got {args.tau_review}, {args.tau_block}).")
+        fusion_cfg = s3c.FusionConfig(tau_review=args.tau_review,
+                                      tau_block=args.tau_block)
+
     use_controller = not args.no_controller
+    if args.defense_profile != "full":
+        use_controller = False  # baseline profiles never use the closed-loop controller
     controller_cfg = None
     if use_controller and (args.max_attempts is not None or args.no_multivector_signal):
         cfg_kwargs: dict[str, object] = {}
@@ -370,10 +417,11 @@ def main() -> None:
         if args.no_multivector_signal:
             cfg_kwargs["use_multivector"] = False
         controller_cfg = ControllerConfig(**cfg_kwargs)
-    kc_scorer = (s9b.OllamaKnowledgeConflict() if args.kc_backend == "ollama"
+    kc_scorer = (None if args.kc_backend == "off"
+                 else s9b.OllamaKnowledgeConflict() if args.kc_backend == "ollama"
                  else s9b.HeuristicKnowledgeConflict())
     ia_scorer = None
-    if args.generator == "isolate":
+    if args.generator in ("isolate", "routed", "verified"):
         ia_scorer = (s9a.OllamaIsolateAggregator() if args.ia_backend == "ollama"
                      else s9a.StubIsolateAggregator())
 
@@ -389,8 +437,11 @@ def main() -> None:
                        generator=args.generator,
                        ia_scorer=ia_scorer,
                        ia_min_agreement=args.ia_min_agreement,
+                       routed_mode=args.routed_mode,
                        use_semantic_intent=args.use_semantic_intent,
-                       semantic_intent_backend=args.semantic_intent_backend)
+                       semantic_intent_backend=args.semantic_intent_backend,
+                       defense_profile=args.defense_profile,
+                       fusion_cfg=fusion_cfg)
 
     if args.question:
         st = _run(args.question)
