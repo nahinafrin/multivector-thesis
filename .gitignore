@@ -30,3 +30,27 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Not part of the research artifact (kept locally, untracked)
+node_modules/
+package.json
+package-lock.json
+pip_install_log.txt
+coffee_recheck.json
+injection_recheck.json
+external_baselines/thesis_overview-1.pdf
+*.bak_*
+**/files (*)/
+
+# Third-party datasets: re-create with `python download_datasets.py` (see README)
+multivector_extra_datasets/**/*.jsonl
+multivector_extra_datasets/**/*.json
+multivector_extra_datasets/**/SafeRAG/
+multivector_extra_datasets (1)/
+/row1_obfuscation_prompt_injection/
+/row8_pii_data_leakage/
+/row4_indirect_injection_rag_poisoning/
+/SafeRAG/
+
+# Local PDF build output
+paper_revision/main.html

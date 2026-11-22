@@ -171,7 +171,7 @@ def main() -> None:
     lines.append("- [ ] Pick ONE protocol as the headline claim for the abstract/results section; "
                 "report the other as a secondary/robustness check, dated and labelled as such.")
 
-    out_path = Path("../UNIFIED_RESULTS.md")
+    out_path = Path("../docs/UNIFIED_RESULTS.md")
     out_path.write_text("\n".join(lines), encoding="utf-8")
     print(f"[wrote] {out_path.resolve()}")
 

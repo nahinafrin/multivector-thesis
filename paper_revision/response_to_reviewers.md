@@ -100,7 +100,7 @@ We added a new "Environment and configuration" paragraph and Table V. They cover
 * **Settings:** every threshold and fusion weight, k/top-n, temperatures, and seeds.
 * **Protocols:** which protocol uses which generator configuration.
 
-A pinned `requirements_lock_venv311.txt` is added to the repository.
+A pinned `requirements_lock_venv311.txt` is added to the repository. The repository now has a README that maps every table and figure to the script that produces it and the committed per-row outputs it reads, plus an MIT licence and a dataset-licence table. The paper adds "Data and Code Availability" and "Ethics Statement" sections.
 
 **5.3 — Small dataset; justify representativeness; evaluate on independent test sets.**
 See 3.2 and 4.1. Sec. IV now explains what the stratified slice represents (one OWASP LLM01 threat model per class) and what it does not represent (real-world prevalence). It also adds three independent external test sets.
