@@ -238,7 +238,7 @@ Generators & \texttt{llama3.2:3b}, \texttt{mistral:7b}, \texttt{qwen2.5:3b} (Q4\
 \subsection{Specificity, Indirect Injection, and Gate Adaptivity}
 \emph{Specificity.} The fusion gate flags none of the 80 benign rows (0/80, 95\% CI [0, 4.6]\%). Downstream, the controller run refuses 10 benign rows (14 without the controller). About 6 of these refusals come from the disagreement-at-risk signal and 3 from ungrounded-recovery refusals, and 1 is an out-of-memory error rather than a security decision.
 \emph{Indirect injection.} In both runs, all 40 poisoned chunks were redacted at Stage~6 and all 40 canaries stayed intact at Stage~10, while the benign queries were still answered. This defense comes from sanitization and canary verification, not from classifier recall.
-\emph{Gate adaptivity.} The gate alone blocks 29--30 of the 40 direct-injection queries. All 40 are blocked once the propagated risk tightens the downstream stages, which is direct evidence that the forward-propagated risk score defends beyond the gate.
+\emph{Gate adaptivity.} The gate alone flags 29--30 of the 40 direct-injection queries (25 blocked, 4--5 sent to review). All 40 are blocked once the propagated risk tightens the downstream stages, which is direct evidence that the forward-propagated risk score defends beyond the gate.
 
 \subsection{Conjunctive Detection: Negative on Saturated Scores, Recovered on Graded Margins}\label{sec:negative}
 The multi-vector detector was built for the conjunctive class. With the scanner's saturated softmax probabilities as channels, it does not fire on the cases it targets, for a structural reason (Table~\ref{tab:negative}). We first present this negative result and its premise, then the repair that the premise suggests.
@@ -513,7 +513,7 @@ Claim & Measured & Status \\
 \midrule
 Benign specificity & 0/80 gate flags; $\approx 6/80$ downstream false positives & Holds at gate \\
 Indirect-injection defense & 40/40 redacted; 40/40 canaries intact & Holds \\
-Gate adaptivity & 29--30 of 40 at gate; 40/40 by cascade & Holds \\
+Gate adaptivity & 29--30 of 40 flagged at gate (25 blocked); 40/40 by cascade & Holds \\
 Conjunctive detection (saturated) & 1/34 invalid; 0/34 sub-threshold; 0/4 real & Fails structurally \\
 Conjunctive detection (graded) & 24/30 valid, 1/80 benign (6/200 held out); external 8/30 vs.\ 4/30 & Partial \\
 Instruction reaches generator (canary) & 0/220 leaks; 74/74 redacted per run & Holds \\

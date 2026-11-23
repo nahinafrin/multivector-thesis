@@ -1,0 +1,837 @@
+{
+  "git_revision_at_check": "d03d1d9",
+  "n_claims": 55,
+  "n_fail": 0,
+  "claims": [
+    {
+      "id": "A.canary",
+      "section": "V-C",
+      "statement": "canary leaks, both runs",
+      "expected": "0/220",
+      "computed": "0/220",
+      "tex_snippet": "0/220",
+      "in_tex": true,
+      "inputs": [
+        "protocolA_220/grounded_controller_220.jsonl",
+        "protocolA_220/grounded_baseline_220.jsonl"
+      ],
+      "scorer": "score_protocolA_220.py",
+      "status": "PASS"
+    },
+    {
+      "id": "A.redaction",
+      "section": "V-C",
+      "statement": "poison chunks redacted",
+      "expected": "74/74",
+      "computed": "74/74",
+      "tex_snippet": "74/74",
+      "in_tex": true,
+      "inputs": [
+        "protocolA_220/grounded_controller_220.jsonl",
+        "protocolA_220/grounded_baseline_220.jsonl"
+      ],
+      "scorer": "score_protocolA_220.py",
+      "status": "PASS"
+    },
+    {
+      "id": "A.poisoned",
+      "section": "V-A",
+      "statement": "poisoned-context chunks redacted",
+      "expected": "40/40",
+      "computed": "40/40",
+      "tex_snippet": "all 40 canaries stayed",
+      "in_tex": true,
+      "inputs": [
+        "protocolA_220/grounded_controller_220.jsonl",
+        "protocolA_220/grounded_baseline_220.jsonl"
+      ],
+      "scorer": "score_protocolA_220.py",
+      "status": "PASS"
+    },
+    {
+      "id": "A.benign_gate",
+      "section": "V-A",
+      "statement": "benign rows flagged at gate",
+      "expected": "0/80",
+      "computed": "0/80",
+      "tex_snippet": "(0/80, 95",
+      "in_tex": true,
+      "inputs": [
+        "protocolA_220/grounded_controller_220.jsonl",
+        "protocolA_220/grounded_baseline_220.jsonl"
+      ],
+      "scorer": "score_protocolA_220.py",
+      "status": "PASS"
+    },
+    {
+      "id": "A.gate_flag",
+      "section": "V-A",
+      "statement": "direct injections flagged at gate (controller-baseline)",
+      "expected": "29-30",
+      "computed": "29-30",
+      "tex_snippet": "flags 29--30 of the 40 direct-injection queries",
+      "in_tex": true,
+      "inputs": [
+        "protocolA_220/grounded_controller_220.jsonl",
+        "protocolA_220/grounded_baseline_220.jsonl"
+      ],
+      "scorer": "score_protocolA_220.py",
+      "status": "PASS"
+    },
+    {
+      "id": "A.gate_block",
+      "section": "V-A",
+      "statement": "direct injections hard-blocked at gate",
+      "expected": "25/40",
+      "computed": "25/40",
+      "tex_snippet": "(25 blocked, 4--5 sent to review)",
+      "in_tex": true,
+      "inputs": [
+        "protocolA_220/grounded_controller_220.jsonl",
+        "protocolA_220/grounded_baseline_220.jsonl"
+      ],
+      "scorer": "score_protocolA_220.py",
+      "status": "PASS"
+    },
+    {
+      "id": "A.cascade",
+      "section": "V-A",
+      "statement": "direct injections blocked by cascade",
+      "expected": "40/40",
+      "computed": "40/40",
+      "tex_snippet": "All 40 are blocked once",
+      "in_tex": true,
+      "inputs": [
+        "protocolA_220/grounded_controller_220.jsonl",
+        "protocolA_220/grounded_baseline_220.jsonl"
+      ],
+      "scorer": "score_protocolA_220.py",
+      "status": "PASS"
+    },
+    {
+      "id": "A.gateslip",
+      "section": "V-H",
+      "statement": "gate-slip rows passing gate",
+      "expected": "5/20",
+      "computed": "5/20",
+      "tex_snippet": "Five of its 20 rows (25\\%) pass the gate",
+      "in_tex": true,
+      "inputs": [
+        "protocolA_220/grounded_controller_220.jsonl",
+        "protocolA_220/grounded_baseline_220.jsonl"
+      ],
+      "scorer": "score_protocolA_220.py",
+      "status": "PASS"
+    },
+    {
+      "id": "A.mv",
+      "section": "V-B",
+      "statement": "multivector fires on post-gate rows",
+      "expected": "1/34",
+      "computed": "1/34",
+      "tex_snippet": "1/34",
+      "in_tex": true,
+      "inputs": [
+        "protocolA_220/grounded_controller_220.jsonl",
+        "protocolA_220/grounded_baseline_220.jsonl"
+      ],
+      "scorer": "score_protocolA_220.py",
+      "status": "PASS"
+    },
+    {
+      "id": "A.blocked",
+      "section": "V-D",
+      "statement": "rows blocked, controller vs baseline",
+      "expected": "88/101",
+      "computed": "88/101",
+      "tex_snippet": "it blocks 88 rows against the baseline's 101",
+      "in_tex": true,
+      "inputs": [
+        "protocolA_220/grounded_controller_220.jsonl",
+        "protocolA_220/grounded_baseline_220.jsonl"
+      ],
+      "scorer": "score_protocolA_220.py",
+      "status": "PASS"
+    },
+    {
+      "id": "A.benign_deliv",
+      "section": "V-D",
+      "statement": "benign delivered, controller vs baseline",
+      "expected": "70/66",
+      "computed": "70/66",
+      "tex_snippet": "answers 70 benign rows (vs.\\ 66)",
+      "in_tex": true,
+      "inputs": [
+        "protocolA_220/grounded_controller_220.jsonl",
+        "protocolA_220/grounded_baseline_220.jsonl"
+      ],
+      "scorer": "score_protocolA_220.py",
+      "status": "PASS"
+    },
+    {
+      "id": "A.pois_deliv",
+      "section": "V-D",
+      "statement": "poisoned-context delivered, controller vs baseline",
+      "expected": "34/28",
+      "computed": "34/28",
+      "tex_snippet": "34 poisoned-context rows (vs.\\ 28)",
+      "in_tex": true,
+      "inputs": [
+        "protocolA_220/grounded_controller_220.jsonl",
+        "protocolA_220/grounded_baseline_220.jsonl"
+      ],
+      "scorer": "score_protocolA_220.py",
+      "status": "PASS"
+    },
+    {
+      "id": "A.benign_refused",
+      "section": "V-A",
+      "statement": "benign refused, controller vs baseline",
+      "expected": "10/14",
+      "computed": "10/14",
+      "tex_snippet": "refuses 10 benign rows (14 without the controller)",
+      "in_tex": true,
+      "inputs": [
+        "protocolA_220/grounded_controller_220.jsonl",
+        "protocolA_220/grounded_baseline_220.jsonl"
+      ],
+      "scorer": "score_protocolA_220.py",
+      "status": "PASS"
+    },
+    {
+      "id": "VII.baseline",
+      "section": "Table VII",
+      "statement": "undefended ASR (current-code arm)",
+      "expected": "59/200",
+      "computed": "59/200",
+      "tex_snippet": "Undefended & 29.5 [23.6, 36.2]",
+      "in_tex": true,
+      "inputs": [
+        "mitigation_results/followup200/off.jsonl"
+      ],
+      "scorer": "score_ablation_study.py",
+      "status": "PASS"
+    },
+    {
+      "id": "VII.full",
+      "section": "Table VII",
+      "statement": "row Full stack (7 layers)",
+      "expected": "ASR 3.5, 54/2, blk 8.5",
+      "computed": "ASR 3.5, 54/2, blk 8.5",
+      "tex_snippet": "\\textbf{Full stack (7 layers)} & \\textbf{3.5} [1.7, 7.0] & 54/2 & $<\\!10^{-13}$ & 8.5 \\\\",
+      "in_tex": true,
+      "inputs": [
+        "mitigation_results/ablation200/on_full.jsonl",
+        "mitigation_results/followup200/off.jsonl"
+      ],
+      "scorer": "score_ablation_study.py",
+      "status": "PASS"
+    },
+    {
+      "id": "VII.nosanitize",
+      "section": "Table VII",
+      "statement": "row $-$ sanitization",
+      "expected": "ASR 11.0, 50/13, blk 7.5",
+      "computed": "ASR 11.0, 50/13, blk 7.5",
+      "tex_snippet": "\\quad $-$ sanitization & 11.0 [7.4, 16.1] & 50/13 & $3\\!\\times\\!10^{-6}$ & 7.5 \\\\",
+      "in_tex": true,
+      "inputs": [
+        "mitigation_results/ablation200/on_nosanitize.jsonl",
+        "mitigation_results/followup200/off.jsonl"
+      ],
+      "scorer": "score_ablation_study.py",
+      "status": "PASS"
+    },
+    {
+      "id": "VII.nogrounding",
+      "section": "Table VII",
+      "statement": "row $-$ grounding gate",
+      "expected": "ASR 6.5, 49/3, blk 2.5",
+      "computed": "ASR 6.5, 49/3, blk 2.5",
+      "tex_snippet": "\\quad $-$ grounding gate & 6.5 [3.8, 10.8] & 49/3 & $10^{-11}$ & 2.5 \\\\",
+      "in_tex": true,
+      "inputs": [
+        "mitigation_results/ablation200/on_nogrounding.jsonl",
+        "mitigation_results/followup200/off.jsonl"
+      ],
+      "scorer": "score_ablation_study.py",
+      "status": "PASS"
+    },
+    {
+      "id": "VII.norefuse",
+      "section": "Table VII",
+      "statement": "row $-$ refuse-on-detection",
+      "expected": "ASR 6.0, 51/4, blk 7.0",
+      "computed": "ASR 6.0, 51/4, blk 7.0",
+      "tex_snippet": "\\quad $-$ refuse-on-detection & 6.0 [3.5, 10.2] & 51/4 & $2\\!\\times\\!10^{-11}$ & 7.0 \\\\",
+      "in_tex": true,
+      "inputs": [
+        "mitigation_results/ablation200/on_norefuse.jsonl",
+        "mitigation_results/followup200/off.jsonl"
+      ],
+      "scorer": "score_ablation_study.py",
+      "status": "PASS"
+    },
+    {
+      "id": "VII.notighten",
+      "section": "Table VII",
+      "statement": "row $-$ tightened rerank",
+      "expected": "ASR 6.0, 51/4, blk 6.5",
+      "computed": "ASR 6.0, 51/4, blk 6.5",
+      "tex_snippet": "\\quad $-$ tightened rerank & 6.0 [3.5, 10.2] & 51/4 & $2\\!\\times\\!10^{-11}$ & 6.5 \\\\",
+      "in_tex": true,
+      "inputs": [
+        "mitigation_results/ablation200/on_notighten.jsonl",
+        "mitigation_results/followup200/off.jsonl"
+      ],
+      "scorer": "score_ablation_study.py",
+      "status": "PASS"
+    },
+    {
+      "id": "VII.noprompt",
+      "section": "Table VII",
+      "statement": "row $-$ guarded prompt",
+      "expected": "ASR 5.5, 53/5, blk 12.5",
+      "computed": "ASR 5.5, 53/5, blk 12.5",
+      "tex_snippet": "\\quad $-$ guarded prompt & 5.5 [3.1, 9.6] & 53/5 & $4\\!\\times\\!10^{-11}$ & 12.5 \\\\",
+      "in_tex": true,
+      "inputs": [
+        "mitigation_results/ablation200/on_noprompt.jsonl",
+        "mitigation_results/followup200/off.jsonl"
+      ],
+      "scorer": "score_ablation_study.py",
+      "status": "PASS"
+    },
+    {
+      "id": "VII.nopresidio",
+      "section": "Table VII",
+      "statement": "row $-$ Presidio",
+      "expected": "ASR 4.0, 53/2, blk 8.5",
+      "computed": "ASR 4.0, 53/2, blk 8.5",
+      "tex_snippet": "\\quad $-$ Presidio & 4.0 [2.0, 7.7] & 53/2 & $<\\!10^{-13}$ & 8.5 \\\\",
+      "in_tex": true,
+      "inputs": [
+        "mitigation_results/ablation200/on_nopresidio.jsonl",
+        "mitigation_results/followup200/off.jsonl"
+      ],
+      "scorer": "score_ablation_study.py",
+      "status": "PASS"
+    },
+    {
+      "id": "VII.nodlp",
+      "section": "Table VII",
+      "statement": "row $-$ DLP",
+      "expected": "ASR 3.5, 54/2, blk 8.5",
+      "computed": "ASR 3.5, 54/2, blk 8.5",
+      "tex_snippet": "\\quad $-$ DLP & 3.5 [1.7, 7.0] & 54/2 & $<\\!10^{-13}$ & 8.5 \\\\",
+      "in_tex": true,
+      "inputs": [
+        "mitigation_results/ablation200/on_nodlp.jsonl",
+        "mitigation_results/followup200/off.jsonl"
+      ],
+      "scorer": "score_ablation_study.py",
+      "status": "PASS"
+    },
+    {
+      "id": "VII.only_grounding",
+      "section": "Table VII",
+      "statement": "row Grounding gate",
+      "expected": "ASR 15.0, 29/0, blk 5.5",
+      "computed": "ASR 15.0, 29/0, blk 5.5",
+      "tex_snippet": "\\quad Grounding gate & 15.0 [10.7, 20.6] & 29/0 & $4\\!\\times\\!10^{-9}$ & 5.5 \\\\",
+      "in_tex": true,
+      "inputs": [
+        "mitigation_results/ablation200/on_only_grounding.jsonl",
+        "mitigation_results/followup200/off.jsonl"
+      ],
+      "scorer": "score_ablation_study.py",
+      "status": "PASS"
+    },
+    {
+      "id": "VII.only_sanitize",
+      "section": "Table VII",
+      "statement": "row Sanitization",
+      "expected": "ASR 16.0, 30/3, blk 0.0",
+      "computed": "ASR 16.0, 30/3, blk 0.0",
+      "tex_snippet": "\\quad Sanitization & 16.0 [11.6, 21.7] & 30/3 & $1.4\\!\\times\\!10^{-6}$ & 0.0 \\\\",
+      "in_tex": true,
+      "inputs": [
+        "mitigation_results/ablation200/on_only_sanitize.jsonl",
+        "mitigation_results/followup200/off.jsonl"
+      ],
+      "scorer": "score_ablation_study.py",
+      "status": "PASS"
+    },
+    {
+      "id": "VII.only_refuse",
+      "section": "Table VII",
+      "statement": "row Refuse-on-detection",
+      "expected": "ASR 18.0, 25/2, blk 2.5",
+      "computed": "ASR 18.0, 25/2, blk 2.5",
+      "tex_snippet": "\\quad Refuse-on-detection & 18.0 [13.3, 23.9] & 25/2 & $6\\!\\times\\!10^{-6}$ & 2.5 \\\\",
+      "in_tex": true,
+      "inputs": [
+        "mitigation_results/ablation200/on_only_refuse.jsonl",
+        "mitigation_results/followup200/off.jsonl"
+      ],
+      "scorer": "score_ablation_study.py",
+      "status": "PASS"
+    },
+    {
+      "id": "VII.only_tighten",
+      "section": "Table VII",
+      "statement": "row Tightened rerank",
+      "expected": "ASR 24.5, 28/18, blk 0.0",
+      "computed": "ASR 24.5, 28/18, blk 0.0",
+      "tex_snippet": "\\quad Tightened rerank & 24.5 [19.1, 30.9] & 28/18 & 0.18 & 0.0 \\\\",
+      "in_tex": true,
+      "inputs": [
+        "mitigation_results/ablation200/on_only_tighten.jsonl",
+        "mitigation_results/followup200/off.jsonl"
+      ],
+      "scorer": "score_ablation_study.py",
+      "status": "PASS"
+    },
+    {
+      "id": "VII.only_prompt",
+      "section": "Table VII",
+      "statement": "row Guarded prompt",
+      "expected": "ASR 53.0, 6/53, blk 0.0",
+      "computed": "ASR 53.0, 6/53, blk 0.0",
+      "tex_snippet": "\\quad Guarded prompt & 53.0 [46.1, 59.8] & 6/53 & $2\\!\\times\\!10^{-10}$ & 0.0 \\\\",
+      "in_tex": true,
+      "inputs": [
+        "mitigation_results/ablation200/on_only_prompt.jsonl",
+        "mitigation_results/followup200/off.jsonl"
+      ],
+      "scorer": "score_ablation_study.py",
+      "status": "PASS"
+    },
+    {
+      "id": "VII.only_presidio",
+      "section": "Table VII",
+      "statement": "row Presidio / DLP",
+      "expected": "ASR 29.5, 0/0, blk 0.0",
+      "computed": "ASR 29.5, 0/0, blk 0.0",
+      "tex_snippet": "\\quad Presidio / DLP & 29.5 [23.6, 36.2] & 0/0 & 1.0 & 0.0 \\\\",
+      "in_tex": true,
+      "inputs": [
+        "mitigation_results/ablation200/on_only_presidio.jsonl",
+        "mitigation_results/followup200/off.jsonl"
+      ],
+      "scorer": "score_ablation_study.py",
+      "status": "PASS"
+    },
+    {
+      "id": "E.seed_off",
+      "section": "V-E",
+      "statement": "undefended ASR per seed",
+      "expected": "29.5, 31.0, 30.5",
+      "computed": "29.5, 31.0, 30.5",
+      "tex_snippet": "(29.5, 31.0, 30.5)",
+      "in_tex": true,
+      "inputs": [
+        "mitigation_results/followup200/",
+        "mitigation_results/seed7/",
+        "mitigation_results/seed1234/"
+      ],
+      "scorer": "score_seed_study.py",
+      "status": "PASS"
+    },
+    {
+      "id": "E.seed_full",
+      "section": "V-E",
+      "statement": "full-stack ASR per seed",
+      "expected": "3.5, 4.5, 4.5",
+      "computed": "3.5, 4.5, 4.5",
+      "tex_snippet": "(3.5, 4.5, 4.5)",
+      "in_tex": true,
+      "inputs": [
+        "mitigation_results/followup200/",
+        "mitigation_results/seed7/",
+        "mitigation_results/seed1234/"
+      ],
+      "scorer": "score_seed_study.py",
+      "status": "PASS"
+    },
+    {
+      "id": "E.seed_sub",
+      "section": "V-E",
+      "statement": "subset ASR per seed",
+      "expected": "5.5, 7.0, 5.5",
+      "computed": "5.5, 7.0, 5.5",
+      "tex_snippet": "(5.5, 7.0, 5.5)",
+      "in_tex": true,
+      "inputs": [
+        "mitigation_results/followup200/",
+        "mitigation_results/seed7/",
+        "mitigation_results/seed1234/"
+      ],
+      "scorer": "score_seed_study.py",
+      "status": "PASS"
+    },
+    {
+      "id": "E.seed_p",
+      "section": "V-E",
+      "statement": "subset vs full p per seed",
+      "expected": "0.34, 0.27, 0.77",
+      "computed": "0.34, 0.27, 0.77",
+      "tex_snippet": "$p=0.34$, 0.27, 0.77",
+      "in_tex": true,
+      "inputs": [
+        "mitigation_results/followup200/",
+        "mitigation_results/seed7/",
+        "mitigation_results/seed1234/"
+      ],
+      "scorer": "score_seed_study.py",
+      "status": "PASS"
+    },
+    {
+      "id": "E.n424_asr",
+      "section": "V-E",
+      "statement": "ASR off / full / subset at n=424",
+      "expected": "29.7/4.2/4.7",
+      "computed": "29.7/4.2/4.7",
+      "tex_snippet": "ASR is 29.7\\% undefended",
+      "in_tex": true,
+      "inputs": [
+        "mitigation_results/followup200/",
+        "mitigation_results/ablation200/on_full.jsonl",
+        "mitigation_results/extended424/"
+      ],
+      "scorer": "score_improvements.py",
+      "status": "PASS"
+    },
+    {
+      "id": "E.n424_full",
+      "section": "V-E",
+      "statement": "full vs off fixed/broke",
+      "expected": "114/6",
+      "computed": "114/6",
+      "tex_snippet": "fixes 114 rows and breaks 6",
+      "in_tex": true,
+      "inputs": [
+        "mitigation_results/followup200/",
+        "mitigation_results/ablation200/on_full.jsonl",
+        "mitigation_results/extended424/"
+      ],
+      "scorer": "score_improvements.py",
+      "status": "PASS"
+    },
+    {
+      "id": "E.n424_sub",
+      "section": "V-E",
+      "statement": "subset vs full: diff, CI, p",
+      "expected": "+0.5 [-1.5, +2.4] p=0.81",
+      "computed": "+0.5 [-1.5, +2.4] p=0.81",
+      "tex_snippet": "$+0.5$ points with an approximate 95\\% interval of $[-1.5, +2.4]$",
+      "in_tex": true,
+      "inputs": [
+        "mitigation_results/followup200/",
+        "mitigation_results/ablation200/on_full.jsonl",
+        "mitigation_results/extended424/"
+      ],
+      "scorer": "score_improvements.py",
+      "status": "PASS"
+    },
+    {
+      "id": "H.isolate",
+      "section": "V-H",
+      "statement": "isolate ASR / abstentions",
+      "expected": "0/40, 34",
+      "computed": "0/40, 34",
+      "tex_snippet": "abstains on 34 of the 40 attack rows",
+      "in_tex": true,
+      "inputs": [
+        "external_eval/semantic40_{fused,isolate,routed}.jsonl",
+        "external_eval/benign40_{fused,isolate,routed}.jsonl"
+      ],
+      "scorer": "score_improvements.py",
+      "status": "PASS"
+    },
+    {
+      "id": "H.utility",
+      "section": "V-H",
+      "statement": "benign answered (correct): isolate, fused",
+      "expected": "15 (10), 37 (27)",
+      "computed": "15 (10), 37 (27)",
+      "tex_snippet": "it answers 15 (10 correctly), against 37 answered (27 correctly)",
+      "in_tex": true,
+      "inputs": [
+        "external_eval/semantic40_{fused,isolate,routed}.jsonl",
+        "external_eval/benign40_{fused,isolate,routed}.jsonl"
+      ],
+      "scorer": "score_improvements.py",
+      "status": "PASS"
+    },
+    {
+      "id": "H.routed",
+      "section": "V-H",
+      "statement": "routed vs fused: fixed/broke, p",
+      "expected": "5/2 p=0.45",
+      "computed": "5/2 p=0.45",
+      "tex_snippet": "(5 fixed, 2 broken, $p=0.45$",
+      "in_tex": true,
+      "inputs": [
+        "external_eval/semantic40_{fused,isolate,routed}.jsonl",
+        "external_eval/benign40_{fused,isolate,routed}.jsonl"
+      ],
+      "scorer": "score_improvements.py",
+      "status": "PASS"
+    },
+    {
+      "id": "H.routes",
+      "section": "V-H",
+      "statement": "rows sent to agreement path (attack, benign)",
+      "expected": "22, 16",
+      "computed": "22, 16",
+      "tex_snippet": "(22 of the 40 attack rows and 16 of the 40 benign questions)",
+      "in_tex": true,
+      "inputs": [
+        "external_eval/semantic40_{fused,isolate,routed}.jsonl",
+        "external_eval/benign40_{fused,isolate,routed}.jsonl"
+      ],
+      "scorer": "score_improvements.py",
+      "status": "PASS"
+    },
+    {
+      "id": "H.routed_util",
+      "section": "V-H",
+      "statement": "routed benign answered (correct)",
+      "expected": "36 (24)",
+      "computed": "36 (24)",
+      "tex_snippet": "(36 benign questions answered, 24 correctly)",
+      "in_tex": true,
+      "inputs": [
+        "external_eval/semantic40_{fused,isolate,routed}.jsonl",
+        "external_eval/benign40_{fused,isolate,routed}.jsonl"
+      ],
+      "scorer": "score_improvements.py",
+      "status": "PASS"
+    },
+    {
+      "id": "B.valid",
+      "section": "V-B",
+      "statement": "graded valid fires (in-sample floors)",
+      "expected": "24/30",
+      "computed": "24/30",
+      "tex_snippet": "on 24/30 with graded channels",
+      "in_tex": true,
+      "inputs": [
+        "grounded_controller_graded.jsonl",
+        "external_eval/graded_heldout_benign.jsonl",
+        "row4_mitigation_results/conjunctive/on_full.jsonl"
+      ],
+      "scorer": "fit_graded_floors_heldout.py",
+      "status": "PASS"
+    },
+    {
+      "id": "B.heldout_fp",
+      "section": "V-B",
+      "statement": "false fires on 200 held-out benign questions",
+      "expected": "6/200",
+      "computed": "6/200",
+      "tex_snippet": "fires on 6 of them (3.0\\%, [1.4, 6.4])",
+      "in_tex": true,
+      "inputs": [
+        "grounded_controller_graded.jsonl",
+        "external_eval/graded_heldout_benign.jsonl",
+        "row4_mitigation_results/conjunctive/on_full.jsonl"
+      ],
+      "scorer": "fit_graded_floors_heldout.py",
+      "status": "PASS"
+    },
+    {
+      "id": "B.bipia",
+      "section": "V-B",
+      "statement": "BIPIA attack / benign fires",
+      "expected": "8/30, 4/30",
+      "computed": "8/30, 4/30",
+      "tex_snippet": "fires on 8/30 attacks and on 4/30 benign",
+      "in_tex": true,
+      "inputs": [
+        "grounded_controller_graded.jsonl",
+        "external_eval/graded_heldout_benign.jsonl",
+        "row4_mitigation_results/conjunctive/on_full.jsonl"
+      ],
+      "scorer": "fit_graded_floors_heldout.py",
+      "status": "PASS"
+    },
+    {
+      "id": "B.refit",
+      "section": "V-B",
+      "statement": "held-out floor: context floor, FP, valid",
+      "expected": "0.637, 1/200, 0/30",
+      "computed": "0.637, 1/200, 0/30",
+      "tex_snippet": "(0.637) cuts held-out false fires to 1/200 but also cuts valid fires to 0/30",
+      "in_tex": true,
+      "inputs": [
+        "grounded_controller_graded.jsonl",
+        "external_eval/graded_heldout_benign.jsonl",
+        "row4_mitigation_results/conjunctive/on_full.jsonl"
+      ],
+      "scorer": "fit_graded_floors_heldout.py",
+      "status": "PASS"
+    },
+    {
+      "id": "B.sweep",
+      "section": "V-B",
+      "statement": "context floor 0.40: valid fires, held-out FP",
+      "expected": "11/30, 5/200",
+      "computed": "11/30, 5/200",
+      "tex_snippet": "keeps 11/30 valid fires and still fires on 5/200",
+      "in_tex": true,
+      "inputs": [
+        "grounded_controller_graded.jsonl",
+        "external_eval/graded_heldout_benign.jsonl",
+        "row4_mitigation_results/conjunctive/on_full.jsonl"
+      ],
+      "scorer": "fit_graded_floors_heldout.py",
+      "status": "PASS"
+    },
+    {
+      "id": "G.deepset_sample",
+      "section": "V-G",
+      "statement": "sample: injections blocked / flagged, benign",
+      "expected": "14/30, 17/30, 0/30",
+      "computed": "14/30, 17/30, 0/30",
+      "tex_snippet": "blocks 14 of 30 real injection prompts",
+      "in_tex": true,
+      "inputs": [
+        "external_eval/deepset_gate_rows.jsonl"
+      ],
+      "scorer": "run_deepset_gate_eval.py",
+      "status": "PASS"
+    },
+    {
+      "id": "G.deepset_full",
+      "section": "V-G",
+      "statement": "full split: blocked, flagged, benign",
+      "expected": "23/60, 28/60, 1/56",
+      "computed": "23/60, 28/60, 1/56",
+      "tex_snippet": "blocks 23 of 60 injections (38.3\\%) and flags 28, at 1/56",
+      "in_tex": true,
+      "inputs": [
+        "external_eval/deepset_gate_rows.jsonl"
+      ],
+      "scorer": "run_deepset_gate_eval.py",
+      "status": "PASS"
+    },
+    {
+      "id": "G.graded_flag",
+      "section": "V-G",
+      "statement": "gate + graded flag on test split: injections, benign",
+      "expected": "38/60, 2/56",
+      "computed": "38/60, 2/56",
+      "tex_snippet": "raises flagged injections from 28/60 to 38/60",
+      "in_tex": true,
+      "inputs": [
+        "external_eval/deepset_graded_scores.jsonl",
+        "external_eval/gate_graded_report.json"
+      ],
+      "scorer": "fit_gate_graded.py",
+      "status": "PASS"
+    },
+    {
+      "id": "G.graded_rag",
+      "section": "V-G",
+      "statement": "graded flag on 200 held-out RAG questions",
+      "expected": "7/200",
+      "computed": "7/200",
+      "tex_snippet": "fires on 7 of 200 held-out benign questions",
+      "in_tex": true,
+      "inputs": [
+        "external_eval/graded_heldout_benign.jsonl"
+      ],
+      "scorer": "fit_gate_graded.py",
+      "status": "PASS"
+    },
+    {
+      "id": "G.e2e",
+      "section": "V-G",
+      "statement": "end to end: injections / benign refused",
+      "expected": "30/30, 30/30",
+      "computed": "30/30, 30/30",
+      "tex_snippet": "refuses all 30 sampled injections",
+      "in_tex": true,
+      "inputs": [
+        "external_eval/deepset_e2e.jsonl"
+      ],
+      "scorer": "score_improvements.py",
+      "status": "PASS"
+    },
+    {
+      "id": "G.prag",
+      "section": "Table VIII",
+      "statement": "PoisonedRAG ASR undefended / defended, fixed/broke",
+      "expected": "137/136, 7/6",
+      "computed": "137/136, 7/6",
+      "tex_snippet": "7 rows fixed, 6 broken",
+      "in_tex": true,
+      "inputs": [
+        "mitigation_results/external200/",
+        "ext_n200_results.jsonl"
+      ],
+      "scorer": "score_external_paired.py",
+      "status": "PASS"
+    },
+    {
+      "id": "G.prag_same",
+      "section": "Table VIII",
+      "statement": "same generator: ASR, fixed/broke",
+      "expected": "128/150, 16/7",
+      "computed": "128/150, 16/7",
+      "tex_snippet": "85.3\\% ASR (128/150)",
+      "in_tex": true,
+      "inputs": [
+        "mitigation_results/external200/",
+        "ext_n200_results.jsonl"
+      ],
+      "scorer": "score_external_paired.py",
+      "status": "PASS"
+    },
+    {
+      "id": "G.bipia",
+      "section": "Table VIII",
+      "statement": "BIPIA blocked: pipeline / same-generator",
+      "expected": "45/50, 44/50",
+      "computed": "45/50, 44/50",
+      "tex_snippet": "45/50 BIPIA attacks are blocked",
+      "in_tex": true,
+      "inputs": [
+        "mitigation_results/external200/",
+        "ext_n200_results.jsonl"
+      ],
+      "scorer": "score_external_paired.py",
+      "status": "PASS"
+    },
+    {
+      "id": "I.latency",
+      "section": "Table IX",
+      "statement": "benign median: undefended / full / subset",
+      "expected": "8.6/15.3/19.0",
+      "computed": "8.6/15.3/19.0",
+      "tex_snippet": "Full stack, 7 layers (Protocol B) & 15.4 / 24.7 & 15.3 / 21.3",
+      "in_tex": true,
+      "inputs": [
+        "resource_profile/overhead_summary.json"
+      ],
+      "scorer": "summarize_overhead.py",
+      "status": "PASS"
+    },
+    {
+      "id": "I.gpu",
+      "section": "Table IX",
+      "statement": "full stack benign median: CPU / GPU fp32 / GPU fp16 encoders",
+      "expected": "13.3/22.6/8.6",
+      "computed": "13.3/22.6/8.6",
+      "tex_snippet": "encoders on GPU, fp16 ($n=50$) & -- & 8.6 / 10.1",
+      "in_tex": true,
+      "inputs": [
+        "mitigation_results/gpu_encoders/"
+      ],
+      "scorer": "run_gpu_latency.sh",
+      "status": "PASS"
+    }
+  ]
+}

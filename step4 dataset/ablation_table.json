@@ -151,8 +151,8 @@
  },
  "_baseline": {
   "name": "current",
-  "attack": "mitigation_results\\followup200\\off.jsonl",
-  "benign": "mitigation_results\\followup200\\benign_off.jsonl",
+  "attack": "mitigation_results/followup200/off.jsonl",
+  "benign": "mitigation_results/followup200/benign_off.jsonl",
   "undefended_asr": 59,
   "n": 200
  }

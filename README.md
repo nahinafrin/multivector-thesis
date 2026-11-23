@@ -64,9 +64,15 @@ There are two ways to check a number.
 
 All commands below run from `step4 dataset/` with the venv active.
 
+**Claim-by-claim check.** `python verify_claims.py` re-runs the standard-library scorers, recomputes
+55 of the paper's numbers from the committed per-row outputs, compares each with the value the paper
+states, and checks that the stated text appears in `paper_revision/main.tex`. It writes
+`claims_manifest.json` (claim, paper section, expected and computed values, input files, scorer,
+status, git revision) and exits non-zero if any claim fails. It does not re-run the models.
+
 | Paper result | Run (regenerates outputs) | Score (reads frozen outputs) | Frozen outputs |
 |---|---|---|---|
-| Protocol A slice, specificity, redaction, canaries (Sec. V-A, V-C, V-D; Tables IV, X) | `build_adversarial_slice.py`, `run_full_pipeline.py` | `score_slice.py` | `adversarial_slice.jsonl`, `grounded*.jsonl`, `frozen/` |
+| Protocol A slice, specificity, redaction, canaries, controller vs. baseline (Sec. V-A, V-C, V-D; Tables IV, X) | `build_adversarial_slice.py`, `run_full_pipeline.py` | `score_protocolA_220.py` | `protocolA_220/` (the 220-row runs, restored from git `27bf190`; see its README) |
 | Conjunctive detector, saturated vs. graded (Sec. V-B, Table VI) | `revalidate_multivector_graded.py` | same script | `multivector_graded_revalidation.json`, `grounded_controller_graded.jsonl` |
 | Graded detector on external BIPIA conjunctive rows (Table VI) | `build_row4_conjunctive.py`¹ | `score_row4_detection.py` | `row4_mitigation_results/` |
 | Ablation: leave-one-out and single-layer arms (Table VII, Figs. 2–3) | `run_ablation_study.py` | `score_ablation_study.py` (pairs every arm with the current-code undefended arm in `followup200/`; `--baseline july` gives the older July arm, not used in the paper) | `mitigation_results/ablation200/`, `ablation_table.json` |

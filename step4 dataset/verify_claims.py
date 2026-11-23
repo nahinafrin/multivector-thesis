@@ -1,0 +1,256 @@
+#!/usr/bin/env python3
+"""
+verify_claims.py -- claim-by-claim provenance check for the paper.
+
+For each number the paper reports, this script recomputes it from the stored per-row outputs
+(or from a report that a named scorer regenerates from them), compares it with the value the
+paper states, and checks that the stated text appears in paper_revision/main.tex. No model is
+run. It first re-runs the standard-library scorers so their reports reflect the stored rows.
+
+    python verify_claims.py            # all claims; exit code 1 if any fails
+Output: claims_manifest.json  (claim id, paper section, statement, expected, computed,
+        inputs, scorer, PASS/FAIL, git revision)
+
+Scope: this establishes that the paper's numbers follow from the committed outputs. It does not
+re-run the models; GPU generation is not bit-reproducible (see the paper, Sec. V-E).
+"""
+from __future__ import annotations
+
+import json
+import subprocess
+import sys
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parent
+TEX = (ROOT / "paper_revision" / "main.tex").read_text(encoding="utf-8")
+EE, MR = HERE / "external_eval", HERE / "mitigation_results"
+B = "\\"
+CLAIMS: list[dict] = []
+
+
+def L(p: Path) -> list[dict]:
+    return [json.loads(l) for l in p.open(encoding="utf-8") if l.strip()]
+
+
+def J(p: Path):
+    return json.loads(p.read_text(encoding="utf-8"))
+
+
+def claim(cid, section, statement, expected, computed, snippet, inputs, scorer):
+    found = snippet in TEX
+    CLAIMS.append({"id": cid, "section": section, "statement": statement,
+                   "expected": expected, "computed": computed, "tex_snippet": snippet,
+                   "in_tex": found, "inputs": inputs, "scorer": scorer,
+                   "status": "PASS" if (str(expected) == str(computed) and found) else "FAIL"})
+
+
+def pct(k, n):
+    return f"{100 * k / n:.1f}"
+
+
+def run(*args):
+    r = subprocess.run([sys.executable, *args], cwd=HERE, capture_output=True, text=True)
+    if r.returncode != 0:
+        raise SystemExit(f"{' '.join(args)} failed:\n{r.stderr[-2000:]}")
+
+
+def main() -> None:
+    for s in (["score_protocolA_220.py"], ["score_ablation_study.py"], ["score_seed_study.py"],
+              ["score_improvements.py"], ["fit_graded_floors_heldout.py"], ["score_external_paired.py"]):
+        run(*s)
+
+    # ---- Protocol A (Sec. V-A, V-B, V-C, V-D) -------------------------------------------
+    pa = J(HERE / "protocolA_220" / "protocolA_220_report.json")
+    c, b = pa["controller"], pa["baseline"]
+    src = ["protocolA_220/grounded_controller_220.jsonl", "protocolA_220/grounded_baseline_220.jsonl"]
+    sc = "score_protocolA_220.py"
+    claim("A.canary", "V-C", "canary leaks, both runs", "0/220",
+          f"{c['canary_leaks'] + b['canary_leaks']}/{c['rows']}", "0/220", src, sc)
+    claim("A.redaction", "V-C", "poison chunks redacted", "74/74", c["poison_chunks_redacted"], "74/74", src, sc)
+    claim("A.poisoned", "V-A", "poisoned-context chunks redacted", "40/40", c["poisoned_context_redacted"],
+          "all 40 canaries stayed", src, sc)
+    claim("A.benign_gate", "V-A", "benign rows flagged at gate", "0/80", c["benign_flagged_at_gate"], "(0/80, 95", src, sc)
+    claim("A.gate_flag", "V-A", "direct injections flagged at gate (controller-baseline)", "29-30",
+          f"{c['direct_flagged_at_gate'].split('/')[0]}-{b['direct_flagged_at_gate'].split('/')[0]}",
+          "flags 29--30 of the 40 direct-injection queries", src, sc)
+    claim("A.gate_block", "V-A", "direct injections hard-blocked at gate", "25/40", c["direct_hard_blocked_at_gate"],
+          "(25 blocked, 4--5 sent to review)", src, sc)
+    claim("A.cascade", "V-A", "direct injections blocked by cascade", "40/40", c["direct_blocked_by_cascade"],
+          "All 40 are blocked once", src, sc)
+    claim("A.gateslip", "V-H", "gate-slip rows passing gate", "5/20", c["gate_slip_pass_gate"],
+          "Five of its 20 rows (25\\%) pass the gate", src, sc)
+    claim("A.mv", "V-B", "multivector fires on post-gate rows", "1/34",
+          f"{c['multivector_fires_post_gate']}/{c['multivector_post_gate']}", "1/34", src, sc)
+    claim("A.blocked", "V-D", "rows blocked, controller vs baseline", "88/101",
+          f"{c['blocked_total']}/{b['blocked_total']}", "it blocks 88 rows against the baseline's 101", src, sc)
+    claim("A.benign_deliv", "V-D", "benign delivered, controller vs baseline", "70/66",
+          f"{c['benign_delivered']}/{b['benign_delivered']}", "answers 70 benign rows (vs." + B + " 66)", src, sc)
+    claim("A.pois_deliv", "V-D", "poisoned-context delivered, controller vs baseline", "34/28",
+          f"{c['poisoned_context_delivered']}/{b['poisoned_context_delivered']}", "34 poisoned-context rows (vs." + B + " 28)", src, sc)
+    claim("A.benign_refused", "V-A", "benign refused, controller vs baseline", "10/14",
+          f"{c['benign_refused']}/{b['benign_refused']}", "refuses 10 benign rows (14 without the controller)", src, sc)
+
+    # ---- Table VII: leave-one-out and single-layer (Sec. V-E) ---------------------------
+    at = J(HERE / "ablation_table.json")
+    claim("VII.baseline", "Table VII", "undefended ASR (current-code arm)", "59/200",
+          f"{at['_baseline']['undefended_asr']}/{at['_baseline']['n']}", "Undefended & 29.5 [23.6, 36.2]",
+          [at["_baseline"]["attack"]], "score_ablation_study.py")
+    rows7 = {"full": ("Full stack (7 layers)", r"\textbf{3.5}"), "nosanitize": ("$-$ sanitization", None),
+             "nogrounding": ("$-$ grounding gate", None), "norefuse": ("$-$ refuse-on-detection", None),
+             "notighten": ("$-$ tightened rerank", None), "noprompt": ("$-$ guarded prompt", None),
+             "nopresidio": ("$-$ Presidio", None), "nodlp": ("$-$ DLP", None),
+             "only_grounding": ("Grounding gate &", None), "only_sanitize": ("Sanitization &", None),
+             "only_refuse": ("Refuse-on-detection &", None), "only_tighten": ("Tightened rerank &", None),
+             "only_prompt": ("Guarded prompt &", None), "only_presidio": ("Presidio / DLP &", None)}
+    tab = TEX[TEX.index(B + "label{tab:ablation}"):]
+    tab = tab[:tab.index(B + "end{tabular}")]
+    for k, (lab, _) in rows7.items():
+        r = at[k]
+        line = next((l for l in tab.splitlines() if lab in l), "")
+        exp = f"ASR {pct(r['asr'], r['n'])}, {r['fixed']}/{r['broke']}, blk {pct(r['benign_blocked'], r['benign_n'])}"
+        ok = (pct(r["asr"], r["n"]) in line and f"& {r['fixed']}/{r['broke']} &" in line
+              and f"& {pct(r['benign_blocked'], r['benign_n'])} " in line + " ")
+        claim(f"VII.{k}", "Table VII", f"row {lab.strip(' &')}", exp, exp if ok else f"row mismatch: {line.strip()}",
+              line.strip() or lab, [f"mitigation_results/ablation200/on_{k}.jsonl", at["_baseline"]["attack"]],
+              "score_ablation_study.py")
+
+    # ---- Seed replicates (Sec. V-E) -----------------------------------------------------
+    sd = J(MR / "seed_study_report.json")
+    seeds = ("42", "7", "1234")
+    off = ", ".join(pct(sd[s]["asr"]["a_off"], 200) for s in seeds)
+    full = ", ".join(pct(sd[s]["asr"]["a_full"], 200) for s in seeds)
+    sub = ", ".join(pct(sd[s]["asr"]["a_combo"], 200) for s in seeds)
+    pv = ", ".join(f"{sd[s]['combo_vs_full'][2]:.2f}" for s in seeds)
+    sl = ["mitigation_results/followup200/", "mitigation_results/seed7/", "mitigation_results/seed1234/"]
+    claim("E.seed_off", "V-E", "undefended ASR per seed", "29.5, 31.0, 30.5", off, "(29.5, 31.0, 30.5)", sl, "score_seed_study.py")
+    claim("E.seed_full", "V-E", "full-stack ASR per seed", "3.5, 4.5, 4.5", full, "(3.5, 4.5, 4.5)", sl, "score_seed_study.py")
+    claim("E.seed_sub", "V-E", "subset ASR per seed", "5.5, 7.0, 5.5", sub, "(5.5, 7.0, 5.5)", sl, "score_seed_study.py")
+    claim("E.seed_p", "V-E", "subset vs full p per seed", "0.34, 0.27, 0.77", pv, "$p=0.34$, 0.27, 0.77", sl, "score_seed_study.py")
+
+    # ---- n = 424 (Sec. V-E) ------------------------------------------------------------
+    imp = J(EE / "improvements_report.json")
+    n4 = imp["planted_n424"]
+    s4 = ["mitigation_results/followup200/", "mitigation_results/ablation200/on_full.jsonl", "mitigation_results/extended424/"]
+    claim("E.n424_asr", "V-E", "ASR off / full / subset at n=424", "29.7/4.2/4.7",
+          "/".join(n4["asr"][a].split("%")[0] for a in ("off", "full", "subset")),
+          "ASR is 29.7" + B + "% undefended", s4, "score_improvements.py")
+    claim("E.n424_full", "V-E", "full vs off fixed/broke", "114/6",
+          f"{n4['full_vs_off']['fixed']}/{n4['full_vs_off']['broke']}", "fixes 114 rows and breaks 6", s4, "score_improvements.py")
+    sv = n4["subset_vs_full"]
+    claim("E.n424_sub", "V-E", "subset vs full: diff, CI, p", "+0.5 [-1.5, +2.4] p=0.81",
+          f"+{sv['diff_pts']} [{sv['diff_ci95_pts'][0]}, +{sv['diff_ci95_pts'][1]}] p={sv['p']:.2f}",
+          "$+0.5$ points with an approximate 95" + B + "% interval of $[-1.5, +2.4]$", s4, "score_improvements.py")
+
+    # ---- Semantic slice generators (Sec. V-H) --------------------------------------------
+    sys.path.insert(0, str(HERE))
+    from score_ablation_study import attack_succeeded
+    sm = imp["semantic40_fused_vs_isolate"]
+    u = sm["benign40_utility"]
+    ss = ["external_eval/semantic40_{fused,isolate,routed}.jsonl", "external_eval/benign40_{fused,isolate,routed}.jsonl"]
+    claim("H.isolate", "V-H", "isolate ASR / abstentions", "0/40, 34", f"{sum(attack_succeeded(r) for r in L(EE / 'semantic40_isolate.jsonl'))}/40, {sm['isolate_abstained']}",
+          "abstains on 34 of the 40 attack rows", ss, "score_improvements.py")
+    claim("H.utility", "V-H", "benign answered (correct): isolate, fused", "15 (10), 37 (27)",
+          f"{u['isolate']['answered']} ({u['isolate']['answered_correct']}), {u['fused']['answered']} ({u['fused']['answered_correct']})",
+          "it answers 15 (10 correctly), against 37 answered (27 correctly)", ss, "score_improvements.py")
+    rv = sm["routed_vs_fused"]
+    claim("H.routed", "V-H", "routed vs fused: fixed/broke, p", "5/2 p=0.45",
+          f"{rv['fixed']}/{rv['broke']} p={rv['p']:.2f}", "(5 fixed, 2 broken, $p=0.45$", ss, "score_improvements.py")
+    rc, rb = sm["routed_route_counts"], sm["routed_benign_route_counts"]
+    claim("H.routes", "V-H", "rows sent to agreement path (attack, benign)", "22, 16",
+          f"{rc.get('v3', 0) + rc.get('v3->v2', 0)}, {rb.get('v3', 0) + rb.get('v3->v2', 0)}",
+          "(22 of the 40 attack rows and 16 of the 40 benign questions)", ss, "score_improvements.py")
+    claim("H.routed_util", "V-H", "routed benign answered (correct)", "36 (24)",
+          f"{u['routed']['answered']} ({u['routed']['answered_correct']})", "(36 benign questions answered, 24 correctly)", ss,
+          "score_improvements.py")
+
+    # ---- Graded multivector floors (Sec. V-B) -------------------------------------------
+    gf = J(EE / "graded_floors_heldout_report.json")
+    gi, gh = gf["in_sample"], gf["heldout"]
+    sg = ["grounded_controller_graded.jsonl", "external_eval/graded_heldout_benign.jsonl",
+          "row4_mitigation_results/conjunctive/on_full.jsonl"]
+    claim("B.valid", "V-B", "graded valid fires (in-sample floors)", "24/30", gi["protocolA_multivector_valid"],
+          "on 24/30 with graded channels", sg, "fit_graded_floors_heldout.py")
+    claim("B.heldout_fp", "V-B", "false fires on 200 held-out benign questions", "6/200", gi["rag_heldout_benign_fires"],
+          "fires on 6 of them (3.0" + B + "%, [1.4, 6.4])", sg, "fit_graded_floors_heldout.py")
+    claim("B.bipia", "V-B", "BIPIA attack / benign fires", "8/30, 4/30",
+          f"{gi['bipia_attack_fires']}, {gi['bipia_benign_fires']}", "fires on 8/30 attacks and on 4/30 benign", sg,
+          "fit_graded_floors_heldout.py")
+    claim("B.refit", "V-B", "held-out floor: context floor, FP, valid", "0.637, 1/200, 0/30",
+          f"{gf['floors_heldout']['context_vector']}, {gh['rag_heldout_benign_fires']}, {gh['protocolA_multivector_valid']}",
+          "(0.637) cuts held-out false fires to 1/200 but also cuts valid fires to 0/30", sg, "fit_graded_floors_heldout.py")
+    sw = next(x for x in gf["floor_sweep"] if x["query_floor"] == 0.228 and x["context_floor"] == 0.40)
+    claim("B.sweep", "V-B", "context floor 0.40: valid fires, held-out FP", "11/30, 5/200",
+          f"{sw['valid_fires']}/30, {sw['heldout_benign_fires']}/200", "keeps 11/30 valid fires and still fires on 5/200", sg,
+          "fit_graded_floors_heldout.py")
+
+    # ---- deepset (Sec. V-G) --------------------------------------------------------------
+    dg = J(EE / "deepset_gate_report.json")
+    ps, ft = dg["paper_sample"], dg["full_test_split"]
+    sdg = ["external_eval/deepset_gate_rows.jsonl"]
+    claim("G.deepset_sample", "V-G", "sample: injections blocked / flagged, benign", "14/30, 17/30, 0/30",
+          f"{ps['injection']['blocked']}/30, {ps['injection']['blocked_or_review']}/30, {ps['benign']['blocked_or_review']}/30",
+          "blocks 14 of 30 real injection prompts", sdg, "run_deepset_gate_eval.py")
+    claim("G.deepset_full", "V-G", "full split: blocked, flagged, benign", "23/60, 28/60, 1/56",
+          f"{ft['injection']['blocked']}/60, {ft['injection']['blocked_or_review']}/60, {ft['benign']['blocked_or_review']}/56",
+          "blocks 23 of 60 injections (38.3" + B + "%) and flags 28, at 1/56", sdg, "run_deepset_gate_eval.py")
+    gg = J(EE / "gate_graded_report.json")
+    t = gg["threshold_t"]
+    gs = [r for r in L(EE / "deepset_graded_scores.jsonl") if r["split"] == "test"]
+    flag = lambda r: r["decision"] != "ALLOW" or r["graded"] >= t  # noqa: E731
+    inj = sum(flag(r) for r in gs if r["label"] == 1)
+    ben = sum(flag(r) for r in gs if r["label"] == 0)
+    claim("G.graded_flag", "V-G", "gate + graded flag on test split: injections, benign", "38/60, 2/56",
+          f"{inj}/{sum(r['label'] == 1 for r in gs)}, {ben}/{sum(r['label'] == 0 for r in gs)}",
+          "raises flagged injections from 28/60 to 38/60", ["external_eval/deepset_graded_scores.jsonl",
+                                                             "external_eval/gate_graded_report.json"], "fit_gate_graded.py")
+    rag = sum(r["channels"]["query_vector"] >= t for r in L(EE / "graded_heldout_benign.jsonl"))
+    claim("G.graded_rag", "V-G", "graded flag on 200 held-out RAG questions", "7/200", f"{rag}/200",
+          "fires on 7 of 200 held-out benign questions", ["external_eval/graded_heldout_benign.jsonl"], "fit_gate_graded.py")
+    de = imp["deepset_end_to_end"]
+    claim("G.e2e", "V-G", "end to end: injections / benign refused", "30/30, 30/30",
+          f"{de['injection']['stopped_anywhere']}/30, {de['benign']['stopped_anywhere']}/30",
+          "refuses all 30 sampled injections", ["external_eval/deepset_e2e.jsonl"], "score_improvements.py")
+
+    # ---- External PoisonedRAG / BIPIA (Sec. V-G, Table VIII) -----------------------------
+    ex = J(MR / "external200" / "paired_report.json")
+    pr = ex["PoisonedRAG (all)"]["amb_as_success"]
+    se = ["mitigation_results/external200/", "ext_n200_results.jsonl"]
+    claim("G.prag", "Table VIII", "PoisonedRAG ASR undefended / defended, fixed/broke", "137/136, 7/6",
+          f"{pr['asr_off']}/{pr['asr_on']}, {pr['fixed']}/{pr['broke']}", "7 rows fixed, 6 broken", se, "score_external_paired.py")
+    sg2 = ex["same_generator"]["PoisonedRAG (all)"]["amb_as_success"]
+    claim("G.prag_same", "Table VIII", "same generator: ASR, fixed/broke", "128/150, 16/7",
+          f"{sg2['asr_on']}/150, {sg2['fixed']}/{sg2['broke']}", "85.3" + B + "% ASR (128/150)", se, "score_external_paired.py")
+    claim("G.bipia", "Table VIII", "BIPIA blocked: pipeline / same-generator", "45/50, 44/50",
+          f"{ex['BIPIA-text_attack']['blocked_on']}/50, {ex['same_generator']['BIPIA-text_attack']['blocked_on']}/50",
+          "45/50 BIPIA attacks are blocked", se, "score_external_paired.py")
+
+    # ---- Overhead (Sec. V-I, Table IX) ---------------------------------------------------
+    ov = J(HERE / "resource_profile" / "overhead_summary.json")["latency_s"]
+    from decimal import ROUND_HALF_UP, Decimal
+    med = lambda k: str(Decimal(str(ov[k]["benign"]["median"])).quantize(Decimal("0.1"), ROUND_HALF_UP))  # noqa: E731
+    claim("I.latency", "Table IX", "benign median: undefended / full / subset", "8.6/15.3/19.0",
+          f"{med('Undefended')}/{med('Full stack (7 mitigation layers)')}/{med('Sanitize + grounding + refuse')}",
+          "Full stack, 7 layers (Protocol B) & 15.4 / 24.7 & 15.3 / 21.3", ["resource_profile/overhead_summary.json"],
+          "summarize_overhead.py")
+    import statistics
+    gl = {k: statistics.median(r["latency_s"] for r in L(MR / "gpu_encoders" / f"benign_on_{k}.jsonl"))
+          for k in ("full_cpu", "full_cuda", "full_cuda_fp16")}
+    claim("I.gpu", "Table IX", "full stack benign median: CPU / GPU fp32 / GPU fp16 encoders", "13.3/22.6/8.6",
+          "/".join(f"{gl[k]:.1f}" for k in ("full_cpu", "full_cuda", "full_cuda_fp16")),
+          "encoders on GPU, fp16 ($n=50$) & -- & 8.6 / 10.1", ["mitigation_results/gpu_encoders/"], "run_gpu_latency.sh")
+
+    rev = subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=HERE, capture_output=True, text=True).stdout.strip()
+    n_fail = sum(c["status"] == "FAIL" for c in CLAIMS)
+    (HERE / "claims_manifest.json").write_text(json.dumps(
+        {"git_revision_at_check": rev, "n_claims": len(CLAIMS), "n_fail": n_fail, "claims": CLAIMS}, indent=2),
+        encoding="utf-8")
+    for c_ in CLAIMS:
+        if c_["status"] == "FAIL":
+            print(f"FAIL {c_['id']}: expected {c_['expected']!r}, computed {c_['computed']!r}, in_tex={c_['in_tex']}")
+    print(f"{len(CLAIMS) - n_fail}/{len(CLAIMS)} claims pass -> claims_manifest.json")
+    sys.exit(1 if n_fail else 0)
+
+
+if __name__ == "__main__":
+    main()

@@ -143,8 +143,8 @@ def main():
         else:
             cb = cc = "n/a"
         print(f"| {desc} | {ci(sum(sn), n)} (n={n}) | {fixed} / {broke} | {exact_p(broke, fixed):.3g} | {cb} | {cc} |")
-    out["_baseline"] = {"name": args.baseline, "attack": str(pa_off.relative_to(HERE)),
-                        "benign": str(pb_off.relative_to(HERE)), "undefended_asr": asr_off, "n": n_a}
+    out["_baseline"] = {"name": args.baseline, "attack": pa_off.relative_to(HERE).as_posix(),
+                        "benign": pb_off.relative_to(HERE).as_posix(), "undefended_asr": asr_off, "n": n_a}
     name = "ablation_table.json" if args.baseline == "current" else f"ablation_table_{args.baseline}.json"
     (HERE / name).write_text(json.dumps(out, indent=1), encoding="utf-8")
     print("\nRead leave-one-out rows against `full`: a layer matters if removing it RAISES ASR (or lowers benign blocking at no ASR cost).")

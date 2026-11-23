@@ -10,7 +10,7 @@ every row against its embedded `expectation` block. Emits:
        poisoned_context    -> indirect-injection defense
        adversarial_query   -> gate adaptivity
   2. A faithfulness-distribution sanity check (proves Step 9 binding is real)
-  3. A frozen JSON artifact: frozen/slice_scoring.json
+  3. A JSON artifact (default: slice_scoring.json in the working directory)
 
 Usage:
     python score_slice.py --in slice_results_audit_continue.jsonl
@@ -323,7 +323,7 @@ def main() -> None:
     ap = argparse.ArgumentParser(description="Score the adversarial causal slice")
     ap.add_argument("--in", dest="input", required=True,
                     help="slice results JSONL (from run_full_pipeline.py --slice)")
-    ap.add_argument("--out", default="frozen/slice_scoring.json",
+    ap.add_argument("--out", default="slice_scoring.json",
                     help="output JSON artifact path")
     args = ap.parse_args()
 
