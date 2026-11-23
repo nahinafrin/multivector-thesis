@@ -2,7 +2,8 @@
 """
 score_ablation_study.py -- table of ASR and benign cost per mitigation configuration.
 
-Reads every configuration found in mitigation_results/ablation200/ (current code) and lists
+Reads every configuration found in mitigation_results/ablation200/ (current code), pairs it with the
+current-code undefended arm in mitigation_results/followup200/ (see BASELINES), and lists
 earlier planted200 runs (older code) separately as cross-checks.
 Attack ASR uses score_attack_success.attack_succeeded; benign correctness uses
 score_benign_cost.answered_correctly. Wilson 95% CIs, exact two-sided McNemar vs the
@@ -84,8 +85,23 @@ def ci(k, n):
     return f"{p:.1f}% [{lo:.1f}, {hi:.1f}]"
 
 
+# Canonical undefended arm for every paired comparison in the paper (Table VII, Sec. V-E):
+# followup200/off.jsonl and benign_off.jsonl, re-run on the CURRENT code. ablation200/off.jsonl
+# is the July undefended arm from older code (61/200 succeed vs 59/200); it is kept only for
+# the historical cross-check (--baseline july) and must not be paired with current-code arms.
+BASELINES = {"current": (MR / "followup200" / "off.jsonl", MR / "followup200" / "benign_off.jsonl"),
+             "july": (AB / "off.jsonl", AB / "benign_off.jsonl")}
+
+
 def main():
-    off_a, off_b = rows(AB / "off.jsonl") or rows(MR / "planted200" / "off.jsonl"), rows(AB / "benign_off.jsonl") or rows(MR / "planted200" / "benign_off.jsonl")
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--baseline", choices=sorted(BASELINES), default="current",
+                    help="undefended arm to pair against (default: current = followup200, as in the paper)")
+    args = ap.parse_args()
+    pa_off, pb_off = BASELINES[args.baseline]
+    off_a, off_b = rows(pa_off), rows(pb_off)
+    print(f"[baseline] {args.baseline}: {pa_off.relative_to(HERE)}, {pb_off.relative_to(HERE)}")
     n_a = len(off_a); asr_off = sum(attack_succeeded(r) for r in off_a.values())
     n_b = len(off_b); ok_off = sum(answered_correctly(r) for r in off_b.values())
     print(f"Undefended: ASR {asr_off}/{n_a} = {ci(asr_off, n_a)};  benign correct {ok_off}/{n_b} = {ci(ok_off, n_b)}\n")
@@ -127,7 +143,10 @@ def main():
         else:
             cb = cc = "n/a"
         print(f"| {desc} | {ci(sum(sn), n)} (n={n}) | {fixed} / {broke} | {exact_p(broke, fixed):.3g} | {cb} | {cc} |")
-    (HERE / "ablation_table.json").write_text(json.dumps(out, indent=1), encoding="utf-8")
+    out["_baseline"] = {"name": args.baseline, "attack": str(pa_off.relative_to(HERE)),
+                        "benign": str(pb_off.relative_to(HERE)), "undefended_asr": asr_off, "n": n_a}
+    name = "ablation_table.json" if args.baseline == "current" else f"ablation_table_{args.baseline}.json"
+    (HERE / name).write_text(json.dumps(out, indent=1), encoding="utf-8")
     print("\nRead leave-one-out rows against `full`: a layer matters if removing it RAISES ASR (or lowers benign blocking at no ASR cost).")
     print("Read add-one-in rows against the undefended arm. Single seed; treat differences inside the CIs as noise.")
 

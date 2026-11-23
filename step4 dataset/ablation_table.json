@@ -2,9 +2,9 @@
  "full": {
   "n": 200,
   "asr": 7,
-  "fixed": 56,
+  "fixed": 54,
   "broke": 2,
-  "p": 1.1879386363489175e-14,
+  "p": 4.4325654258159375e-14,
   "benign_n": 200,
   "benign_blocked": 17,
   "benign_correct": 104
@@ -12,9 +12,9 @@
  "noprompt": {
   "n": 200,
   "asr": 11,
-  "fixed": 55,
+  "fixed": 53,
   "broke": 5,
-  "p": 1.0382663478969434e-11,
+  "p": 3.4964767192668944e-11,
   "benign_n": 200,
   "benign_blocked": 25,
   "benign_correct": 104
@@ -22,9 +22,9 @@
  "norefuse": {
   "n": 200,
   "asr": 12,
-  "fixed": 53,
+  "fixed": 51,
   "broke": 4,
-  "p": 5.910882894255565e-12,
+  "p": 2.0474233419776056e-11,
   "benign_n": 200,
   "benign_blocked": 14,
   "benign_correct": 105
@@ -32,9 +32,9 @@
  "nogrounding": {
   "n": 200,
   "asr": 13,
-  "fixed": 51,
+  "fixed": 49,
   "broke": 3,
-  "p": 2.9187763317395365e-12,
+  "p": 1.042677055806962e-11,
   "benign_n": 200,
   "benign_blocked": 5,
   "benign_correct": 105
@@ -42,9 +42,9 @@
  "nosanitize": {
   "n": 200,
   "asr": 22,
-  "fixed": 51,
-  "broke": 12,
-  "p": 7.459722282164658e-07,
+  "fixed": 50,
+  "broke": 13,
+  "p": 3.015952084642337e-06,
   "benign_n": 200,
   "benign_blocked": 15,
   "benign_correct": 108
@@ -52,9 +52,9 @@
  "notighten": {
   "n": 200,
   "asr": 12,
-  "fixed": 52,
-  "broke": 3,
-  "p": 1.5418777365994174e-12,
+  "fixed": 51,
+  "broke": 4,
+  "p": 2.0474233419776056e-11,
   "benign_n": 200,
   "benign_blocked": 13,
   "benign_correct": 107
@@ -62,9 +62,9 @@
  "nopresidio": {
   "n": 200,
   "asr": 8,
-  "fixed": 55,
+  "fixed": 53,
   "broke": 2,
-  "p": 2.295386103412511e-14,
+  "p": 8.554268404736831e-14,
   "benign_n": 200,
   "benign_blocked": 17,
   "benign_correct": 104
@@ -72,9 +72,9 @@
  "nodlp": {
   "n": 200,
   "asr": 7,
-  "fixed": 56,
+  "fixed": 54,
   "broke": 2,
-  "p": 1.1879386363489175e-14,
+  "p": 4.4325654258159375e-14,
   "benign_n": 200,
   "benign_blocked": 17,
   "benign_correct": 104
@@ -82,9 +82,9 @@
  "only_refuse": {
   "n": 200,
   "asr": 36,
-  "fixed": 28,
-  "broke": 3,
-  "p": 4.649162292480469e-06,
+  "fixed": 25,
+  "broke": 2,
+  "p": 5.647540092468262e-06,
   "benign_n": 200,
   "benign_blocked": 5,
   "benign_correct": 109
@@ -92,9 +92,9 @@
  "only_grounding": {
   "n": 200,
   "asr": 30,
-  "fixed": 35,
-  "broke": 4,
-  "p": 3.353161446284503e-07,
+  "fixed": 29,
+  "broke": 0,
+  "p": 3.725290298461914e-09,
   "benign_n": 200,
   "benign_blocked": 11,
   "benign_correct": 112
@@ -102,9 +102,9 @@
  "only_sanitize": {
   "n": 200,
   "asr": 32,
-  "fixed": 33,
-  "broke": 4,
-  "p": 1.0843941709026694e-06,
+  "fixed": 30,
+  "broke": 3,
+  "p": 1.4011748135089874e-06,
   "benign_n": 200,
   "benign_blocked": 0,
   "benign_correct": 109
@@ -113,8 +113,8 @@
   "n": 200,
   "asr": 49,
   "fixed": 28,
-  "broke": 16,
-  "p": 0.09614175442061423,
+  "broke": 18,
+  "p": 0.18392482137699062,
   "benign_n": 200,
   "benign_blocked": 0,
   "benign_correct": 116
@@ -123,8 +123,8 @@
   "n": 200,
   "asr": 106,
   "fixed": 6,
-  "broke": 51,
-  "p": 5.676193126635809e-10,
+  "broke": 53,
+  "p": 1.7539187463500028e-10,
   "benign_n": 200,
   "benign_blocked": 0,
   "benign_correct": 113
@@ -132,9 +132,9 @@
  "only_presidio": {
   "n": 200,
   "asr": 59,
-  "fixed": 9,
-  "broke": 7,
-  "p": 0.803619384765625,
+  "fixed": 0,
+  "broke": 0,
+  "p": 1.0,
   "benign_n": 200,
   "benign_blocked": 0,
   "benign_correct": 113
@@ -142,11 +142,18 @@
  "only_dlp": {
   "n": 200,
   "asr": 59,
-  "fixed": 9,
-  "broke": 7,
-  "p": 0.803619384765625,
+  "fixed": 0,
+  "broke": 0,
+  "p": 1.0,
   "benign_n": 200,
   "benign_blocked": 0,
   "benign_correct": 113
+ },
+ "_baseline": {
+  "name": "current",
+  "attack": "mitigation_results\\followup200\\off.jsonl",
+  "benign": "mitigation_results\\followup200\\benign_off.jsonl",
+  "undefended_asr": 59,
+  "n": 200
  }
 }

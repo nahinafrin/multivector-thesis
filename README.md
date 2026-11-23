@@ -69,7 +69,7 @@ All commands below run from `step4 dataset/` with the venv active.
 | Protocol A slice, specificity, redaction, canaries (Sec. V-A, V-C, V-D; Tables IV, X) | `build_adversarial_slice.py`, `run_full_pipeline.py` | `score_slice.py` | `adversarial_slice.jsonl`, `grounded*.jsonl`, `frozen/` |
 | Conjunctive detector, saturated vs. graded (Sec. V-B, Table VI) | `revalidate_multivector_graded.py` | same script | `multivector_graded_revalidation.json`, `grounded_controller_graded.jsonl` |
 | Graded detector on external BIPIA conjunctive rows (Table VI) | `build_row4_conjunctive.py`¹ | `score_row4_detection.py` | `row4_mitigation_results/` |
-| Ablation: leave-one-out and single-layer arms (Table VII, Figs. 2–3) | `run_ablation_study.py` | `score_ablation_study.py` | `mitigation_results/ablation200/`, `ablation_table.json` |
+| Ablation: leave-one-out and single-layer arms (Table VII, Figs. 2–3) | `run_ablation_study.py` | `score_ablation_study.py` (pairs every arm with the current-code undefended arm in `followup200/`; `--baseline july` gives the older July arm, not used in the paper) | `mitigation_results/ablation200/`, `ablation_table.json` |
 | Ablation: layer subsets (Table VII) | `run_followup_study.py` | `score_followup_study.py` | `mitigation_results/followup200/` |
 | Seed replicates (Sec. V-E, "Replicates") | `run_seed_study.py` | `score_seed_study.py` | `mitigation_results/seed7/`, `seed1234/`, `seed_study_report.json` |
 | LLM-Guard detector baseline (Sec. V-E) | `run_external_guard_baseline.py` | same script | `baseline_comparison/llmguard_detector_baseline.json` |
@@ -84,7 +84,7 @@ All commands below run from `step4 dataset/` with the venv active.
 | deepset end to end (Sec. V-G) | `run_full_pipeline.py --slice external_eval/deepset_e2e_slice.jsonl` | `score_improvements.py` | `external_eval/deepset_e2e.jsonl`, `improvements_report.json` |
 | Graded floors on held-out benign questions (Sec. V-B) | `collect_graded_heldout_benign.py` | `fit_graded_floors_heldout.py` | `external_eval/graded_heldout_benign.jsonl`, `graded_floors_heldout_report.json` |
 | Ablation at n = 424 (Sec. V-E, "Larger sample") | `build_planted_attacks.py --yesno-only --seed 42`, `run_mitigation_ab.py --slice planted_attacks_extra224.jsonl` | `score_improvements.py` | `planted_attacks_extra224.jsonl`, `mitigation_results/extended424/` |
-| Semantic slice, fused vs. isolate-and-aggregate generator (Sec. V-H) | `run_full_pipeline.py --generator {fused,isolate}` | `score_improvements.py` | `external_eval/semantic40_*.jsonl`, `benign40_*.jsonl` |
+| Semantic slice, fused vs. isolate-and-aggregate vs. routed generator (Sec. V-H) | `run_full_pipeline.py --generator {fused,isolate,routed}` | `score_improvements.py` | `external_eval/semantic40_*.jsonl`, `benign40_*.jsonl` |
 | Encoders on CPU vs. GPU (Sec. V-I) | `run_gpu_latency.sh` (`bench_encoder_device.py`, `run_benign_cost.py` with `RAG_ENCODER_DEVICE=cuda`) | `bench_encoder_device.py` | `external_eval/encoder_latency_*.json`, `mitigation_results/gpu_encoders/` |
 
 The queue that produced the deepset, held-out, semantic, and n = 424 outputs is `run_improvement_queue.py` (sequential, resumable).

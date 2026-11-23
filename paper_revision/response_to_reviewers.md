@@ -44,7 +44,7 @@ We justify the stratified slice as an attribution instrument, not a prevalence s
 **3.3 — 100% neutralization is insufficiently supported; it relies on canary integrity rather than verification of malicious output.**
 We agree, and we removed the claim. Sec. V-C now reports two levels:
 
-* **Level 1, canary integrity:** 0/220 leaks and 74/74 redactions. This shows that no instruction reached the generator as an instruction, and nothing more.
+* **Level 1, canary integrity:** 0/220 leaks and 74/74 redactions. This shows that no canary leaked into a delivered answer and that every poisoned chunk was removed before generation, and nothing more. (Some blocked direct-attack rows are stopped after generation, so we no longer say that no injected instruction reached the generator.)
 * **Level 2, target-string checks on delivered outputs:** 7/200 planted attacks still succeed under the full stack (3.5%, 95% CI [1.7, 7.0], against 29.5% undefended). On the semantic slice, 14/40 succeed; on PoisonedRAG, 136/150 succeed, against 137/150 for a paired undefended arm. BIPIA blocks 45/50. BIPIA goals are not string-scorable, so we read the 5 unblocked answers manually: 2 followed the injected instruction, 2 did not, and 1 is indeterminable, giving 2–3/50 (4–6%) defended attack success.
 
 The abstract, claims table (Table X), and conclusion were rewritten to match.
@@ -112,7 +112,7 @@ The slice grows to 40 rows, with layer-level attribution (Sec. V-H):
 
 * Grounding cannot help, because a planted fact is "grounded" in the poisoned context.
 * The guarded prompt and refusal account for the reduction, but neither survives Bonferroni correction at n = 40.
-* We also ran the pipeline's isolate-and-aggregate generator (answer per chunk, accept only cross-chunk agreement) on the same 40 rows. ASR falls to 0/40 against 18/40 for the fused ensemble in the same run, but almost entirely by abstaining (34/40). On 40 benign questions it answers only 15 (fused: 37), so the paper reports it as a utility-prohibitive option, not a fix (Sec. V-H).
+* We also ran the pipeline's isolate-and-aggregate generator (answer per chunk, accept only cross-chunk agreement) on the same 40 rows. ASR falls to 0/40 against 18/40 for the fused ensemble in the same run, but almost entirely by abstaining (34/40). On 40 benign questions it answers only 15 (fused: 37), so the paper reports it as a utility-prohibitive option, not a fix (Sec. V-H). A routed variant that uses the agreement check only when retrieved passages disagree keeps utility (36/40 benign answered) but reduces semantic ASR only from 18/40 to 15/40 (p = 0.45), which is not significant.
 * PoisonedRAG replicates the gap externally.
 
 A new "Practical security implications" paragraph covers who is exposed (any corpus an outsider can write to), the consequence (integrity loss through confident, cited false answers), and four deployment measures: provenance as a security boundary, corroboration, surfaced citations, and human review for high-stakes answers. We state clearly that these measures are not evaluated here.
