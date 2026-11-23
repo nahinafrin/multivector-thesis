@@ -1,3 +1,5 @@
+> **Status: historical working document.** Note written during the revision to reconcile result narratives; superseded by the paper. The paper (`paper_revision/main.tex`) is the authoritative statement of results. Where this file and the paper differ, the paper wins. On the graded multivector detector specifically: the paper reports that it fails on saturated scores (0/34 valid fires) and that graded logit margins recover 24/30 valid fires in-sample, but with 6/200 false fires on held-out benign questions, only 8/30 on BIPIA, and no context floor that separates attack contexts from benign ones (Sec. V-B). It is evidence that the impossibility is specific to saturated channels, not a validated working detector.
+
 # Reconciliation note — one coherent story across related results
 
 Written to close out limitation #10 (two internal result narratives never merged) and

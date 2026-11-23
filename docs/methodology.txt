@@ -1,3 +1,8 @@
+STATUS (historical working document): Earlier methodology draft. Superseded by the paper's
+Sections III-IV. The paper (`paper_revision/main.tex`) is the authoritative statement of
+results. Where this file and the paper differ, the paper wins.
+------------------------------------------------------------------------------------------
+
 ================================================================================
 MODIFIED METHODOLOGY:
 A Zero-Cost, Local, Adaptive RAG Security Extension

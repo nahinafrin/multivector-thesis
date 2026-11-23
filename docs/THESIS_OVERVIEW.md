@@ -1,3 +1,5 @@
+> **Status: historical working document.** Thesis overview and planning document; numbers may predate the revision. The paper (`paper_revision/main.tex`) is the authoritative statement of results. Where this file and the paper differ, the paper wins.
+
 # Evidence-Guided Multi-Vector Defense for Retrieval-Augmented Generation
 
 ## Proposed Thesis Title

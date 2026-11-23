@@ -1,3 +1,5 @@
+> **Status: historical working document.** Runbook for the external-validation runs; the commands in the root README's reproduction table supersede it. The paper (`paper_revision/main.tex`) is the authoritative statement of results. Where this file and the paper differ, the paper wins.
+
 # Row 1 / Row 4 / Row 8 external validation — mitigation OFF vs ON
 
 This runbook wires three independently-sourced external attack datasets into

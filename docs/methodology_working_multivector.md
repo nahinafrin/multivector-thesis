@@ -1,3 +1,5 @@
+> **Status: historical working document.** Working methodology written when the graded-margin fix was proposed, before it was tested out of sample. Its claim below that the fix yields "a measurable, working defense" was not borne out; see the graded-detector note. The paper (`paper_revision/main.tex`) is the authoritative statement of results. Where this file and the paper differ, the paper wins. On the graded multivector detector specifically: the paper reports that it fails on saturated scores (0/34 valid fires) and that graded logit margins recover 24/30 valid fires in-sample, but with 6/200 false fires on held-out benign questions, only 8/30 on BIPIA, and no context floor that separates attack contexts from benign ones (Sec. V-B). It is evidence that the impossibility is specific to saturated channels, not a validated working detector.
+
 # A Working Methodology for a Local, Adaptive, Multi-Vector RAG Security Extension
 
 ## 0. Purpose and scope

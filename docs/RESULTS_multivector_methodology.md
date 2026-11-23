@@ -1,3 +1,5 @@
+> **Status: historical working document.** Results write-up from the original submission (frozen runs `grounded_controller.jsonl` / `grounded_baseline.jsonl`). It predates the graded-margin repair, the external benchmarks, and the Protocol B ablation. The paper (`paper_revision/main.tex`) is the authoritative statement of results. Where this file and the paper differ, the paper wins. On the graded multivector detector specifically: the paper reports that it fails on saturated scores (0/34 valid fires) and that graded logit margins recover 24/30 valid fires in-sample, but with 6/200 false fires on held-out benign questions, only 8/30 on BIPIA, and no context floor that separates attack contexts from benign ones (Sec. V-B). It is evidence that the impossibility is specific to saturated channels, not a validated working detector.
+
 # Multi-Vector Defense for RAG: Results and Methodology
 
 *Reconciling the project's claims with the measured artifacts. Every figure

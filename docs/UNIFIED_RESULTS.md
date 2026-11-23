@@ -1,3 +1,5 @@
+> **Status: historical working document.** Generated intermediate report (Protocol A vs. Protocol B) from the revision; superseded by the paper's tables. The paper (`paper_revision/main.tex`) is the authoritative statement of results. Where this file and the paper differ, the paper wins.
+
 # Unified Results — Protocol A (canary) vs Protocol B (marker/ASR)
 
 Generated: 2026-10-16T02:22:41.352710+00:00
