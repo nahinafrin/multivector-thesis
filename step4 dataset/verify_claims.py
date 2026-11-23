@@ -11,17 +11,24 @@ run. It first re-runs the standard-library scorers so their reports reflect the 
 Output: claims_manifest.json  (claim id, paper section, statement, expected, computed,
         inputs, scorer, PASS/FAIL, git revision)
 
-Scope: this establishes that the paper's numbers follow from the committed outputs. It does not
-re-run the models; GPU generation is not bit-reproducible (see the paper, Sec. V-E).
+Scope: a selected set of the paper's numbers (the headline results of every section and every
+Table VII cell, including its Wilson intervals and p-values), not every number in the paper. It
+establishes that these follow from the committed outputs; each input is recorded with a SHA-256
+(line endings normalised). It does not re-run the models; GPU generation is not bit-reproducible
+(see the paper, Sec. V-E). "Found in main.tex" is a text match on the stated phrase.
 """
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+from score_ablation_study import exact_p, wilson  # noqa: E402
+
 ROOT = HERE.parent
 TEX = (ROOT / "paper_revision" / "main.tex").read_text(encoding="utf-8")
 EE, MR = HERE / "external_eval", HERE / "mitigation_results"
@@ -37,12 +44,41 @@ def J(p: Path):
     return json.loads(p.read_text(encoding="utf-8"))
 
 
+def _sha256(rel: str) -> dict:
+    """SHA-256 of an input file, or of every file under an input directory (sorted)."""
+    import hashlib
+    p = HERE / rel
+    if "{" in rel or not p.exists():
+        return {"path": rel, "sha256": None}
+    files = sorted(x for x in p.rglob("*") if x.is_file()) if p.is_dir() else [p]
+    h = hashlib.sha256()
+    for f in files:
+        h.update(f.relative_to(HERE).as_posix().encode())
+        h.update(f.read_bytes().replace(b"\r\n", b"\n"))
+    return {"path": rel, "sha256": h.hexdigest(), "n_files": len(files)}
+
+
 def claim(cid, section, statement, expected, computed, snippet, inputs, scorer):
     found = snippet in TEX
     CLAIMS.append({"id": cid, "section": section, "statement": statement,
                    "expected": expected, "computed": computed, "tex_snippet": snippet,
-                   "in_tex": found, "inputs": inputs, "scorer": scorer,
+                   "in_tex": found, "inputs": [_sha256(i) for i in inputs], "scorer": scorer,
                    "status": "PASS" if (str(expected) == str(computed) and found) else "FAIL"})
+
+
+def p_matches(shown: str, p: float) -> bool:
+    """Does a p-value as printed in the table ('$<\\!10^{-13}$', '$3\\!\\times\\!10^{-6}$',
+    '$10^{-11}$', '0.18', '1.0') agree with p at the precision shown?"""
+    s = shown.replace("$", "").replace("\\!", "").replace(" ", "")
+    if s.startswith("<10^{"):
+        return p < 10 ** int(re.search(r"\{(-?\d+)\}", s).group(1))
+    m = re.fullmatch(r"(?:([\d.]+)\\times)?10\^\{(-?\d+)\}", s)
+    if m:
+        mant, e = m.group(1) or "1", int(m.group(2))
+        dec = len(mant.split(".")[1]) if "." in mant else 0
+        return round(p / 10 ** e, dec) == float(mant)
+    dec = len(s.split(".")[1]) if "." in s else 0
+    return round(p, dec) == float(s)
 
 
 def pct(k, n):
@@ -65,8 +101,15 @@ def main() -> None:
     c, b = pa["controller"], pa["baseline"]
     src = ["protocolA_220/grounded_controller_220.jsonl", "protocolA_220/grounded_baseline_220.jsonl"]
     sc = "score_protocolA_220.py"
-    claim("A.canary", "V-C", "canary leaks, both runs", "0/220",
-          f"{c['canary_leaks'] + b['canary_leaks']}/{c['rows']}", "0/220", src, sc)
+    claim("A.canary", "V-C", "canary leaks among checked rows, controller run", "0/175",
+          f"{c['canary_leaks']}/{c['canary_checked']}", "the canary was checked on 175 of the 220 rows", src, sc)
+    claim("A.canary_base", "V-C", "canary rows checked, controller-off run", "176",
+          str(b["canary_checked"]), "(176 in the controller-off run)", src, sc)
+    claim("A.canary_unchecked", "V-C", "every unchecked row was blocked (both runs)", "True",
+          str(c["canary_not_checked_all_blocked"] and b["canary_not_checked_all_blocked"]),
+          "were blocked before the check", src, sc)
+    claim("A.canary_delivered", "V-C", "delivered answers with intact canary, controller run", "132/132",
+          f"{c['delivered_canary_intact']}/{c['delivered']}", "including all 132 delivered answers", src, sc)
     claim("A.redaction", "V-C", "poison chunks redacted", "74/74", c["poison_chunks_redacted"], "74/74", src, sc)
     claim("A.poisoned", "V-A", "poisoned-context chunks redacted", "40/40", c["poisoned_context_redacted"],
           "all 40 canaries stayed", src, sc)
@@ -114,6 +157,19 @@ def main() -> None:
         claim(f"VII.{k}", "Table VII", f"row {lab.strip(' &')}", exp, exp if ok else f"row mismatch: {line.strip()}",
               line.strip() or lab, [f"mitigation_results/ablation200/on_{k}.jsonl", at["_baseline"]["attack"]],
               "score_ablation_study.py")
+        # displayed Wilson interval and exact McNemar p of the same row
+        cells = [x.strip() for x in line.split("&")]
+        lo, hi = wilson(r["asr"], r["n"])[1:]
+        shown_ci = [float(x) for x in re.findall(r"\[([\d.]+),\s*([\d.]+)\]", cells[1])[0]] if len(cells) > 1 else []
+        p = exact_p(r["broke"], r["fixed"])
+        ci_ok = shown_ci == [round(lo, 1), round(hi, 1)]
+        p_ok = len(cells) > 3 and p_matches(cells[3], p)
+        claim(f"VII.{k}.ci_p", "Table VII", f"row {lab.strip(' &')}: Wilson CI and exact p",
+              f"[{round(lo, 1)}, {round(hi, 1)}], p={p:.2g}",
+              f"[{round(lo, 1)}, {round(hi, 1)}], p={p:.2g}" if (ci_ok and p_ok) else
+              f"shown {cells[1:2]} {cells[3:4]} vs computed [{lo:.1f}, {hi:.1f}] p={p:.3g}",
+              line.strip() or lab, [f"mitigation_results/ablation200/on_{k}.jsonl", at["_baseline"]["attack"]],
+              "score_ablation_study.py")
 
     # ---- Seed replicates (Sec. V-E) -----------------------------------------------------
     sd = J(MR / "seed_study_report.json")
@@ -127,6 +183,20 @@ def main() -> None:
     claim("E.seed_full", "V-E", "full-stack ASR per seed", "3.5, 4.5, 4.5", full, "(3.5, 4.5, 4.5)", sl, "score_seed_study.py")
     claim("E.seed_sub", "V-E", "subset ASR per seed", "5.5, 7.0, 5.5", sub, "(5.5, 7.0, 5.5)", sl, "score_seed_study.py")
     claim("E.seed_p", "V-E", "subset vs full p per seed", "0.34, 0.27, 0.77", pv, "$p=0.34$, 0.27, 0.77", sl, "score_seed_study.py")
+
+    # ---- Fresh rerun from the raw slice (Sec. V-E) --------------------------------------
+    run("score_rerun200.py")
+    rr = J(MR / "rerun200" / "rerun_report.json")
+    srr = ["mitigation_results/rerun200/off.jsonl", "mitigation_results/rerun200/on_full.jsonl",
+           "mitigation_results/followup200/off.jsonl", "mitigation_results/ablation200/on_full.jsonl"]
+    claim("E.rerun_asr", "V-E", "fresh rerun successes: undefended, full", "58/200, 6/200",
+          f"{rr['off']['fresh_k']}/200, {rr['full']['fresh_k']}/200", "The fresh run gives 58/200", srr, "score_rerun200.py")
+    claim("E.rerun_agree", "V-E", "rows with the same outcome as the reported run: undefended, full", "189, 199",
+          f"{rr['off']['drift_fresh_vs_saved']['same_outcome']}, {rr['full']['drift_fresh_vs_saved']['same_outcome']}",
+          "agree on 189 and 199 of the 200 rows", srr, "score_rerun200.py")
+    fr = rr["fresh_full_vs_off"]
+    claim("E.rerun_paired", "V-E", "fresh full vs undefended: fixed/broke", "54/2", f"{fr['fixed']}/{fr['broke']}",
+          "again fixes 54 rows and breaks 2", srr, "score_rerun200.py")
 
     # ---- n = 424 (Sec. V-E) ------------------------------------------------------------
     imp = J(EE / "improvements_report.json")

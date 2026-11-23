@@ -6,7 +6,7 @@ We thank the reviewers for their careful and constructive comments. Several of t
 
 * **Larger, independent evaluation.** We now report 920 scored rows across seven sets, up from 220. These include 150 PoisonedRAG rows, 50 BIPIA rows, and 60 deepset rows, none of which we constructed.
 * **Ablation against simpler defenses.** A three-layer subset (sanitization, grounding, and refusal on detection) is statistically indistinguishable from the full stack. We now recommend that subset.
-* **Narrower neutralization claim.** "100% neutralization" is gone. We separate canary integrity (0/220 leaks) from attacker content in delivered outputs, where attack success is 3.5%, not 0%.
+* **Narrower neutralization claim.** "100% neutralization" is gone. We separate canary integrity (0 leaks; checked on 175/220 rows, the rest blocked first, and intact in all 132 delivered answers) from attacker content in delivered outputs, where attack success is 3.5%, not 0%.
 * **Correction to the conjunctive-detector result.** The structural impossibility holds for *saturated* classifier scores only. Reading graded logit margins instead restores detection in-sample (24/30), but only modestly on external data (8/30), and benign false fires rise from 1/80 to 6/200 on held-out questions.
 * **Explicit scope.** The title, abstract, and a new "Scope" paragraph in the introduction now state the paper's central boundary: the pipeline contains instruction-carrying injection but offers no measurable protection against knowledge corruption. We present the latter as a measured limit of this defense class, not as a threat we mitigate.
 * **Semantic gap.** It is now measured on 40 rows (up from 8) and replicated on PoisonedRAG, where the defended pipeline is no better than undefended RAG (90.7% vs. 91.3% attack success, paired p = 1.0). We add a practical-implications discussion.
@@ -44,7 +44,7 @@ We justify the stratified slice as an attribution instrument, not a prevalence s
 **3.3 — 100% neutralization is insufficiently supported; it relies on canary integrity rather than verification of malicious output.**
 We agree, and we removed the claim. Sec. V-C now reports two levels:
 
-* **Level 1, canary integrity:** 0/220 leaks and 74/74 redactions. This shows that no canary leaked into a delivered answer and that every poisoned chunk was removed before generation, and nothing more. (Some blocked direct-attack rows are stopped after generation, so we no longer say that no injected instruction reached the generator.)
+* **Level 1, canary integrity:** 0 leaks and 74/74 redactions. The canary is checked at Stage 10, so it was evaluated on 175 of the 220 rows; the other 45 were blocked before that point (44 at the gate), and all 132 delivered answers have an intact canary. This shows that no canary leaked into a delivered answer and that every poisoned chunk was removed before generation, and nothing more. (Some blocked direct-attack rows are stopped after generation, so we no longer say that no injected instruction reached the generator.)
 * **Level 2, target-string checks on delivered outputs:** 7/200 planted attacks still succeed under the full stack (3.5%, 95% CI [1.7, 7.0], against 29.5% undefended). On the semantic slice, 14/40 succeed; on PoisonedRAG, 136/150 succeed, against 137/150 for a paired undefended arm. BIPIA blocks 45/50. BIPIA goals are not string-scorable, so we read the 5 unblocked answers manually: 2 followed the injected instruction, 2 did not, and 1 is indeterminable, giving 2–3/50 (4–6%) defended attack success.
 
 The abstract, claims table (Table X), and conclusion were rewritten to match.
@@ -127,6 +127,7 @@ A new "Statistical analysis" paragraph (Sec. IV) explains:
 * We apply Bonferroni correction to the leave-one-out (α = 0.007) and subset (α = 0.0125) families and flag results that do not survive it. As a result, two semantic-slice attributions are now labeled "suggestive".
 * We define AUC and the percentile gap precisely.
 * Run-to-run variance: the headline Protocol B arms are now replicated under three generation seeds and reported as mean ± SD with per-replicate tests (Sec. V-E, "Replicates"). Ollama GPU generation is not bit-reproducible at a fixed seed, so the paper treats these runs as independent replicates and says so in the threats to validity.
+* Fresh reproduction: we regenerated the undefended and full-stack Protocol B arms from the raw slice with the released code. They give 58/200 and 6/200 successes (reported: 59 and 7), agree with the reported run on 189 and 199 of 200 rows, and reproduce the paired result exactly (54 fixed, 2 broken, p < 10^-13).
 
 The earlier-code arms are kept and clearly labeled (Sec. V-F). We retract their "refusal is the only significant single layer" result, which the current-code ablation contradicts.
 

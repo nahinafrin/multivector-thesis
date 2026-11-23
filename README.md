@@ -64,11 +64,13 @@ There are two ways to check a number.
 
 All commands below run from `step4 dataset/` with the venv active.
 
-**Claim-by-claim check.** `python verify_claims.py` re-runs the standard-library scorers, recomputes
-55 of the paper's numbers from the committed per-row outputs, compares each with the value the paper
-states, and checks that the stated text appears in `paper_revision/main.tex`. It writes
-`claims_manifest.json` (claim, paper section, expected and computed values, input files, scorer,
-status, git revision) and exits non-zero if any claim fails. It does not re-run the models.
+**Claim-by-claim check.** `python verify_claims.py` re-runs the standard-library scorers and checks
+75 selected claims: the headline numbers of each results section and every Table VII cell, including
+its Wilson interval and exact p-value. Each is recomputed from the committed per-row outputs, compared
+with the value the paper states, and matched against the text of `paper_revision/main.tex`. It writes
+`claims_manifest.json` with, per claim, the paper section, expected and computed values, input files
+with SHA-256 hashes, the scorer, and PASS/FAIL, plus the git revision; it exits non-zero on any
+failure. It covers selected claims, not every number in the paper, and it does not re-run the models.
 
 | Paper result | Run (regenerates outputs) | Score (reads frozen outputs) | Frozen outputs |
 |---|---|---|---|
@@ -78,6 +80,7 @@ status, git revision) and exits non-zero if any claim fails. It does not re-run 
 | Ablation: leave-one-out and single-layer arms (Table VII, Figs. 2–3) | `run_ablation_study.py` | `score_ablation_study.py` (pairs every arm with the current-code undefended arm in `followup200/`; `--baseline july` gives the older July arm, not used in the paper) | `mitigation_results/ablation200/`, `ablation_table.json` |
 | Ablation: layer subsets (Table VII) | `run_followup_study.py` | `score_followup_study.py` | `mitigation_results/followup200/` |
 | Seed replicates (Sec. V-E, "Replicates") | `run_seed_study.py` | `score_seed_study.py` | `mitigation_results/seed7/`, `seed1234/`, `seed_study_report.json` |
+| Fresh rerun of the undefended and full-stack arms from the raw slice (Sec. V-E, "Replicates") | `run_mitigation_ab.py --slice planted_attacks_200.jsonl --run-dir mitigation_results/rerun200` (`--off-only`, then `--skip-off --label full`) | `score_rerun200.py` | `mitigation_results/rerun200/` (with `code_revision.txt`, `rerun_report.json`) |
 | LLM-Guard detector baseline (Sec. V-E) | `run_external_guard_baseline.py` | same script | `baseline_comparison/llmguard_detector_baseline.json` |
 | ControlNET and ADO baselines (Sec. V-E) | `../external_baselines/baseline_controlnet.py`, `../external_baselines/run_ado_official_on_slice.py` | `../external_baselines/compare_paper_faithful.py` | `../external_baselines/*_results.txt` |
 | PoisonedRAG and BIPIA, complete pipeline (Table VIII) | `convert_external_datasets.py`, `run_full_pipeline.py` | `final_n200_summary.py` | `external_validation_n200.jsonl`, `ext_n200_results.jsonl` |

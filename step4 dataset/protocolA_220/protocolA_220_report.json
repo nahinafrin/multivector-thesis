@@ -9,6 +9,10 @@
       "gate_slip_query": 20
     },
     "canary_leaks": 0,
+    "canary_checked": 175,
+    "canary_not_checked_all_blocked": true,
+    "delivered": 132,
+    "delivered_canary_intact": 132,
     "poison_chunks_redacted": "74/74",
     "poisoned_context_redacted": "40/40",
     "benign_flagged_at_gate": "0/80",
@@ -33,6 +37,10 @@
       "gate_slip_query": 20
     },
     "canary_leaks": 0,
+    "canary_checked": 176,
+    "canary_not_checked_all_blocked": true,
+    "delivered": 119,
+    "delivered_canary_intact": 119,
     "poison_chunks_redacted": "74/74",
     "poisoned_context_redacted": "40/40",
     "benign_flagged_at_gate": "0/80",

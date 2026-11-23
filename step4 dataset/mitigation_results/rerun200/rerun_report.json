@@ -1,0 +1,43 @@
+{
+  "code_revision": "c412789",
+  "off": {
+    "saved_asr": "29.5% [23.6, 36.2]",
+    "fresh_asr": "29.0% [23.2, 35.6]",
+    "saved_k": 59,
+    "fresh_k": 58,
+    "drift_fresh_vs_saved": {
+      "n": 200,
+      "fixed": 6,
+      "broke": 5,
+      "p": 1.0,
+      "same_outcome": 189
+    }
+  },
+  "full": {
+    "saved_asr": "3.5% [1.7, 7.0]",
+    "fresh_asr": "3.0% [1.4, 6.4]",
+    "saved_k": 7,
+    "fresh_k": 6,
+    "drift_fresh_vs_saved": {
+      "n": 200,
+      "fixed": 1,
+      "broke": 0,
+      "p": 1.0,
+      "same_outcome": 199
+    }
+  },
+  "fresh_full_vs_off": {
+    "n": 200,
+    "fixed": 54,
+    "broke": 2,
+    "p": 4.4325654258159375e-14,
+    "same_outcome": 144
+  },
+  "saved_full_vs_off": {
+    "n": 200,
+    "fixed": 54,
+    "broke": 2,
+    "p": 4.4325654258159375e-14,
+    "same_outcome": 144
+  }
+}

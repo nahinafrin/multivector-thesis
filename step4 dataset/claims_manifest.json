@@ -1,19 +1,96 @@
 {
-  "git_revision_at_check": "d03d1d9",
-  "n_claims": 55,
+  "git_revision_at_check": "c412789",
+  "n_claims": 75,
   "n_fail": 0,
   "claims": [
     {
       "id": "A.canary",
       "section": "V-C",
-      "statement": "canary leaks, both runs",
-      "expected": "0/220",
-      "computed": "0/220",
-      "tex_snippet": "0/220",
+      "statement": "canary leaks among checked rows, controller run",
+      "expected": "0/175",
+      "computed": "0/175",
+      "tex_snippet": "the canary was checked on 175 of the 220 rows",
       "in_tex": true,
       "inputs": [
-        "protocolA_220/grounded_controller_220.jsonl",
-        "protocolA_220/grounded_baseline_220.jsonl"
+        {
+          "path": "protocolA_220/grounded_controller_220.jsonl",
+          "sha256": "2644bde464b9ae13540652e558027d40ce462e93d2494423acca4e9681a870cd",
+          "n_files": 1
+        },
+        {
+          "path": "protocolA_220/grounded_baseline_220.jsonl",
+          "sha256": "73d86a7a1f7b2b2bfa39e4e86b0c0c0d7a67e12e1bf6d7910d4a92d0943849da",
+          "n_files": 1
+        }
+      ],
+      "scorer": "score_protocolA_220.py",
+      "status": "PASS"
+    },
+    {
+      "id": "A.canary_base",
+      "section": "V-C",
+      "statement": "canary rows checked, controller-off run",
+      "expected": "176",
+      "computed": "176",
+      "tex_snippet": "(176 in the controller-off run)",
+      "in_tex": true,
+      "inputs": [
+        {
+          "path": "protocolA_220/grounded_controller_220.jsonl",
+          "sha256": "2644bde464b9ae13540652e558027d40ce462e93d2494423acca4e9681a870cd",
+          "n_files": 1
+        },
+        {
+          "path": "protocolA_220/grounded_baseline_220.jsonl",
+          "sha256": "73d86a7a1f7b2b2bfa39e4e86b0c0c0d7a67e12e1bf6d7910d4a92d0943849da",
+          "n_files": 1
+        }
+      ],
+      "scorer": "score_protocolA_220.py",
+      "status": "PASS"
+    },
+    {
+      "id": "A.canary_unchecked",
+      "section": "V-C",
+      "statement": "every unchecked row was blocked (both runs)",
+      "expected": "True",
+      "computed": "True",
+      "tex_snippet": "were blocked before the check",
+      "in_tex": true,
+      "inputs": [
+        {
+          "path": "protocolA_220/grounded_controller_220.jsonl",
+          "sha256": "2644bde464b9ae13540652e558027d40ce462e93d2494423acca4e9681a870cd",
+          "n_files": 1
+        },
+        {
+          "path": "protocolA_220/grounded_baseline_220.jsonl",
+          "sha256": "73d86a7a1f7b2b2bfa39e4e86b0c0c0d7a67e12e1bf6d7910d4a92d0943849da",
+          "n_files": 1
+        }
+      ],
+      "scorer": "score_protocolA_220.py",
+      "status": "PASS"
+    },
+    {
+      "id": "A.canary_delivered",
+      "section": "V-C",
+      "statement": "delivered answers with intact canary, controller run",
+      "expected": "132/132",
+      "computed": "132/132",
+      "tex_snippet": "including all 132 delivered answers",
+      "in_tex": true,
+      "inputs": [
+        {
+          "path": "protocolA_220/grounded_controller_220.jsonl",
+          "sha256": "2644bde464b9ae13540652e558027d40ce462e93d2494423acca4e9681a870cd",
+          "n_files": 1
+        },
+        {
+          "path": "protocolA_220/grounded_baseline_220.jsonl",
+          "sha256": "73d86a7a1f7b2b2bfa39e4e86b0c0c0d7a67e12e1bf6d7910d4a92d0943849da",
+          "n_files": 1
+        }
       ],
       "scorer": "score_protocolA_220.py",
       "status": "PASS"
@@ -27,8 +104,16 @@
       "tex_snippet": "74/74",
       "in_tex": true,
       "inputs": [
-        "protocolA_220/grounded_controller_220.jsonl",
-        "protocolA_220/grounded_baseline_220.jsonl"
+        {
+          "path": "protocolA_220/grounded_controller_220.jsonl",
+          "sha256": "2644bde464b9ae13540652e558027d40ce462e93d2494423acca4e9681a870cd",
+          "n_files": 1
+        },
+        {
+          "path": "protocolA_220/grounded_baseline_220.jsonl",
+          "sha256": "73d86a7a1f7b2b2bfa39e4e86b0c0c0d7a67e12e1bf6d7910d4a92d0943849da",
+          "n_files": 1
+        }
       ],
       "scorer": "score_protocolA_220.py",
       "status": "PASS"
@@ -42,8 +127,16 @@
       "tex_snippet": "all 40 canaries stayed",
       "in_tex": true,
       "inputs": [
-        "protocolA_220/grounded_controller_220.jsonl",
-        "protocolA_220/grounded_baseline_220.jsonl"
+        {
+          "path": "protocolA_220/grounded_controller_220.jsonl",
+          "sha256": "2644bde464b9ae13540652e558027d40ce462e93d2494423acca4e9681a870cd",
+          "n_files": 1
+        },
+        {
+          "path": "protocolA_220/grounded_baseline_220.jsonl",
+          "sha256": "73d86a7a1f7b2b2bfa39e4e86b0c0c0d7a67e12e1bf6d7910d4a92d0943849da",
+          "n_files": 1
+        }
       ],
       "scorer": "score_protocolA_220.py",
       "status": "PASS"
@@ -57,8 +150,16 @@
       "tex_snippet": "(0/80, 95",
       "in_tex": true,
       "inputs": [
-        "protocolA_220/grounded_controller_220.jsonl",
-        "protocolA_220/grounded_baseline_220.jsonl"
+        {
+          "path": "protocolA_220/grounded_controller_220.jsonl",
+          "sha256": "2644bde464b9ae13540652e558027d40ce462e93d2494423acca4e9681a870cd",
+          "n_files": 1
+        },
+        {
+          "path": "protocolA_220/grounded_baseline_220.jsonl",
+          "sha256": "73d86a7a1f7b2b2bfa39e4e86b0c0c0d7a67e12e1bf6d7910d4a92d0943849da",
+          "n_files": 1
+        }
       ],
       "scorer": "score_protocolA_220.py",
       "status": "PASS"
@@ -72,8 +173,16 @@
       "tex_snippet": "flags 29--30 of the 40 direct-injection queries",
       "in_tex": true,
       "inputs": [
-        "protocolA_220/grounded_controller_220.jsonl",
-        "protocolA_220/grounded_baseline_220.jsonl"
+        {
+          "path": "protocolA_220/grounded_controller_220.jsonl",
+          "sha256": "2644bde464b9ae13540652e558027d40ce462e93d2494423acca4e9681a870cd",
+          "n_files": 1
+        },
+        {
+          "path": "protocolA_220/grounded_baseline_220.jsonl",
+          "sha256": "73d86a7a1f7b2b2bfa39e4e86b0c0c0d7a67e12e1bf6d7910d4a92d0943849da",
+          "n_files": 1
+        }
       ],
       "scorer": "score_protocolA_220.py",
       "status": "PASS"
@@ -87,8 +196,16 @@
       "tex_snippet": "(25 blocked, 4--5 sent to review)",
       "in_tex": true,
       "inputs": [
-        "protocolA_220/grounded_controller_220.jsonl",
-        "protocolA_220/grounded_baseline_220.jsonl"
+        {
+          "path": "protocolA_220/grounded_controller_220.jsonl",
+          "sha256": "2644bde464b9ae13540652e558027d40ce462e93d2494423acca4e9681a870cd",
+          "n_files": 1
+        },
+        {
+          "path": "protocolA_220/grounded_baseline_220.jsonl",
+          "sha256": "73d86a7a1f7b2b2bfa39e4e86b0c0c0d7a67e12e1bf6d7910d4a92d0943849da",
+          "n_files": 1
+        }
       ],
       "scorer": "score_protocolA_220.py",
       "status": "PASS"
@@ -102,8 +219,16 @@
       "tex_snippet": "All 40 are blocked once",
       "in_tex": true,
       "inputs": [
-        "protocolA_220/grounded_controller_220.jsonl",
-        "protocolA_220/grounded_baseline_220.jsonl"
+        {
+          "path": "protocolA_220/grounded_controller_220.jsonl",
+          "sha256": "2644bde464b9ae13540652e558027d40ce462e93d2494423acca4e9681a870cd",
+          "n_files": 1
+        },
+        {
+          "path": "protocolA_220/grounded_baseline_220.jsonl",
+          "sha256": "73d86a7a1f7b2b2bfa39e4e86b0c0c0d7a67e12e1bf6d7910d4a92d0943849da",
+          "n_files": 1
+        }
       ],
       "scorer": "score_protocolA_220.py",
       "status": "PASS"
@@ -117,8 +242,16 @@
       "tex_snippet": "Five of its 20 rows (25\\%) pass the gate",
       "in_tex": true,
       "inputs": [
-        "protocolA_220/grounded_controller_220.jsonl",
-        "protocolA_220/grounded_baseline_220.jsonl"
+        {
+          "path": "protocolA_220/grounded_controller_220.jsonl",
+          "sha256": "2644bde464b9ae13540652e558027d40ce462e93d2494423acca4e9681a870cd",
+          "n_files": 1
+        },
+        {
+          "path": "protocolA_220/grounded_baseline_220.jsonl",
+          "sha256": "73d86a7a1f7b2b2bfa39e4e86b0c0c0d7a67e12e1bf6d7910d4a92d0943849da",
+          "n_files": 1
+        }
       ],
       "scorer": "score_protocolA_220.py",
       "status": "PASS"
@@ -132,8 +265,16 @@
       "tex_snippet": "1/34",
       "in_tex": true,
       "inputs": [
-        "protocolA_220/grounded_controller_220.jsonl",
-        "protocolA_220/grounded_baseline_220.jsonl"
+        {
+          "path": "protocolA_220/grounded_controller_220.jsonl",
+          "sha256": "2644bde464b9ae13540652e558027d40ce462e93d2494423acca4e9681a870cd",
+          "n_files": 1
+        },
+        {
+          "path": "protocolA_220/grounded_baseline_220.jsonl",
+          "sha256": "73d86a7a1f7b2b2bfa39e4e86b0c0c0d7a67e12e1bf6d7910d4a92d0943849da",
+          "n_files": 1
+        }
       ],
       "scorer": "score_protocolA_220.py",
       "status": "PASS"
@@ -147,8 +288,16 @@
       "tex_snippet": "it blocks 88 rows against the baseline's 101",
       "in_tex": true,
       "inputs": [
-        "protocolA_220/grounded_controller_220.jsonl",
-        "protocolA_220/grounded_baseline_220.jsonl"
+        {
+          "path": "protocolA_220/grounded_controller_220.jsonl",
+          "sha256": "2644bde464b9ae13540652e558027d40ce462e93d2494423acca4e9681a870cd",
+          "n_files": 1
+        },
+        {
+          "path": "protocolA_220/grounded_baseline_220.jsonl",
+          "sha256": "73d86a7a1f7b2b2bfa39e4e86b0c0c0d7a67e12e1bf6d7910d4a92d0943849da",
+          "n_files": 1
+        }
       ],
       "scorer": "score_protocolA_220.py",
       "status": "PASS"
@@ -162,8 +311,16 @@
       "tex_snippet": "answers 70 benign rows (vs.\\ 66)",
       "in_tex": true,
       "inputs": [
-        "protocolA_220/grounded_controller_220.jsonl",
-        "protocolA_220/grounded_baseline_220.jsonl"
+        {
+          "path": "protocolA_220/grounded_controller_220.jsonl",
+          "sha256": "2644bde464b9ae13540652e558027d40ce462e93d2494423acca4e9681a870cd",
+          "n_files": 1
+        },
+        {
+          "path": "protocolA_220/grounded_baseline_220.jsonl",
+          "sha256": "73d86a7a1f7b2b2bfa39e4e86b0c0c0d7a67e12e1bf6d7910d4a92d0943849da",
+          "n_files": 1
+        }
       ],
       "scorer": "score_protocolA_220.py",
       "status": "PASS"
@@ -177,8 +334,16 @@
       "tex_snippet": "34 poisoned-context rows (vs.\\ 28)",
       "in_tex": true,
       "inputs": [
-        "protocolA_220/grounded_controller_220.jsonl",
-        "protocolA_220/grounded_baseline_220.jsonl"
+        {
+          "path": "protocolA_220/grounded_controller_220.jsonl",
+          "sha256": "2644bde464b9ae13540652e558027d40ce462e93d2494423acca4e9681a870cd",
+          "n_files": 1
+        },
+        {
+          "path": "protocolA_220/grounded_baseline_220.jsonl",
+          "sha256": "73d86a7a1f7b2b2bfa39e4e86b0c0c0d7a67e12e1bf6d7910d4a92d0943849da",
+          "n_files": 1
+        }
       ],
       "scorer": "score_protocolA_220.py",
       "status": "PASS"
@@ -192,8 +357,16 @@
       "tex_snippet": "refuses 10 benign rows (14 without the controller)",
       "in_tex": true,
       "inputs": [
-        "protocolA_220/grounded_controller_220.jsonl",
-        "protocolA_220/grounded_baseline_220.jsonl"
+        {
+          "path": "protocolA_220/grounded_controller_220.jsonl",
+          "sha256": "2644bde464b9ae13540652e558027d40ce462e93d2494423acca4e9681a870cd",
+          "n_files": 1
+        },
+        {
+          "path": "protocolA_220/grounded_baseline_220.jsonl",
+          "sha256": "73d86a7a1f7b2b2bfa39e4e86b0c0c0d7a67e12e1bf6d7910d4a92d0943849da",
+          "n_files": 1
+        }
       ],
       "scorer": "score_protocolA_220.py",
       "status": "PASS"
@@ -207,7 +380,11 @@
       "tex_snippet": "Undefended & 29.5 [23.6, 36.2]",
       "in_tex": true,
       "inputs": [
-        "mitigation_results/followup200/off.jsonl"
+        {
+          "path": "mitigation_results/followup200/off.jsonl",
+          "sha256": "f846594231a61aff32fb74ffb8a3bf090f6eff6746ce4f8662346dd6a9ed52a3",
+          "n_files": 1
+        }
       ],
       "scorer": "score_ablation_study.py",
       "status": "PASS"
@@ -221,8 +398,39 @@
       "tex_snippet": "\\textbf{Full stack (7 layers)} & \\textbf{3.5} [1.7, 7.0] & 54/2 & $<\\!10^{-13}$ & 8.5 \\\\",
       "in_tex": true,
       "inputs": [
-        "mitigation_results/ablation200/on_full.jsonl",
-        "mitigation_results/followup200/off.jsonl"
+        {
+          "path": "mitigation_results/ablation200/on_full.jsonl",
+          "sha256": "549408923f3f7342f978ae4a92c8d809617528ce193b5fd2349d73c24824f0ee",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/followup200/off.jsonl",
+          "sha256": "f846594231a61aff32fb74ffb8a3bf090f6eff6746ce4f8662346dd6a9ed52a3",
+          "n_files": 1
+        }
+      ],
+      "scorer": "score_ablation_study.py",
+      "status": "PASS"
+    },
+    {
+      "id": "VII.full.ci_p",
+      "section": "Table VII",
+      "statement": "row Full stack (7 layers): Wilson CI and exact p",
+      "expected": "[1.7, 7.0], p=4.4e-14",
+      "computed": "[1.7, 7.0], p=4.4e-14",
+      "tex_snippet": "\\textbf{Full stack (7 layers)} & \\textbf{3.5} [1.7, 7.0] & 54/2 & $<\\!10^{-13}$ & 8.5 \\\\",
+      "in_tex": true,
+      "inputs": [
+        {
+          "path": "mitigation_results/ablation200/on_full.jsonl",
+          "sha256": "549408923f3f7342f978ae4a92c8d809617528ce193b5fd2349d73c24824f0ee",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/followup200/off.jsonl",
+          "sha256": "f846594231a61aff32fb74ffb8a3bf090f6eff6746ce4f8662346dd6a9ed52a3",
+          "n_files": 1
+        }
       ],
       "scorer": "score_ablation_study.py",
       "status": "PASS"
@@ -236,8 +444,39 @@
       "tex_snippet": "\\quad $-$ sanitization & 11.0 [7.4, 16.1] & 50/13 & $3\\!\\times\\!10^{-6}$ & 7.5 \\\\",
       "in_tex": true,
       "inputs": [
-        "mitigation_results/ablation200/on_nosanitize.jsonl",
-        "mitigation_results/followup200/off.jsonl"
+        {
+          "path": "mitigation_results/ablation200/on_nosanitize.jsonl",
+          "sha256": "819533671ced1d5508fda6ea4a186998e6afd7c28743dcbc506aab968d2164c9",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/followup200/off.jsonl",
+          "sha256": "f846594231a61aff32fb74ffb8a3bf090f6eff6746ce4f8662346dd6a9ed52a3",
+          "n_files": 1
+        }
+      ],
+      "scorer": "score_ablation_study.py",
+      "status": "PASS"
+    },
+    {
+      "id": "VII.nosanitize.ci_p",
+      "section": "Table VII",
+      "statement": "row $-$ sanitization: Wilson CI and exact p",
+      "expected": "[7.4, 16.1], p=3e-06",
+      "computed": "[7.4, 16.1], p=3e-06",
+      "tex_snippet": "\\quad $-$ sanitization & 11.0 [7.4, 16.1] & 50/13 & $3\\!\\times\\!10^{-6}$ & 7.5 \\\\",
+      "in_tex": true,
+      "inputs": [
+        {
+          "path": "mitigation_results/ablation200/on_nosanitize.jsonl",
+          "sha256": "819533671ced1d5508fda6ea4a186998e6afd7c28743dcbc506aab968d2164c9",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/followup200/off.jsonl",
+          "sha256": "f846594231a61aff32fb74ffb8a3bf090f6eff6746ce4f8662346dd6a9ed52a3",
+          "n_files": 1
+        }
       ],
       "scorer": "score_ablation_study.py",
       "status": "PASS"
@@ -251,8 +490,39 @@
       "tex_snippet": "\\quad $-$ grounding gate & 6.5 [3.8, 10.8] & 49/3 & $10^{-11}$ & 2.5 \\\\",
       "in_tex": true,
       "inputs": [
-        "mitigation_results/ablation200/on_nogrounding.jsonl",
-        "mitigation_results/followup200/off.jsonl"
+        {
+          "path": "mitigation_results/ablation200/on_nogrounding.jsonl",
+          "sha256": "6f677e033b70d2f5e9e9470f942fbb9bb608a8c5235a0ddec5a816cbc5ceb89e",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/followup200/off.jsonl",
+          "sha256": "f846594231a61aff32fb74ffb8a3bf090f6eff6746ce4f8662346dd6a9ed52a3",
+          "n_files": 1
+        }
+      ],
+      "scorer": "score_ablation_study.py",
+      "status": "PASS"
+    },
+    {
+      "id": "VII.nogrounding.ci_p",
+      "section": "Table VII",
+      "statement": "row $-$ grounding gate: Wilson CI and exact p",
+      "expected": "[3.8, 10.8], p=1e-11",
+      "computed": "[3.8, 10.8], p=1e-11",
+      "tex_snippet": "\\quad $-$ grounding gate & 6.5 [3.8, 10.8] & 49/3 & $10^{-11}$ & 2.5 \\\\",
+      "in_tex": true,
+      "inputs": [
+        {
+          "path": "mitigation_results/ablation200/on_nogrounding.jsonl",
+          "sha256": "6f677e033b70d2f5e9e9470f942fbb9bb608a8c5235a0ddec5a816cbc5ceb89e",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/followup200/off.jsonl",
+          "sha256": "f846594231a61aff32fb74ffb8a3bf090f6eff6746ce4f8662346dd6a9ed52a3",
+          "n_files": 1
+        }
       ],
       "scorer": "score_ablation_study.py",
       "status": "PASS"
@@ -266,8 +536,39 @@
       "tex_snippet": "\\quad $-$ refuse-on-detection & 6.0 [3.5, 10.2] & 51/4 & $2\\!\\times\\!10^{-11}$ & 7.0 \\\\",
       "in_tex": true,
       "inputs": [
-        "mitigation_results/ablation200/on_norefuse.jsonl",
-        "mitigation_results/followup200/off.jsonl"
+        {
+          "path": "mitigation_results/ablation200/on_norefuse.jsonl",
+          "sha256": "c3ac187e2088172c8170bd7b6bec18c19719215e2b5bb1828b0edbd8596f6c98",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/followup200/off.jsonl",
+          "sha256": "f846594231a61aff32fb74ffb8a3bf090f6eff6746ce4f8662346dd6a9ed52a3",
+          "n_files": 1
+        }
+      ],
+      "scorer": "score_ablation_study.py",
+      "status": "PASS"
+    },
+    {
+      "id": "VII.norefuse.ci_p",
+      "section": "Table VII",
+      "statement": "row $-$ refuse-on-detection: Wilson CI and exact p",
+      "expected": "[3.5, 10.2], p=2e-11",
+      "computed": "[3.5, 10.2], p=2e-11",
+      "tex_snippet": "\\quad $-$ refuse-on-detection & 6.0 [3.5, 10.2] & 51/4 & $2\\!\\times\\!10^{-11}$ & 7.0 \\\\",
+      "in_tex": true,
+      "inputs": [
+        {
+          "path": "mitigation_results/ablation200/on_norefuse.jsonl",
+          "sha256": "c3ac187e2088172c8170bd7b6bec18c19719215e2b5bb1828b0edbd8596f6c98",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/followup200/off.jsonl",
+          "sha256": "f846594231a61aff32fb74ffb8a3bf090f6eff6746ce4f8662346dd6a9ed52a3",
+          "n_files": 1
+        }
       ],
       "scorer": "score_ablation_study.py",
       "status": "PASS"
@@ -281,8 +582,39 @@
       "tex_snippet": "\\quad $-$ tightened rerank & 6.0 [3.5, 10.2] & 51/4 & $2\\!\\times\\!10^{-11}$ & 6.5 \\\\",
       "in_tex": true,
       "inputs": [
-        "mitigation_results/ablation200/on_notighten.jsonl",
-        "mitigation_results/followup200/off.jsonl"
+        {
+          "path": "mitigation_results/ablation200/on_notighten.jsonl",
+          "sha256": "ff03de63aacc4334290f2d68c33ed19b9def072bc9ae2e6374b19aefc66bb181",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/followup200/off.jsonl",
+          "sha256": "f846594231a61aff32fb74ffb8a3bf090f6eff6746ce4f8662346dd6a9ed52a3",
+          "n_files": 1
+        }
+      ],
+      "scorer": "score_ablation_study.py",
+      "status": "PASS"
+    },
+    {
+      "id": "VII.notighten.ci_p",
+      "section": "Table VII",
+      "statement": "row $-$ tightened rerank: Wilson CI and exact p",
+      "expected": "[3.5, 10.2], p=2e-11",
+      "computed": "[3.5, 10.2], p=2e-11",
+      "tex_snippet": "\\quad $-$ tightened rerank & 6.0 [3.5, 10.2] & 51/4 & $2\\!\\times\\!10^{-11}$ & 6.5 \\\\",
+      "in_tex": true,
+      "inputs": [
+        {
+          "path": "mitigation_results/ablation200/on_notighten.jsonl",
+          "sha256": "ff03de63aacc4334290f2d68c33ed19b9def072bc9ae2e6374b19aefc66bb181",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/followup200/off.jsonl",
+          "sha256": "f846594231a61aff32fb74ffb8a3bf090f6eff6746ce4f8662346dd6a9ed52a3",
+          "n_files": 1
+        }
       ],
       "scorer": "score_ablation_study.py",
       "status": "PASS"
@@ -293,11 +625,42 @@
       "statement": "row $-$ guarded prompt",
       "expected": "ASR 5.5, 53/5, blk 12.5",
       "computed": "ASR 5.5, 53/5, blk 12.5",
-      "tex_snippet": "\\quad $-$ guarded prompt & 5.5 [3.1, 9.6] & 53/5 & $4\\!\\times\\!10^{-11}$ & 12.5 \\\\",
+      "tex_snippet": "\\quad $-$ guarded prompt & 5.5 [3.1, 9.6] & 53/5 & $3\\!\\times\\!10^{-11}$ & 12.5 \\\\",
       "in_tex": true,
       "inputs": [
-        "mitigation_results/ablation200/on_noprompt.jsonl",
-        "mitigation_results/followup200/off.jsonl"
+        {
+          "path": "mitigation_results/ablation200/on_noprompt.jsonl",
+          "sha256": "57a0b95156f05eec4b70443cd1ece68adc4194b6913f5eb1607df56d0292d866",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/followup200/off.jsonl",
+          "sha256": "f846594231a61aff32fb74ffb8a3bf090f6eff6746ce4f8662346dd6a9ed52a3",
+          "n_files": 1
+        }
+      ],
+      "scorer": "score_ablation_study.py",
+      "status": "PASS"
+    },
+    {
+      "id": "VII.noprompt.ci_p",
+      "section": "Table VII",
+      "statement": "row $-$ guarded prompt: Wilson CI and exact p",
+      "expected": "[3.1, 9.6], p=3.5e-11",
+      "computed": "[3.1, 9.6], p=3.5e-11",
+      "tex_snippet": "\\quad $-$ guarded prompt & 5.5 [3.1, 9.6] & 53/5 & $3\\!\\times\\!10^{-11}$ & 12.5 \\\\",
+      "in_tex": true,
+      "inputs": [
+        {
+          "path": "mitigation_results/ablation200/on_noprompt.jsonl",
+          "sha256": "57a0b95156f05eec4b70443cd1ece68adc4194b6913f5eb1607df56d0292d866",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/followup200/off.jsonl",
+          "sha256": "f846594231a61aff32fb74ffb8a3bf090f6eff6746ce4f8662346dd6a9ed52a3",
+          "n_files": 1
+        }
       ],
       "scorer": "score_ablation_study.py",
       "status": "PASS"
@@ -311,8 +674,39 @@
       "tex_snippet": "\\quad $-$ Presidio & 4.0 [2.0, 7.7] & 53/2 & $<\\!10^{-13}$ & 8.5 \\\\",
       "in_tex": true,
       "inputs": [
-        "mitigation_results/ablation200/on_nopresidio.jsonl",
-        "mitigation_results/followup200/off.jsonl"
+        {
+          "path": "mitigation_results/ablation200/on_nopresidio.jsonl",
+          "sha256": "8ddb5a0dd23236b57d9bf33d22f24ee2038f952ed809c29fd63d8ac4059194eb",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/followup200/off.jsonl",
+          "sha256": "f846594231a61aff32fb74ffb8a3bf090f6eff6746ce4f8662346dd6a9ed52a3",
+          "n_files": 1
+        }
+      ],
+      "scorer": "score_ablation_study.py",
+      "status": "PASS"
+    },
+    {
+      "id": "VII.nopresidio.ci_p",
+      "section": "Table VII",
+      "statement": "row $-$ Presidio: Wilson CI and exact p",
+      "expected": "[2.0, 7.7], p=8.6e-14",
+      "computed": "[2.0, 7.7], p=8.6e-14",
+      "tex_snippet": "\\quad $-$ Presidio & 4.0 [2.0, 7.7] & 53/2 & $<\\!10^{-13}$ & 8.5 \\\\",
+      "in_tex": true,
+      "inputs": [
+        {
+          "path": "mitigation_results/ablation200/on_nopresidio.jsonl",
+          "sha256": "8ddb5a0dd23236b57d9bf33d22f24ee2038f952ed809c29fd63d8ac4059194eb",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/followup200/off.jsonl",
+          "sha256": "f846594231a61aff32fb74ffb8a3bf090f6eff6746ce4f8662346dd6a9ed52a3",
+          "n_files": 1
+        }
       ],
       "scorer": "score_ablation_study.py",
       "status": "PASS"
@@ -326,8 +720,39 @@
       "tex_snippet": "\\quad $-$ DLP & 3.5 [1.7, 7.0] & 54/2 & $<\\!10^{-13}$ & 8.5 \\\\",
       "in_tex": true,
       "inputs": [
-        "mitigation_results/ablation200/on_nodlp.jsonl",
-        "mitigation_results/followup200/off.jsonl"
+        {
+          "path": "mitigation_results/ablation200/on_nodlp.jsonl",
+          "sha256": "16bf0515982a5cae91efb135cc6e218a07bd17fb0b3b9a05fbe9784daf17a0eb",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/followup200/off.jsonl",
+          "sha256": "f846594231a61aff32fb74ffb8a3bf090f6eff6746ce4f8662346dd6a9ed52a3",
+          "n_files": 1
+        }
+      ],
+      "scorer": "score_ablation_study.py",
+      "status": "PASS"
+    },
+    {
+      "id": "VII.nodlp.ci_p",
+      "section": "Table VII",
+      "statement": "row $-$ DLP: Wilson CI and exact p",
+      "expected": "[1.7, 7.0], p=4.4e-14",
+      "computed": "[1.7, 7.0], p=4.4e-14",
+      "tex_snippet": "\\quad $-$ DLP & 3.5 [1.7, 7.0] & 54/2 & $<\\!10^{-13}$ & 8.5 \\\\",
+      "in_tex": true,
+      "inputs": [
+        {
+          "path": "mitigation_results/ablation200/on_nodlp.jsonl",
+          "sha256": "16bf0515982a5cae91efb135cc6e218a07bd17fb0b3b9a05fbe9784daf17a0eb",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/followup200/off.jsonl",
+          "sha256": "f846594231a61aff32fb74ffb8a3bf090f6eff6746ce4f8662346dd6a9ed52a3",
+          "n_files": 1
+        }
       ],
       "scorer": "score_ablation_study.py",
       "status": "PASS"
@@ -341,8 +766,39 @@
       "tex_snippet": "\\quad Grounding gate & 15.0 [10.7, 20.6] & 29/0 & $4\\!\\times\\!10^{-9}$ & 5.5 \\\\",
       "in_tex": true,
       "inputs": [
-        "mitigation_results/ablation200/on_only_grounding.jsonl",
-        "mitigation_results/followup200/off.jsonl"
+        {
+          "path": "mitigation_results/ablation200/on_only_grounding.jsonl",
+          "sha256": "d7e279bd84faff49f8ecf69fa5a364f025198224bb58708c1de5b940454cc1dc",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/followup200/off.jsonl",
+          "sha256": "f846594231a61aff32fb74ffb8a3bf090f6eff6746ce4f8662346dd6a9ed52a3",
+          "n_files": 1
+        }
+      ],
+      "scorer": "score_ablation_study.py",
+      "status": "PASS"
+    },
+    {
+      "id": "VII.only_grounding.ci_p",
+      "section": "Table VII",
+      "statement": "row Grounding gate: Wilson CI and exact p",
+      "expected": "[10.7, 20.6], p=3.7e-09",
+      "computed": "[10.7, 20.6], p=3.7e-09",
+      "tex_snippet": "\\quad Grounding gate & 15.0 [10.7, 20.6] & 29/0 & $4\\!\\times\\!10^{-9}$ & 5.5 \\\\",
+      "in_tex": true,
+      "inputs": [
+        {
+          "path": "mitigation_results/ablation200/on_only_grounding.jsonl",
+          "sha256": "d7e279bd84faff49f8ecf69fa5a364f025198224bb58708c1de5b940454cc1dc",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/followup200/off.jsonl",
+          "sha256": "f846594231a61aff32fb74ffb8a3bf090f6eff6746ce4f8662346dd6a9ed52a3",
+          "n_files": 1
+        }
       ],
       "scorer": "score_ablation_study.py",
       "status": "PASS"
@@ -356,8 +812,39 @@
       "tex_snippet": "\\quad Sanitization & 16.0 [11.6, 21.7] & 30/3 & $1.4\\!\\times\\!10^{-6}$ & 0.0 \\\\",
       "in_tex": true,
       "inputs": [
-        "mitigation_results/ablation200/on_only_sanitize.jsonl",
-        "mitigation_results/followup200/off.jsonl"
+        {
+          "path": "mitigation_results/ablation200/on_only_sanitize.jsonl",
+          "sha256": "cc20017871146b2ec5168acc65433a68423b8e53000950aab39d64af054ef9b2",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/followup200/off.jsonl",
+          "sha256": "f846594231a61aff32fb74ffb8a3bf090f6eff6746ce4f8662346dd6a9ed52a3",
+          "n_files": 1
+        }
+      ],
+      "scorer": "score_ablation_study.py",
+      "status": "PASS"
+    },
+    {
+      "id": "VII.only_sanitize.ci_p",
+      "section": "Table VII",
+      "statement": "row Sanitization: Wilson CI and exact p",
+      "expected": "[11.6, 21.7], p=1.4e-06",
+      "computed": "[11.6, 21.7], p=1.4e-06",
+      "tex_snippet": "\\quad Sanitization & 16.0 [11.6, 21.7] & 30/3 & $1.4\\!\\times\\!10^{-6}$ & 0.0 \\\\",
+      "in_tex": true,
+      "inputs": [
+        {
+          "path": "mitigation_results/ablation200/on_only_sanitize.jsonl",
+          "sha256": "cc20017871146b2ec5168acc65433a68423b8e53000950aab39d64af054ef9b2",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/followup200/off.jsonl",
+          "sha256": "f846594231a61aff32fb74ffb8a3bf090f6eff6746ce4f8662346dd6a9ed52a3",
+          "n_files": 1
+        }
       ],
       "scorer": "score_ablation_study.py",
       "status": "PASS"
@@ -371,8 +858,39 @@
       "tex_snippet": "\\quad Refuse-on-detection & 18.0 [13.3, 23.9] & 25/2 & $6\\!\\times\\!10^{-6}$ & 2.5 \\\\",
       "in_tex": true,
       "inputs": [
-        "mitigation_results/ablation200/on_only_refuse.jsonl",
-        "mitigation_results/followup200/off.jsonl"
+        {
+          "path": "mitigation_results/ablation200/on_only_refuse.jsonl",
+          "sha256": "e6b611783cca9352d36932377c6e9c39c618e1f6929b6ad2d4f0305334e47ba8",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/followup200/off.jsonl",
+          "sha256": "f846594231a61aff32fb74ffb8a3bf090f6eff6746ce4f8662346dd6a9ed52a3",
+          "n_files": 1
+        }
+      ],
+      "scorer": "score_ablation_study.py",
+      "status": "PASS"
+    },
+    {
+      "id": "VII.only_refuse.ci_p",
+      "section": "Table VII",
+      "statement": "row Refuse-on-detection: Wilson CI and exact p",
+      "expected": "[13.3, 23.9], p=5.6e-06",
+      "computed": "[13.3, 23.9], p=5.6e-06",
+      "tex_snippet": "\\quad Refuse-on-detection & 18.0 [13.3, 23.9] & 25/2 & $6\\!\\times\\!10^{-6}$ & 2.5 \\\\",
+      "in_tex": true,
+      "inputs": [
+        {
+          "path": "mitigation_results/ablation200/on_only_refuse.jsonl",
+          "sha256": "e6b611783cca9352d36932377c6e9c39c618e1f6929b6ad2d4f0305334e47ba8",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/followup200/off.jsonl",
+          "sha256": "f846594231a61aff32fb74ffb8a3bf090f6eff6746ce4f8662346dd6a9ed52a3",
+          "n_files": 1
+        }
       ],
       "scorer": "score_ablation_study.py",
       "status": "PASS"
@@ -386,8 +904,39 @@
       "tex_snippet": "\\quad Tightened rerank & 24.5 [19.1, 30.9] & 28/18 & 0.18 & 0.0 \\\\",
       "in_tex": true,
       "inputs": [
-        "mitigation_results/ablation200/on_only_tighten.jsonl",
-        "mitigation_results/followup200/off.jsonl"
+        {
+          "path": "mitigation_results/ablation200/on_only_tighten.jsonl",
+          "sha256": "e56491b7004de11309722b16b90747d02cd4ee44b2df87f4eec1f30788d4b9dc",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/followup200/off.jsonl",
+          "sha256": "f846594231a61aff32fb74ffb8a3bf090f6eff6746ce4f8662346dd6a9ed52a3",
+          "n_files": 1
+        }
+      ],
+      "scorer": "score_ablation_study.py",
+      "status": "PASS"
+    },
+    {
+      "id": "VII.only_tighten.ci_p",
+      "section": "Table VII",
+      "statement": "row Tightened rerank: Wilson CI and exact p",
+      "expected": "[19.1, 30.9], p=0.18",
+      "computed": "[19.1, 30.9], p=0.18",
+      "tex_snippet": "\\quad Tightened rerank & 24.5 [19.1, 30.9] & 28/18 & 0.18 & 0.0 \\\\",
+      "in_tex": true,
+      "inputs": [
+        {
+          "path": "mitigation_results/ablation200/on_only_tighten.jsonl",
+          "sha256": "e56491b7004de11309722b16b90747d02cd4ee44b2df87f4eec1f30788d4b9dc",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/followup200/off.jsonl",
+          "sha256": "f846594231a61aff32fb74ffb8a3bf090f6eff6746ce4f8662346dd6a9ed52a3",
+          "n_files": 1
+        }
       ],
       "scorer": "score_ablation_study.py",
       "status": "PASS"
@@ -401,8 +950,39 @@
       "tex_snippet": "\\quad Guarded prompt & 53.0 [46.1, 59.8] & 6/53 & $2\\!\\times\\!10^{-10}$ & 0.0 \\\\",
       "in_tex": true,
       "inputs": [
-        "mitigation_results/ablation200/on_only_prompt.jsonl",
-        "mitigation_results/followup200/off.jsonl"
+        {
+          "path": "mitigation_results/ablation200/on_only_prompt.jsonl",
+          "sha256": "e075930bf0368a598ed36b6333bee4dfac27db2b02217abdf4210655bddbbe56",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/followup200/off.jsonl",
+          "sha256": "f846594231a61aff32fb74ffb8a3bf090f6eff6746ce4f8662346dd6a9ed52a3",
+          "n_files": 1
+        }
+      ],
+      "scorer": "score_ablation_study.py",
+      "status": "PASS"
+    },
+    {
+      "id": "VII.only_prompt.ci_p",
+      "section": "Table VII",
+      "statement": "row Guarded prompt: Wilson CI and exact p",
+      "expected": "[46.1, 59.8], p=1.8e-10",
+      "computed": "[46.1, 59.8], p=1.8e-10",
+      "tex_snippet": "\\quad Guarded prompt & 53.0 [46.1, 59.8] & 6/53 & $2\\!\\times\\!10^{-10}$ & 0.0 \\\\",
+      "in_tex": true,
+      "inputs": [
+        {
+          "path": "mitigation_results/ablation200/on_only_prompt.jsonl",
+          "sha256": "e075930bf0368a598ed36b6333bee4dfac27db2b02217abdf4210655bddbbe56",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/followup200/off.jsonl",
+          "sha256": "f846594231a61aff32fb74ffb8a3bf090f6eff6746ce4f8662346dd6a9ed52a3",
+          "n_files": 1
+        }
       ],
       "scorer": "score_ablation_study.py",
       "status": "PASS"
@@ -416,8 +996,39 @@
       "tex_snippet": "\\quad Presidio / DLP & 29.5 [23.6, 36.2] & 0/0 & 1.0 & 0.0 \\\\",
       "in_tex": true,
       "inputs": [
-        "mitigation_results/ablation200/on_only_presidio.jsonl",
-        "mitigation_results/followup200/off.jsonl"
+        {
+          "path": "mitigation_results/ablation200/on_only_presidio.jsonl",
+          "sha256": "eef5a4902c65f476a024103e34fc04fabc293ab4f23ccd376e9d9d828dfbacb5",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/followup200/off.jsonl",
+          "sha256": "f846594231a61aff32fb74ffb8a3bf090f6eff6746ce4f8662346dd6a9ed52a3",
+          "n_files": 1
+        }
+      ],
+      "scorer": "score_ablation_study.py",
+      "status": "PASS"
+    },
+    {
+      "id": "VII.only_presidio.ci_p",
+      "section": "Table VII",
+      "statement": "row Presidio / DLP: Wilson CI and exact p",
+      "expected": "[23.6, 36.2], p=1",
+      "computed": "[23.6, 36.2], p=1",
+      "tex_snippet": "\\quad Presidio / DLP & 29.5 [23.6, 36.2] & 0/0 & 1.0 & 0.0 \\\\",
+      "in_tex": true,
+      "inputs": [
+        {
+          "path": "mitigation_results/ablation200/on_only_presidio.jsonl",
+          "sha256": "eef5a4902c65f476a024103e34fc04fabc293ab4f23ccd376e9d9d828dfbacb5",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/followup200/off.jsonl",
+          "sha256": "f846594231a61aff32fb74ffb8a3bf090f6eff6746ce4f8662346dd6a9ed52a3",
+          "n_files": 1
+        }
       ],
       "scorer": "score_ablation_study.py",
       "status": "PASS"
@@ -431,9 +1042,21 @@
       "tex_snippet": "(29.5, 31.0, 30.5)",
       "in_tex": true,
       "inputs": [
-        "mitigation_results/followup200/",
-        "mitigation_results/seed7/",
-        "mitigation_results/seed1234/"
+        {
+          "path": "mitigation_results/followup200/",
+          "sha256": "d9917f245945b5b2e5bb45d4e35df7d89865698eede2d0f646ce6fa5c54a5b7f",
+          "n_files": 18
+        },
+        {
+          "path": "mitigation_results/seed7/",
+          "sha256": "04f5deb36ce124a9b610214167c3d2e2c9d0652e48583c9ff5d5735f389893dd",
+          "n_files": 14
+        },
+        {
+          "path": "mitigation_results/seed1234/",
+          "sha256": "0a115dfe7a78bb66b4d6a324715b0433a8d6b5f0a9cd0c9439b462f7cd179de8",
+          "n_files": 14
+        }
       ],
       "scorer": "score_seed_study.py",
       "status": "PASS"
@@ -447,9 +1070,21 @@
       "tex_snippet": "(3.5, 4.5, 4.5)",
       "in_tex": true,
       "inputs": [
-        "mitigation_results/followup200/",
-        "mitigation_results/seed7/",
-        "mitigation_results/seed1234/"
+        {
+          "path": "mitigation_results/followup200/",
+          "sha256": "d9917f245945b5b2e5bb45d4e35df7d89865698eede2d0f646ce6fa5c54a5b7f",
+          "n_files": 18
+        },
+        {
+          "path": "mitigation_results/seed7/",
+          "sha256": "04f5deb36ce124a9b610214167c3d2e2c9d0652e48583c9ff5d5735f389893dd",
+          "n_files": 14
+        },
+        {
+          "path": "mitigation_results/seed1234/",
+          "sha256": "0a115dfe7a78bb66b4d6a324715b0433a8d6b5f0a9cd0c9439b462f7cd179de8",
+          "n_files": 14
+        }
       ],
       "scorer": "score_seed_study.py",
       "status": "PASS"
@@ -463,9 +1098,21 @@
       "tex_snippet": "(5.5, 7.0, 5.5)",
       "in_tex": true,
       "inputs": [
-        "mitigation_results/followup200/",
-        "mitigation_results/seed7/",
-        "mitigation_results/seed1234/"
+        {
+          "path": "mitigation_results/followup200/",
+          "sha256": "d9917f245945b5b2e5bb45d4e35df7d89865698eede2d0f646ce6fa5c54a5b7f",
+          "n_files": 18
+        },
+        {
+          "path": "mitigation_results/seed7/",
+          "sha256": "04f5deb36ce124a9b610214167c3d2e2c9d0652e48583c9ff5d5735f389893dd",
+          "n_files": 14
+        },
+        {
+          "path": "mitigation_results/seed1234/",
+          "sha256": "0a115dfe7a78bb66b4d6a324715b0433a8d6b5f0a9cd0c9439b462f7cd179de8",
+          "n_files": 14
+        }
       ],
       "scorer": "score_seed_study.py",
       "status": "PASS"
@@ -479,11 +1126,122 @@
       "tex_snippet": "$p=0.34$, 0.27, 0.77",
       "in_tex": true,
       "inputs": [
-        "mitigation_results/followup200/",
-        "mitigation_results/seed7/",
-        "mitigation_results/seed1234/"
+        {
+          "path": "mitigation_results/followup200/",
+          "sha256": "d9917f245945b5b2e5bb45d4e35df7d89865698eede2d0f646ce6fa5c54a5b7f",
+          "n_files": 18
+        },
+        {
+          "path": "mitigation_results/seed7/",
+          "sha256": "04f5deb36ce124a9b610214167c3d2e2c9d0652e48583c9ff5d5735f389893dd",
+          "n_files": 14
+        },
+        {
+          "path": "mitigation_results/seed1234/",
+          "sha256": "0a115dfe7a78bb66b4d6a324715b0433a8d6b5f0a9cd0c9439b462f7cd179de8",
+          "n_files": 14
+        }
       ],
       "scorer": "score_seed_study.py",
+      "status": "PASS"
+    },
+    {
+      "id": "E.rerun_asr",
+      "section": "V-E",
+      "statement": "fresh rerun successes: undefended, full",
+      "expected": "58/200, 6/200",
+      "computed": "58/200, 6/200",
+      "tex_snippet": "The fresh run gives 58/200",
+      "in_tex": true,
+      "inputs": [
+        {
+          "path": "mitigation_results/rerun200/off.jsonl",
+          "sha256": "3c8172a9ab1dc49f2a2f99e9b5423d7a8ef5003d34fdd6c4263b7b6b2057dfa5",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/rerun200/on_full.jsonl",
+          "sha256": "609e039a016a2fd6367de1767788d0f24e46a7f5500272bd806e4789bb36a82a",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/followup200/off.jsonl",
+          "sha256": "f846594231a61aff32fb74ffb8a3bf090f6eff6746ce4f8662346dd6a9ed52a3",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/ablation200/on_full.jsonl",
+          "sha256": "549408923f3f7342f978ae4a92c8d809617528ce193b5fd2349d73c24824f0ee",
+          "n_files": 1
+        }
+      ],
+      "scorer": "score_rerun200.py",
+      "status": "PASS"
+    },
+    {
+      "id": "E.rerun_agree",
+      "section": "V-E",
+      "statement": "rows with the same outcome as the reported run: undefended, full",
+      "expected": "189, 199",
+      "computed": "189, 199",
+      "tex_snippet": "agree on 189 and 199 of the 200 rows",
+      "in_tex": true,
+      "inputs": [
+        {
+          "path": "mitigation_results/rerun200/off.jsonl",
+          "sha256": "3c8172a9ab1dc49f2a2f99e9b5423d7a8ef5003d34fdd6c4263b7b6b2057dfa5",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/rerun200/on_full.jsonl",
+          "sha256": "609e039a016a2fd6367de1767788d0f24e46a7f5500272bd806e4789bb36a82a",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/followup200/off.jsonl",
+          "sha256": "f846594231a61aff32fb74ffb8a3bf090f6eff6746ce4f8662346dd6a9ed52a3",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/ablation200/on_full.jsonl",
+          "sha256": "549408923f3f7342f978ae4a92c8d809617528ce193b5fd2349d73c24824f0ee",
+          "n_files": 1
+        }
+      ],
+      "scorer": "score_rerun200.py",
+      "status": "PASS"
+    },
+    {
+      "id": "E.rerun_paired",
+      "section": "V-E",
+      "statement": "fresh full vs undefended: fixed/broke",
+      "expected": "54/2",
+      "computed": "54/2",
+      "tex_snippet": "again fixes 54 rows and breaks 2",
+      "in_tex": true,
+      "inputs": [
+        {
+          "path": "mitigation_results/rerun200/off.jsonl",
+          "sha256": "3c8172a9ab1dc49f2a2f99e9b5423d7a8ef5003d34fdd6c4263b7b6b2057dfa5",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/rerun200/on_full.jsonl",
+          "sha256": "609e039a016a2fd6367de1767788d0f24e46a7f5500272bd806e4789bb36a82a",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/followup200/off.jsonl",
+          "sha256": "f846594231a61aff32fb74ffb8a3bf090f6eff6746ce4f8662346dd6a9ed52a3",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/ablation200/on_full.jsonl",
+          "sha256": "549408923f3f7342f978ae4a92c8d809617528ce193b5fd2349d73c24824f0ee",
+          "n_files": 1
+        }
+      ],
+      "scorer": "score_rerun200.py",
       "status": "PASS"
     },
     {
@@ -495,9 +1253,21 @@
       "tex_snippet": "ASR is 29.7\\% undefended",
       "in_tex": true,
       "inputs": [
-        "mitigation_results/followup200/",
-        "mitigation_results/ablation200/on_full.jsonl",
-        "mitigation_results/extended424/"
+        {
+          "path": "mitigation_results/followup200/",
+          "sha256": "d9917f245945b5b2e5bb45d4e35df7d89865698eede2d0f646ce6fa5c54a5b7f",
+          "n_files": 18
+        },
+        {
+          "path": "mitigation_results/ablation200/on_full.jsonl",
+          "sha256": "549408923f3f7342f978ae4a92c8d809617528ce193b5fd2349d73c24824f0ee",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/extended424/",
+          "sha256": "2bf64ebb376aa1256ce3e33905a6e935a8e173691b6bb6796b34e00f5f98bbe6",
+          "n_files": 5
+        }
       ],
       "scorer": "score_improvements.py",
       "status": "PASS"
@@ -511,9 +1281,21 @@
       "tex_snippet": "fixes 114 rows and breaks 6",
       "in_tex": true,
       "inputs": [
-        "mitigation_results/followup200/",
-        "mitigation_results/ablation200/on_full.jsonl",
-        "mitigation_results/extended424/"
+        {
+          "path": "mitigation_results/followup200/",
+          "sha256": "d9917f245945b5b2e5bb45d4e35df7d89865698eede2d0f646ce6fa5c54a5b7f",
+          "n_files": 18
+        },
+        {
+          "path": "mitigation_results/ablation200/on_full.jsonl",
+          "sha256": "549408923f3f7342f978ae4a92c8d809617528ce193b5fd2349d73c24824f0ee",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/extended424/",
+          "sha256": "2bf64ebb376aa1256ce3e33905a6e935a8e173691b6bb6796b34e00f5f98bbe6",
+          "n_files": 5
+        }
       ],
       "scorer": "score_improvements.py",
       "status": "PASS"
@@ -527,9 +1309,21 @@
       "tex_snippet": "$+0.5$ points with an approximate 95\\% interval of $[-1.5, +2.4]$",
       "in_tex": true,
       "inputs": [
-        "mitigation_results/followup200/",
-        "mitigation_results/ablation200/on_full.jsonl",
-        "mitigation_results/extended424/"
+        {
+          "path": "mitigation_results/followup200/",
+          "sha256": "d9917f245945b5b2e5bb45d4e35df7d89865698eede2d0f646ce6fa5c54a5b7f",
+          "n_files": 18
+        },
+        {
+          "path": "mitigation_results/ablation200/on_full.jsonl",
+          "sha256": "549408923f3f7342f978ae4a92c8d809617528ce193b5fd2349d73c24824f0ee",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/extended424/",
+          "sha256": "2bf64ebb376aa1256ce3e33905a6e935a8e173691b6bb6796b34e00f5f98bbe6",
+          "n_files": 5
+        }
       ],
       "scorer": "score_improvements.py",
       "status": "PASS"
@@ -543,8 +1337,14 @@
       "tex_snippet": "abstains on 34 of the 40 attack rows",
       "in_tex": true,
       "inputs": [
-        "external_eval/semantic40_{fused,isolate,routed}.jsonl",
-        "external_eval/benign40_{fused,isolate,routed}.jsonl"
+        {
+          "path": "external_eval/semantic40_{fused,isolate,routed}.jsonl",
+          "sha256": null
+        },
+        {
+          "path": "external_eval/benign40_{fused,isolate,routed}.jsonl",
+          "sha256": null
+        }
       ],
       "scorer": "score_improvements.py",
       "status": "PASS"
@@ -558,8 +1358,14 @@
       "tex_snippet": "it answers 15 (10 correctly), against 37 answered (27 correctly)",
       "in_tex": true,
       "inputs": [
-        "external_eval/semantic40_{fused,isolate,routed}.jsonl",
-        "external_eval/benign40_{fused,isolate,routed}.jsonl"
+        {
+          "path": "external_eval/semantic40_{fused,isolate,routed}.jsonl",
+          "sha256": null
+        },
+        {
+          "path": "external_eval/benign40_{fused,isolate,routed}.jsonl",
+          "sha256": null
+        }
       ],
       "scorer": "score_improvements.py",
       "status": "PASS"
@@ -573,8 +1379,14 @@
       "tex_snippet": "(5 fixed, 2 broken, $p=0.45$",
       "in_tex": true,
       "inputs": [
-        "external_eval/semantic40_{fused,isolate,routed}.jsonl",
-        "external_eval/benign40_{fused,isolate,routed}.jsonl"
+        {
+          "path": "external_eval/semantic40_{fused,isolate,routed}.jsonl",
+          "sha256": null
+        },
+        {
+          "path": "external_eval/benign40_{fused,isolate,routed}.jsonl",
+          "sha256": null
+        }
       ],
       "scorer": "score_improvements.py",
       "status": "PASS"
@@ -588,8 +1400,14 @@
       "tex_snippet": "(22 of the 40 attack rows and 16 of the 40 benign questions)",
       "in_tex": true,
       "inputs": [
-        "external_eval/semantic40_{fused,isolate,routed}.jsonl",
-        "external_eval/benign40_{fused,isolate,routed}.jsonl"
+        {
+          "path": "external_eval/semantic40_{fused,isolate,routed}.jsonl",
+          "sha256": null
+        },
+        {
+          "path": "external_eval/benign40_{fused,isolate,routed}.jsonl",
+          "sha256": null
+        }
       ],
       "scorer": "score_improvements.py",
       "status": "PASS"
@@ -603,8 +1421,14 @@
       "tex_snippet": "(36 benign questions answered, 24 correctly)",
       "in_tex": true,
       "inputs": [
-        "external_eval/semantic40_{fused,isolate,routed}.jsonl",
-        "external_eval/benign40_{fused,isolate,routed}.jsonl"
+        {
+          "path": "external_eval/semantic40_{fused,isolate,routed}.jsonl",
+          "sha256": null
+        },
+        {
+          "path": "external_eval/benign40_{fused,isolate,routed}.jsonl",
+          "sha256": null
+        }
       ],
       "scorer": "score_improvements.py",
       "status": "PASS"
@@ -618,9 +1442,21 @@
       "tex_snippet": "on 24/30 with graded channels",
       "in_tex": true,
       "inputs": [
-        "grounded_controller_graded.jsonl",
-        "external_eval/graded_heldout_benign.jsonl",
-        "row4_mitigation_results/conjunctive/on_full.jsonl"
+        {
+          "path": "grounded_controller_graded.jsonl",
+          "sha256": "05a53b7a0ff47081780106138abe5b715ade506173a7a480984c19fabd48f2d6",
+          "n_files": 1
+        },
+        {
+          "path": "external_eval/graded_heldout_benign.jsonl",
+          "sha256": "1b11b8274ec899463e360833a6311edfea1c707bb21f168fe076cb8cf74aad74",
+          "n_files": 1
+        },
+        {
+          "path": "row4_mitigation_results/conjunctive/on_full.jsonl",
+          "sha256": "832aeacef504ebe09809ef76818fe501f0cd3aa64b0195fe8819d0d31d05f242",
+          "n_files": 1
+        }
       ],
       "scorer": "fit_graded_floors_heldout.py",
       "status": "PASS"
@@ -634,9 +1470,21 @@
       "tex_snippet": "fires on 6 of them (3.0\\%, [1.4, 6.4])",
       "in_tex": true,
       "inputs": [
-        "grounded_controller_graded.jsonl",
-        "external_eval/graded_heldout_benign.jsonl",
-        "row4_mitigation_results/conjunctive/on_full.jsonl"
+        {
+          "path": "grounded_controller_graded.jsonl",
+          "sha256": "05a53b7a0ff47081780106138abe5b715ade506173a7a480984c19fabd48f2d6",
+          "n_files": 1
+        },
+        {
+          "path": "external_eval/graded_heldout_benign.jsonl",
+          "sha256": "1b11b8274ec899463e360833a6311edfea1c707bb21f168fe076cb8cf74aad74",
+          "n_files": 1
+        },
+        {
+          "path": "row4_mitigation_results/conjunctive/on_full.jsonl",
+          "sha256": "832aeacef504ebe09809ef76818fe501f0cd3aa64b0195fe8819d0d31d05f242",
+          "n_files": 1
+        }
       ],
       "scorer": "fit_graded_floors_heldout.py",
       "status": "PASS"
@@ -650,9 +1498,21 @@
       "tex_snippet": "fires on 8/30 attacks and on 4/30 benign",
       "in_tex": true,
       "inputs": [
-        "grounded_controller_graded.jsonl",
-        "external_eval/graded_heldout_benign.jsonl",
-        "row4_mitigation_results/conjunctive/on_full.jsonl"
+        {
+          "path": "grounded_controller_graded.jsonl",
+          "sha256": "05a53b7a0ff47081780106138abe5b715ade506173a7a480984c19fabd48f2d6",
+          "n_files": 1
+        },
+        {
+          "path": "external_eval/graded_heldout_benign.jsonl",
+          "sha256": "1b11b8274ec899463e360833a6311edfea1c707bb21f168fe076cb8cf74aad74",
+          "n_files": 1
+        },
+        {
+          "path": "row4_mitigation_results/conjunctive/on_full.jsonl",
+          "sha256": "832aeacef504ebe09809ef76818fe501f0cd3aa64b0195fe8819d0d31d05f242",
+          "n_files": 1
+        }
       ],
       "scorer": "fit_graded_floors_heldout.py",
       "status": "PASS"
@@ -666,9 +1526,21 @@
       "tex_snippet": "(0.637) cuts held-out false fires to 1/200 but also cuts valid fires to 0/30",
       "in_tex": true,
       "inputs": [
-        "grounded_controller_graded.jsonl",
-        "external_eval/graded_heldout_benign.jsonl",
-        "row4_mitigation_results/conjunctive/on_full.jsonl"
+        {
+          "path": "grounded_controller_graded.jsonl",
+          "sha256": "05a53b7a0ff47081780106138abe5b715ade506173a7a480984c19fabd48f2d6",
+          "n_files": 1
+        },
+        {
+          "path": "external_eval/graded_heldout_benign.jsonl",
+          "sha256": "1b11b8274ec899463e360833a6311edfea1c707bb21f168fe076cb8cf74aad74",
+          "n_files": 1
+        },
+        {
+          "path": "row4_mitigation_results/conjunctive/on_full.jsonl",
+          "sha256": "832aeacef504ebe09809ef76818fe501f0cd3aa64b0195fe8819d0d31d05f242",
+          "n_files": 1
+        }
       ],
       "scorer": "fit_graded_floors_heldout.py",
       "status": "PASS"
@@ -682,9 +1554,21 @@
       "tex_snippet": "keeps 11/30 valid fires and still fires on 5/200",
       "in_tex": true,
       "inputs": [
-        "grounded_controller_graded.jsonl",
-        "external_eval/graded_heldout_benign.jsonl",
-        "row4_mitigation_results/conjunctive/on_full.jsonl"
+        {
+          "path": "grounded_controller_graded.jsonl",
+          "sha256": "05a53b7a0ff47081780106138abe5b715ade506173a7a480984c19fabd48f2d6",
+          "n_files": 1
+        },
+        {
+          "path": "external_eval/graded_heldout_benign.jsonl",
+          "sha256": "1b11b8274ec899463e360833a6311edfea1c707bb21f168fe076cb8cf74aad74",
+          "n_files": 1
+        },
+        {
+          "path": "row4_mitigation_results/conjunctive/on_full.jsonl",
+          "sha256": "832aeacef504ebe09809ef76818fe501f0cd3aa64b0195fe8819d0d31d05f242",
+          "n_files": 1
+        }
       ],
       "scorer": "fit_graded_floors_heldout.py",
       "status": "PASS"
@@ -698,7 +1582,11 @@
       "tex_snippet": "blocks 14 of 30 real injection prompts",
       "in_tex": true,
       "inputs": [
-        "external_eval/deepset_gate_rows.jsonl"
+        {
+          "path": "external_eval/deepset_gate_rows.jsonl",
+          "sha256": "b409278d3563874bcd3c681806db4120cd163c53898335af59d951cea3d79769",
+          "n_files": 1
+        }
       ],
       "scorer": "run_deepset_gate_eval.py",
       "status": "PASS"
@@ -712,7 +1600,11 @@
       "tex_snippet": "blocks 23 of 60 injections (38.3\\%) and flags 28, at 1/56",
       "in_tex": true,
       "inputs": [
-        "external_eval/deepset_gate_rows.jsonl"
+        {
+          "path": "external_eval/deepset_gate_rows.jsonl",
+          "sha256": "b409278d3563874bcd3c681806db4120cd163c53898335af59d951cea3d79769",
+          "n_files": 1
+        }
       ],
       "scorer": "run_deepset_gate_eval.py",
       "status": "PASS"
@@ -726,8 +1618,16 @@
       "tex_snippet": "raises flagged injections from 28/60 to 38/60",
       "in_tex": true,
       "inputs": [
-        "external_eval/deepset_graded_scores.jsonl",
-        "external_eval/gate_graded_report.json"
+        {
+          "path": "external_eval/deepset_graded_scores.jsonl",
+          "sha256": "87002a7b0aa379654faaf8065fa02edfc803abe348cc7f5a49ef95edc0cac1d6",
+          "n_files": 1
+        },
+        {
+          "path": "external_eval/gate_graded_report.json",
+          "sha256": "ac8e956c1dad731e2e343e2b322238a6fb7f5784a3af5b60432dd8eb5314209c",
+          "n_files": 1
+        }
       ],
       "scorer": "fit_gate_graded.py",
       "status": "PASS"
@@ -741,7 +1641,11 @@
       "tex_snippet": "fires on 7 of 200 held-out benign questions",
       "in_tex": true,
       "inputs": [
-        "external_eval/graded_heldout_benign.jsonl"
+        {
+          "path": "external_eval/graded_heldout_benign.jsonl",
+          "sha256": "1b11b8274ec899463e360833a6311edfea1c707bb21f168fe076cb8cf74aad74",
+          "n_files": 1
+        }
       ],
       "scorer": "fit_gate_graded.py",
       "status": "PASS"
@@ -755,7 +1659,11 @@
       "tex_snippet": "refuses all 30 sampled injections",
       "in_tex": true,
       "inputs": [
-        "external_eval/deepset_e2e.jsonl"
+        {
+          "path": "external_eval/deepset_e2e.jsonl",
+          "sha256": "b3116c4197ff5ddf65a5dc425d07318aeda0c685a43060e062ec8e2fec97562e",
+          "n_files": 1
+        }
       ],
       "scorer": "score_improvements.py",
       "status": "PASS"
@@ -769,8 +1677,16 @@
       "tex_snippet": "7 rows fixed, 6 broken",
       "in_tex": true,
       "inputs": [
-        "mitigation_results/external200/",
-        "ext_n200_results.jsonl"
+        {
+          "path": "mitigation_results/external200/",
+          "sha256": "6f324a805c36dd584adc2026c8e70a6d05161e965f7cb3fe7dcb67515dd1ae89",
+          "n_files": 6
+        },
+        {
+          "path": "ext_n200_results.jsonl",
+          "sha256": "14387ab2becad862c02881981e88f1a954043a8cbfb72fcc54a0e7da30fd01ab",
+          "n_files": 1
+        }
       ],
       "scorer": "score_external_paired.py",
       "status": "PASS"
@@ -784,8 +1700,16 @@
       "tex_snippet": "85.3\\% ASR (128/150)",
       "in_tex": true,
       "inputs": [
-        "mitigation_results/external200/",
-        "ext_n200_results.jsonl"
+        {
+          "path": "mitigation_results/external200/",
+          "sha256": "6f324a805c36dd584adc2026c8e70a6d05161e965f7cb3fe7dcb67515dd1ae89",
+          "n_files": 6
+        },
+        {
+          "path": "ext_n200_results.jsonl",
+          "sha256": "14387ab2becad862c02881981e88f1a954043a8cbfb72fcc54a0e7da30fd01ab",
+          "n_files": 1
+        }
       ],
       "scorer": "score_external_paired.py",
       "status": "PASS"
@@ -799,8 +1723,16 @@
       "tex_snippet": "45/50 BIPIA attacks are blocked",
       "in_tex": true,
       "inputs": [
-        "mitigation_results/external200/",
-        "ext_n200_results.jsonl"
+        {
+          "path": "mitigation_results/external200/",
+          "sha256": "6f324a805c36dd584adc2026c8e70a6d05161e965f7cb3fe7dcb67515dd1ae89",
+          "n_files": 6
+        },
+        {
+          "path": "ext_n200_results.jsonl",
+          "sha256": "14387ab2becad862c02881981e88f1a954043a8cbfb72fcc54a0e7da30fd01ab",
+          "n_files": 1
+        }
       ],
       "scorer": "score_external_paired.py",
       "status": "PASS"
@@ -814,7 +1746,11 @@
       "tex_snippet": "Full stack, 7 layers (Protocol B) & 15.4 / 24.7 & 15.3 / 21.3",
       "in_tex": true,
       "inputs": [
-        "resource_profile/overhead_summary.json"
+        {
+          "path": "resource_profile/overhead_summary.json",
+          "sha256": "9b6dce63f0e038d0bcc919d7f2d97802a84db9bfac8ee0278047f3d74bdbc213",
+          "n_files": 1
+        }
       ],
       "scorer": "summarize_overhead.py",
       "status": "PASS"
@@ -828,7 +1764,11 @@
       "tex_snippet": "encoders on GPU, fp16 ($n=50$) & -- & 8.6 / 10.1",
       "in_tex": true,
       "inputs": [
-        "mitigation_results/gpu_encoders/"
+        {
+          "path": "mitigation_results/gpu_encoders/",
+          "sha256": "471f0c448ee07e8973b74bc0cb6aec72fd503c65dcb318ab04a17544c62dd4b1",
+          "n_files": 7
+        }
       ],
       "scorer": "run_gpu_latency.sh",
       "status": "PASS"

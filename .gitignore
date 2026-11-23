@@ -65,3 +65,4 @@ paper_revision/main.html
 # local LaTeX compiler (Tectonic)
 /tools/
 /paper_revision/build_tex/
+/step4 dataset/mitigation_results/rerun200/*_log.txt
