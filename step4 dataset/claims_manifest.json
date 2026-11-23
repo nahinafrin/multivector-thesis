@@ -1,5 +1,5 @@
 {
-  "git_revision_at_check": "1c7b9eb",
+  "git_revision_at_check": "93a6ad4",
   "n_claims": 79,
   "n_fail": 0,
   "claims": [
@@ -1248,15 +1248,15 @@
       "id": "X.asr",
       "section": "V-E",
       "statement": "ASR: LLM-Guard / Spotlighting / ControlNET / full stack",
-      "expected": "21.0/23.0/5.0/3.5",
-      "computed": "21.0/23.0/5.0/3.5",
+      "expected": "21.0/23.0/4.5/3.5",
+      "computed": "21.0/23.0/4.5/3.5",
       "tex_snippet": "3.5\\% vs.\\ 21.0\\% and 23.0\\% ASR",
       "in_tex": true,
       "inputs": [
         {
           "path": "mitigation_results/baselines_protocolB/",
-          "sha256": "4ca9e07a8b5bd58b34b970c346c7b4974ea03c16dce0b83336068598f68ba52b",
-          "n_files": 16
+          "sha256": "fde8cfcd7c637a622eab2b8ef25c48dada3ca08e34c9704fc09ac9ff54dcca6a",
+          "n_files": 19
         },
         {
           "path": "mitigation_results/followup200/",
@@ -1288,8 +1288,8 @@
       "inputs": [
         {
           "path": "mitigation_results/baselines_protocolB/",
-          "sha256": "4ca9e07a8b5bd58b34b970c346c7b4974ea03c16dce0b83336068598f68ba52b",
-          "n_files": 16
+          "sha256": "fde8cfcd7c637a622eab2b8ef25c48dada3ca08e34c9704fc09ac9ff54dcca6a",
+          "n_files": 19
         },
         {
           "path": "mitigation_results/followup200/",
@@ -1314,15 +1314,15 @@
       "id": "X.controlnet",
       "section": "V-E",
       "statement": "full stack vs ControlNET: ASR p, benign-correct p",
-      "expected": "0.63, 0.058",
-      "computed": "0.63, 0.058",
+      "expected": "0.77, 0.058",
+      "computed": "0.77, 0.058",
       "tex_snippet": "$p=0.058$ against the full stack",
       "in_tex": true,
       "inputs": [
         {
           "path": "mitigation_results/baselines_protocolB/",
-          "sha256": "4ca9e07a8b5bd58b34b970c346c7b4974ea03c16dce0b83336068598f68ba52b",
-          "n_files": 16
+          "sha256": "fde8cfcd7c637a622eab2b8ef25c48dada3ca08e34c9704fc09ac9ff54dcca6a",
+          "n_files": 19
         },
         {
           "path": "mitigation_results/followup200/",
@@ -1354,8 +1354,8 @@
       "inputs": [
         {
           "path": "mitigation_results/baselines_protocolB/",
-          "sha256": "4ca9e07a8b5bd58b34b970c346c7b4974ea03c16dce0b83336068598f68ba52b",
-          "n_files": 16
+          "sha256": "fde8cfcd7c637a622eab2b8ef25c48dada3ca08e34c9704fc09ac9ff54dcca6a",
+          "n_files": 19
         },
         {
           "path": "mitigation_results/followup200/",

@@ -205,7 +205,7 @@ def main() -> None:
     sxb = ["mitigation_results/baselines_protocolB/", "mitigation_results/followup200/",
            "mitigation_results/ablation200/on_full.jsonl", "mitigation_results/ablation200/benign_on.jsonl"]
     asr = lambda a: f"{100 * arm[a]['asr']['k'] / arm[a]['asr']['n']:.1f}"  # noqa: E731
-    claim("X.asr", "V-E", "ASR: LLM-Guard / Spotlighting / ControlNET / full stack", "21.0/23.0/5.0/3.5",
+    claim("X.asr", "V-E", "ASR: LLM-Guard / Spotlighting / ControlNET / full stack", "21.0/23.0/4.5/3.5",
           "/".join(asr(a) for a in ("LLM-Guard firewall", "Spotlighting", "ControlNET", "This work, full stack")),
           "3.5" + B + "% vs." + B + " 21.0" + B + "% and 23.0" + B + "% ASR", sxb, "score_baselines_protocolB.py")
     lg = vs["This work, full stack vs LLM-Guard firewall"]["attack_success (ours-only / theirs-only)"]
@@ -213,7 +213,7 @@ def main() -> None:
           f"{lg['only_first']}/{lg['only_second']}", "3 rows succeed only under the full stack, 38 only under LLM-Guard",
           sxb, "score_baselines_protocolB.py")
     cn = vs["This work, full stack vs ControlNET"]
-    claim("X.controlnet", "V-E", "full stack vs ControlNET: ASR p, benign-correct p", "0.63, 0.058",
+    claim("X.controlnet", "V-E", "full stack vs ControlNET: ASR p, benign-correct p", "0.77, 0.058",
           f"{cn['attack_success (ours-only / theirs-only)']['p']:.2f}, {cn['benign_correct (ours-only / theirs-only)']['p']:.3f}",
           "$p=0.058$ against the full stack", sxb, "score_baselines_protocolB.py")
     claim("X.cn_correct", "V-E", "benign correct: ControlNET vs full stack", "46.0/52.0",

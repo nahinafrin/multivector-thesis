@@ -7,13 +7,14 @@
   "last": {
     "val_f1": 0.8822571893651655,
     "tree_depth": 1,
-    "protocolB_auroc_asi_attack_vs_benign": 0.8662
+    "protocolB_auroc_asi_attack_vs_benign": 0.867825
   },
   "mean": {
     "val_f1": 0.6366644606221046,
     "tree_depth": 2,
-    "protocolB_auroc_asi_attack_vs_benign": 0.37045000000000006
+    "protocolB_auroc_asi_attack_vs_benign": 0.365475
   },
-  "blocked_attack": 162,
-  "blocked_benign": 27
+  "blocked_attack": 168,
+  "blocked_benign": 27,
+  "context": "generator"
 }

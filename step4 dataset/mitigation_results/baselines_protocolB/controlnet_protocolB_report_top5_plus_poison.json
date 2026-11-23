@@ -1,0 +1,19 @@
+{
+  "model": "llama3.1-8b",
+  "layer": 1,
+  "n_anchor": 200,
+  "n_train": 1500,
+  "n_val": 1190,
+  "last": {
+    "val_f1": 0.8822571893651655,
+    "tree_depth": 1,
+    "protocolB_auroc_asi_attack_vs_benign": 0.8662
+  },
+  "mean": {
+    "val_f1": 0.6366644606221046,
+    "tree_depth": 2,
+    "protocolB_auroc_asi_attack_vs_benign": 0.37045000000000006
+  },
+  "blocked_attack": 162,
+  "blocked_benign": 27
+}

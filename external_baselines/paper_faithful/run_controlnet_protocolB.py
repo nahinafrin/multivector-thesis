@@ -6,9 +6,9 @@ applied to Protocol B: the 200 planted attacks and the 200 benign questions.
 Training is identical to controlnet_faithful.py: layer-1 last-token activations of the
 reduced Llama-3.1-8B GGUF, Activation Shift Index against the 200 benign anchors, decision tree
 on ASI with depth chosen by validation F1 (train/val/anchor rows from contexts_bge.jsonl).
-The trained tree then scores each Protocol B row. Input layout follows controlnet_faithful.py:
-the top-5 retrieved passages (minus the planted chunk) plus the planted chunk, in the paper's
-"Knowledge / System Prompt / Query" format. Passages come from
+The trained tree then scores each Protocol B row, in the paper's "Knowledge / System Prompt /
+Query" format. By default (--context generator) the knowledge is exactly the 8 reranked passages
+the undefended generator received; --context top5_plus_poison reproduces the earlier variant. Passages come from
 step4 dataset/mitigation_results/baselines_protocolB/contexts_{attack,benign}.jsonl
 (dump_undefended_contexts.py).
 
@@ -59,7 +59,13 @@ def main():
     ap.add_argument("--gguf-file", default="llama3.1-8b_blk0.gguf")
     ap.add_argument("--tag", default="llama3.1-8b")
     ap.add_argument("--max-len", type=int, default=2048)
+    ap.add_argument("--context", choices=["generator", "top5_plus_poison"], default="generator",
+                    help="generator: exactly the 8 reranked passages the undefended generator received "
+                         "(the planted chunk only where it survived reranking; 184/200 rows). "
+                         "top5_plus_poison: controlnet_faithful.py's Protocol A convention, top-5 "
+                         "retrieved plus the planted chunk on every attack row (earlier variant).")
     args = ap.parse_args()
+    sfx = "" if args.context == "generator" else "_top5_plus_poison"
     cdir = HERE / "results" / "cache"
     cdir.mkdir(parents=True, exist_ok=True)
 
@@ -70,6 +76,8 @@ def main():
     rows = {s: [json.loads(l) for l in open(D / f"contexts_{s}.jsonl", encoding="utf-8")] for s in ("attack", "benign")}
 
     def docs(r):
+        if args.context == "generator":
+            return r["ranked_context"]
         poison = r.get("poison_chunk")
         d = [c for c in r["retrieved_top8"] if c != poison][:5]
         return d + [poison] if poison else d
@@ -78,7 +86,7 @@ def main():
     A = acts(model, [fmt(r["question"], r["chunks_fresh"]) for r in anchors], f"{cdir}/{args.tag}_anchor.npz")
     T = acts(model, [fmt(r["question"], r["chunks_fresh"]) for r in train], f"{cdir}/{args.tag}_train.npz")
     V = acts(model, [fmt(r["question"], r["chunks_fresh"]) for r in val], f"{cdir}/{args.tag}_val_{len(val)}.npz")
-    P = {s: acts(model, [fmt(r["question"], docs(r)) for r in rs], f"{cdir}/{args.tag}_protocolB_{s}.npz")
+    P = {s: acts(model, [fmt(r["question"], docs(r)) for r in rs], f"{cdir}/{args.tag}_protocolB_{s}{sfx}.npz")
          for s, rs in rows.items()}
     ytr = np.array([r["label"] for r in train]); yva = np.array([r["label"] for r in val])
 
@@ -102,13 +110,14 @@ def main():
             for o, x, p in zip(out[s], sc[s], pred):
                 o[f"asi_{pool}"] = float(x); o[f"blocked_{pool}"] = bool(p)
     for s in rows:
-        with open(D / f"controlnet_{s}.jsonl", "w", encoding="utf-8") as fh:
+        with open(D / f"controlnet_{s}{sfx}.jsonl", "w", encoding="utf-8") as fh:
             for o in out[s]:
                 o["blocked"] = o["blocked_last"]          # headline read-out, as in controlnet_faithful.py
                 fh.write(json.dumps(o) + "\n")
     report["blocked_attack"] = sum(o["blocked"] for o in out["attack"])
     report["blocked_benign"] = sum(o["blocked"] for o in out["benign"])
-    json.dump(report, open(D / "controlnet_protocolB_report.json", "w"), indent=2)
+    report["context"] = args.context
+    json.dump(report, open(D / f"controlnet_protocolB_report{sfx}.json", "w"), indent=2)
     print(json.dumps(report, indent=2))
 
 
