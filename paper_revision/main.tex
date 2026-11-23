@@ -63,7 +63,7 @@ The study pursues four objectives.
 \centering
 \caption{Positioning against related RAG and prompt-injection defenses. \checkmark{} = provided; -- = not reported.}
 \label{tab:positioning}
-\setlength{\tabcolsep}{3pt}
+\setlength{\tabcolsep}{2.6pt}
 \begin{tabular}{lccccc}
 \toprule
 Work & \makecell{Fully\\local} & \makecell{Context\\defense} & \makecell{Stage-level\\attribution} & \makecell{Paired\\tests} & \makecell{Negative\\results} \\
@@ -75,7 +75,7 @@ ADO~\cite{palleria2026ado} & \checkmark & \checkmark & -- & -- & -- \\
 Layered~\cite{saleem2026layered} & partial$^a$ & \checkmark & subsets$^b$ & -- & -- \\
 \textbf{This work} & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
 \bottomrule
-\multicolumn{6}{l}{\footnotesize $^a$GPT-4o target and judge via API; Llama~3 and Mistral local.} \\
+\multicolumn{6}{l}{\footnotesize $^a$GPT-4o target and judge via API; others local.} \\
 \multicolumn{6}{l}{\footnotesize $^b$All seven layer subsets; point estimates, no tests or CIs.} \\
 \end{tabular}
 \end{table}
@@ -152,7 +152,7 @@ The calibration finds the injection scanner to be nearly binary, scoring benign 
 \label{tab:evalsets}
 \setlength{\tabcolsep}{3pt}
 \small
-\begin{tabular}{p{2.6cm}rp{1.4cm}p{2.5cm}}
+\footnotesize\begin{tabular}{>{\raggedright\arraybackslash}p{2.3cm}r>{\raggedright\arraybackslash}p{1.75cm}>{\raggedright\arraybackslash}p{2.2cm}}
 \toprule
 Set & $n$ & Source & Outcome scored \\
 \midrule
@@ -160,7 +160,7 @@ Adversarial slice (A) & 220 & Constructed & Gate decision, redaction, canary \\
 Planted attacks (B) & 200 & Constructed & Target string in response \\
 Benign controls (B) & 200 & rag-mini-wiki & Refusal, correctness \\
 Semantic free-text (B) & 40 & Constructed & Target string in response \\
-PoisonedRAG NQ/HotpotQA/MS MARCO & 150 & External~\cite{zou2025poisonedrag} & Target string in response \\
+PoisonedRAG (NQ, HotpotQA, MS MARCO) & 150 & External~\cite{zou2025poisonedrag} & Target string in response \\
 BIPIA text attacks & 50 & External~\cite{yi2023bipia} & Block / redaction \\
 deepset prompt-injections & 60 & External~\cite{deepset2023pi} & Gate decision \\
 \midrule
@@ -219,15 +219,15 @@ Generators & \texttt{llama3.2:3b}, \texttt{mistral:7b}, \texttt{qwen2.5:3b} (Q4\
 \centering
 \begin{tikzpicture}[
   node distance=4mm,
-  step/.style={draw, rounded corners=2pt, line width=0.7pt, align=center,
-               text width=2.55cm, minimum height=2.3cm, font=\small, inner sep=3pt},
+  wfstep/.style={draw, rounded corners=2pt, line width=0.7pt, align=center,
+               text width=2.45cm, minimum height=2.3cm, font=\small, inner sep=3pt},
   arr/.style={-{Stealth[length=2.5mm]}, line width=0.9pt}]
-\node[step, fill=blue!8]   (s1) {\textbf{1. Threat model}\\[2pt] Every chunk is untrusted; local, open-weight, zero-cost tools only};
-\node[step, fill=blue!8,   right=of s1] (s2) {\textbf{2. Pipeline}\\[2pt] 13-stage cascade with forward-propagated risk score};
-\node[step, fill=green!10, right=of s2] (s3) {\textbf{3. Eval sets}\\[2pt] Protocol A (220), Protocol B (440), PoisonedRAG, BIPIA, deepset};
-\node[step, fill=green!10, right=of s3] (s4) {\textbf{4. Paired runs}\\[2pt] Same rows under every configuration; per-row scoring};
-\node[step, fill=orange!12,right=of s4] (s5) {\textbf{5. Attribution}\\[2pt] McNemar + Wilson; leave-one-out, single-layer, subsets};
-\node[step, fill=orange!12,right=of s5] (s6) {\textbf{6. Stress tests}\\[2pt] Negative-result proof, semantic gap, latency/memory};
+\node[wfstep, fill=blue!8]   (s1) {\textbf{1. Threat model}\\[2pt] Every chunk is untrusted; local, open-weight, zero-cost tools only};
+\node[wfstep, fill=blue!8,   right=of s1] (s2) {\textbf{2. Pipeline}\\[2pt] 13-stage cascade with forward-propagated risk score};
+\node[wfstep, fill=green!10, right=of s2] (s3) {\textbf{3. Eval sets}\\[2pt] Protocol A (220), Protocol B (440), PoisonedRAG, BIPIA, deepset};
+\node[wfstep, fill=green!10, right=of s3] (s4) {\textbf{4. Paired runs}\\[2pt] Same rows under every configuration; per-row scoring};
+\node[wfstep, fill=orange!12,right=of s4] (s5) {\textbf{5. Attribution}\\[2pt] McNemar + Wilson; leave-one-out, single-layer, subsets};
+\node[wfstep, fill=orange!12,right=of s5] (s6) {\textbf{6. Stress tests}\\[2pt] Negative-result proof, semantic gap, latency/memory};
 \foreach \a/\b in {s1/s2,s2/s3,s3/s4,s4/s5,s5/s6} \draw[arr] (\a) -- (\b);
 \end{tikzpicture}
 \caption{Evaluation workflow. Blue: design; green: data and execution; orange: analysis.}
@@ -251,7 +251,7 @@ The multi-vector detector was built for the conjunctive class. With the scanner'
 
 \textbf{Closed-form argument.} A valid conjunctive fire requires the query to pass Stage~3 (low injection score on $x_q$) and the chunk to survive Stage~6 (low injection score on $x_c$). Any co-activation signal derived from injection-signature strength is therefore low on exactly the rows that pass both stages, so it cannot fire on the band a genuine sub-threshold attack must occupy. A high joint signal with both individual signals below threshold would require measuring something other than signature strength, such as semantic intent, which this detector does not. Conversely, any directive payload strong enough to raise the joint signal saturates the near-binary classifier in at least one channel, and is then blocked at Stage~3 or dropped at Stage~6 as a single-channel detection. No surviving-and-dangerous middle band exists. This is not a tuning failure but a structural property of a detector whose channels are \emph{saturated} probabilities. The argument rests on one premise: the scanner output is near-binary, so ``passes the gate'' and ``carries a weak signature'' coincide.
 
-\textbf{Repair: graded logit margins.} The premise suggests a fix. Instead of the saturated probability, we read the DeBERTa logit margin as a graded channel, with the floors and joint minimum of Eq.~(\ref{eq:fire}) fixed from benign rows of a baseline run. Re-running the same 30 post-gate multivector rows of the current slice, the detector fires on 0/30 with saturated channels and on 24/30 with graded channels. All 24 fires are genuinely sub-threshold (both channels below 0.9). False fires are 1/80 benign, 0/40 poisoned-context, and 3/20 gate-slip rows. So the closed-form impossibility applies to saturated channels, not to injection signatures as such. Two caveats limit this positive result. First, the floors were derived from benign rows of a baseline run of the same slice, so the 1/80 false-fire rate is in-sample. Second, on the external BIPIA conjunctive construction ($n=30$), the graded detector fires on 8/30 attacks and on 4/30 benign BIPIA controls (the mitigation harness's looser rule, with query floor 0.20 and no joint minimum, gives 10/30 and 4/30), so it generalizes only modestly. To test the first caveat, we scored 200 benign rag-mini-wikipedia questions that appear in no evaluation slice through Stages~1--6. With the paper's floors the detector fires on 6 of them (3.0\%, [1.4, 6.4]), against 1/80 in-sample. The benign query channel is low (95th percentile 0.18, so the 0.228 query floor transfers), but the benign context channel is not: its 95th percentile is 0.59 on the held-out questions and 0.54 on the Protocol~A benign rows themselves. The 0.30 context floor therefore sits well inside the benign range, and benign false fires are held down by the query floor and the joint minimum, not by the context floor. Raising the context floor to the held-out 95th percentile plus 0.05 (0.637) cuts held-out false fires to 1/200 but also cuts valid fires to 0/30. The graded repair therefore shows that the impossibility is specific to saturated channels; it is not yet a detector whose context channel separates attacks from ordinary retrieved text.
+\textbf{Repair: graded logit margins.} The premise suggests a fix. Instead of the saturated probability, we read the DeBERTa logit margin as a graded channel, with the floors and joint minimum of Eq.~(\ref{eq:fire}) fixed from benign rows of a baseline run. Re-running the same 30 post-gate multivector rows of the current slice, the detector fires on 0/30 with saturated channels and on 24/30 with graded channels. All 24 fires are genuinely sub-threshold (both channels below 0.9). False fires are 1/80 benign, 0/40 poisoned-context, and 3/20 gate-slip rows. So the closed-form impossibility applies to saturated channels, not to injection signatures as such. Two caveats limit this positive result. First, the floors were derived from benign rows of a baseline run of the same slice, so the 1/80 false-fire rate is in-sample. Second, on the external BIPIA conjunctive construction ($n=30$), the graded detector fires on 8/30 attacks and on 4/30 benign BIPIA controls (the mitigation harness's looser rule, with query floor 0.20 and no joint minimum, gives 10/30 and 4/30), so it generalizes only modestly. To test the first caveat, we scored 200 benign rag-mini-wikipedia questions that appear in no evaluation slice through Stages~1--6. With the paper's floors the detector fires on 6 of them (3.0\%, [1.4, 6.4]), against 1/80 in-sample. The benign query channel is low (95th percentile 0.18, so the 0.228 query floor transfers), but the benign context channel is not: its 95th percentile is 0.59 on the held-out questions and 0.54 on the Protocol~A benign rows themselves. The 0.30 context floor therefore sits well inside the benign range, and benign false fires are held down by the query floor and the joint minimum, not by the context floor. Raising the context floor to the held-out 95th percentile plus 0.05 (0.637) cuts held-out false fires to 1/200 but also cuts valid fires to 0/30. No intermediate setting does better. Sweeping the context floor from 0.30 to 0.60 (query floor 0.20--0.25) only trades valid fires against false fires: at 0.40 the detector keeps 11/30 valid fires and still fires on 5/200 held-out benign questions. The reason is that the post-gate attack contexts score 0.33--0.39 (5th--50th percentile), inside the benign range, so no floor on this channel separates them. The graded repair therefore shows that the impossibility is specific to saturated channels; it is not yet a detector whose context channel separates attacks from ordinary retrieved text.
 
 \textbf{Security implication.} The detector's failure on saturated scores did not translate into a security failure. Every multivector row in Protocol~A was neutralized anyway, because Stage~6 redacted the poisoned chunk before generation (Section~\ref{sec:e2e}). The practical lesson is that a co-activation detector is only as good as the resolution of its channels. With saturated classifier outputs it is dead weight; with graded margins it becomes a useful, but not yet externally validated, signal.
 
@@ -259,7 +259,8 @@ The multi-vector detector was built for the conjunctive class. With the scanner'
 \centering
 \caption{Evidence chain for the negative result.}
 \label{tab:negative}
-\begin{tabular}{ll}
+\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{2.9cm}>{\raggedright\arraybackslash}p{4.95cm}}
 \toprule
 Evidence source & Finding \\
 \midrule
@@ -297,6 +298,7 @@ Does a thirteen-stage cascade outperform a simpler defense? We answer this with 
 \label{tab:ablation}
 \setlength{\tabcolsep}{2.5pt}
 \small
+\resizebox{\columnwidth}{!}{%
 \begin{tabular}{lcccc}
 \toprule
 Configuration & ASR \% [95\% CI] & fix/brk & $p$ & \makecell{Benign\\blk \%} \\
@@ -327,20 +329,20 @@ Undefended & 29.5 [23.6, 36.2] & -- & -- & 0.0 \\
 \quad Sanitize+refuse & 9.5 [6.2, 14.4] & 42/2 & $10^{-10}$ & 2.5 \\
 \quad Ground+refuse & 10.5 [7.0, 15.5] & 40/2 & $4\!\times\!10^{-10}$ & 7.5 \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \end{table}
 
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}
 \begin{axis}[
-  xbar, width=0.97\columnwidth, height=10.5cm,
+  xbar, scale only axis, width=0.56\columnwidth, height=8.2cm,
   bar width=5pt, xmin=0, xmax=62,
   xlabel={Rate (\%) with 95\% Wilson CI}, xlabel style={font=\small},
   symbolic y coords={a0,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11},
   ytick=data, yticklabels={{Full stack},{San+Gnd+Ref},{San+Gnd},{San+Ref},{Gnd+Ref},{Grounding only},{Sanitize only},{Refuse only},{Rerank only},{Presidio/DLP only},{Prompt only},{Undefended}}, y dir=reverse, yticklabel style={font=\small},
   xticklabel style={font=\small}, enlarge y limits=0.05,
-  legend style={font=\small, at={(0.98,0.02)}, anchor=south east, draw=none, fill=white, fill opacity=0.85},
+  legend style={font=\small, at={(0.5,1.02)}, anchor=south, legend columns=2, draw=none, /tikz/every even column/.append style={column sep=6pt}},
   xmajorgrids, grid style={gray!25},
   error bars/x dir=both, error bars/x explicit,
   error bars/error bar style={line width=0.6pt}]
@@ -381,10 +383,10 @@ Undefended & 29.5 [23.6, 36.2] & -- & -- & 0.0 \\
 \centering
 \begin{tikzpicture}
 \begin{axis}[
-  width=0.97\columnwidth, height=6.2cm,
+  scale only axis, width=0.74\columnwidth, height=4.8cm,
   xlabel={Median latency per benign query (s)}, ylabel={Attack success (\%)},
   xlabel style={font=\small}, ylabel style={font=\small},
-  ticklabel style={font=\small}, xmin=7, xmax=21, ymin=0, ymax=33,
+  ticklabel style={font=\small}, xmin=7, xmax=24, ymin=0, ymax=33,
   grid=major, grid style={gray!25},
   nodes near coords, point meta=explicit symbolic,
   every node near coord/.append style={font=\footnotesize, anchor=west, xshift=1pt}]
@@ -416,7 +418,7 @@ The submitted version reported mitigation arms from an earlier code version (Fig
 \subsection{Independent External Benchmarks}\label{sec:external}
 Table~\ref{tab:external} reports the complete thirteen-stage pipeline on data we did not construct. The outcome depends sharply on the threat model.
 
-\begin{table}[t]
+\begin{table*}[t]
 \centering
 \caption{Complete pipeline on independent external sets, paired row by row with an undefended RAG arm on the same rows and poison. ASR = attack's target string in the delivered answer and true answer absent; $p$ = exact McNemar (fixed/broke).}
 \label{tab:external}
@@ -435,13 +437,12 @@ PoisonedRAG-MS MARCO & 50 & 0/49 & 45 & 45 & 2/2 (1.0) \\
  & & & \multicolumn{2}{c}{Blocked: undef.\ / def.} & \\
 BIPIA text attack & 50 & 33/49 & \multicolumn{2}{c}{0/50 / 45/50} & $^\dagger$ \\
 \midrule
-deepset (gate only) & 30+30 & \multicolumn{4}{l}{Blocked 14/30 (46.7\%), flagged 17/30 (20/30 graded); benign 0/30} \\
+deepset (gate only) & 30+30 & \multicolumn{4}{l}{Blocked 14/30 (46.7\%), flagged 17/30 (20/30 with graded flag); benign 0/30} \\
 \bottomrule
-\multicolumn{6}{l}{\footnotesize $^\dagger$BIPIA goals are not string-scorable; the 5 unblocked defended rows were} \\
-\multicolumn{6}{l}{\footnotesize read manually: 2 followed the injected instruction, 2 did not, 1 indeterminable.} \\
-\multicolumn{6}{l}{\footnotesize $^\ddagger$Seven-layer harness, \texttt{llama3.2:3b} in both arms; BIPIA 44/50 blocked.} \\
 \end{tabular}
-\end{table}
+
+\vspace{2pt}{\footnotesize $^\dagger$BIPIA goals are not string-scorable; the 5 unblocked defended rows were read manually: 2 followed the injected instruction, 2 did not, 1 indeterminable. $^\ddagger$Seven-layer harness, \texttt{llama3.2:3b} in both arms; BIPIA 44/50 blocked.\par}
+\end{table*}
 
 \emph{Instruction-style indirect injection (BIPIA).} BIPIA goals are output-format manipulations, such as ``answer with intentional misspellings'', with no target string, so we score them by block and by manual reading. We read the 5 unblocked defended answers: 2 followed the injected instruction (one with deliberate misspellings, one with a symbol-substituted output), 2 did not, and 1 one-word answer cannot show compliance. Defended BIPIA attack success is therefore 2--3 of 50 (4--6\%). We have not annotated the 50 undefended answers, so we report the block comparison rather than a paired ASR. The undefended arm blocks none of the 50 rows; the pipeline blocks 45 of 50: 36 through the risk-adaptive policy, 8 through the grounding judge, and 1 at the gate. Stage~6 redacts 33 of the 49 injected chunks. This is consistent with the Protocol~A result that per-chunk sanitization and downstream refusal carry the indirect-injection defense.
 \emph{Knowledge corruption (PoisonedRAG).} The pipeline offers no measurable protection. Stage~6 redacts none of the 148 injected passages, because PoisonedRAG passages are fluent factual text with no instruction signature. Against a paired undefended arm (same rows, same injected passage, no defense layers, single \texttt{llama3.2:3b} generator), attack success is 91.3\% undefended and 90.7\% defended: 7 rows fixed, 6 broken, exact McNemar $p=1.0$. Four undefended answers contain both the target and the true answer; counting them as failures instead of successes gives 88.7\% undefended (6 fixed, 9 broken, $p=0.61$), with the same conclusion. Because the complete pipeline uses the three-model ensemble, we also ran a same-generator comparison. The seven-layer mitigation harness with \texttt{llama3.2:3b} was run on the same 200 rows. It reaches 85.3\% ASR (128/150) against 91.3\% undefended: 16 rows fixed, 7 broken, exact McNemar $p=0.093$, or $p=0.44$ when ambiguous undefended answers count as failures. Most of this difference comes from 11 blocked rows. The paired difference is $-6.0$ points, with an approximate 95\% interval of $[-12.2, +0.2]$. So we cannot exclude a reduction of up to about 12 points, but no configuration shows a significant one. On BIPIA, the same-generator harness blocks 44/50 against 0/50 undefended, close to the complete pipeline's 45/50. Neither the ensemble's disagreement signal nor the grounding judge helps: a planted fact is consistent across models and is ``grounded'' in the poisoned passage. This external result replicates the semantic gap of Section~\ref{sec:semantic} at a larger scale and on third-party data.
@@ -465,6 +466,7 @@ The gate-slip class (role-play or fictional framing around an unsafe request) ca
 \label{tab:overhead}
 \setlength{\tabcolsep}{3pt}
 \small
+\resizebox{\columnwidth}{!}{%
 \begin{tabular}{lcc}
 \toprule
 Configuration & Attack rows & Benign rows \\
@@ -481,7 +483,7 @@ Full stack, 7 layers (Protocol B) & 15.4 / 24.7 & 15.3 / 21.3 \\
 Full 13 stages, 3-model ensemble & \multicolumn{2}{c}{23.8 (mean, external $n=200$)} \\
 ADO baseline~\cite{palleria2026ado} & \multicolumn{2}{c}{31.5 (median, $n=210$)} \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \end{table}
 
 The defenses roughly double the median latency of the undefended single-generator pipeline (8.6$\rightarrow$15.3\,s on benign queries). The grounding gate is the dominant cost: it adds about 7--8\,s on its own (grounding-only arm, median 16.4\,s), because the cross-encoder judge runs on the CPU. Sanitization adds about 2\,s. Refuse-on-detection is free, and it is faster on attack rows because refused queries skip generation. The complete thirteen-stage pipeline with the three-model ensemble and the controller averages 23.8\,s per query, which is faster than the ADO baseline run in our setup (31.5\,s median, four LLM control calls per query).
@@ -530,11 +532,11 @@ Semantic detection & AUC $\le 0.62$ usable; 0.86 has a negative gap & Fails \\
 \centering
 \begin{tikzpicture}
 \begin{axis}[
-  xbar, width=0.97\columnwidth, height=9.4cm,
+  xbar, scale only axis, width=0.36\columnwidth, height=8.4cm,
   bar width=8pt, xmin=0, xmax=112,
   xlabel={Measured rate (\%) with 95\% Wilson CI}, xlabel style={font=\small},
   symbolic y coords={h0,h1,h2,h3,h4,h5,h6,h7,h9,h8},
-  ytick=data, yticklabels={{Canary leaks (A, 0/220)},{Poison chunks redacted (A, 74/74)},{ASR undefended (B, 59/200)},{ASR full stack (B, 7/200)},{Valid conj.\ fires, saturated (0/34)},{Valid conj.\ fires, graded (24/30)},{BIPIA blocked (45/50)},{Semantic ASR, full stack (14/40)},{PoisonedRAG ASR, undefended (137/150)},{PoisonedRAG ASR, defended (136/150)}}, y dir=reverse, yticklabel style={font=\small, text width=4.2cm, align=right},
+  ytick=data, yticklabels={{Canary leaks (A, 0/220)},{Poison chunks redacted (A, 74/74)},{ASR undefended (B, 59/200)},{ASR full stack (B, 7/200)},{Valid conj.\ fires, saturated (0/34)},{Valid conj.\ fires, graded (24/30)},{BIPIA blocked (45/50)},{Semantic ASR, full stack (14/40)},{PoisonedRAG ASR, undefended (137/150)},{PoisonedRAG ASR, defended (136/150)}}, y dir=reverse, yticklabel style={font=\footnotesize, text width=3.9cm, align=right},
   xticklabel style={font=\small}, enlarge y limits=0.07,
   xmajorgrids, grid style={gray!25},
   nodes near coords, nodes near coords style={font=\small, anchor=west, xshift=3pt},

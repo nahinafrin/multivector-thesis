@@ -33,5 +33,120 @@
     "bipia_attack_ci": "16.7% [7.3, 33.6]",
     "bipia_benign_fires": "3/30",
     "rag_heldout_benign_fires": "1/200"
-  }
+  },
+  "attack_context_percentiles_5_25_50": [
+    0.326,
+    0.374,
+    0.386
+  ],
+  "floor_sweep": [
+    {
+      "query_floor": 0.2,
+      "context_floor": 0.3,
+      "valid_fires": 24,
+      "heldout_benign_fires": 6
+    },
+    {
+      "query_floor": 0.2,
+      "context_floor": 0.4,
+      "valid_fires": 11,
+      "heldout_benign_fires": 5
+    },
+    {
+      "query_floor": 0.2,
+      "context_floor": 0.45,
+      "valid_fires": 4,
+      "heldout_benign_fires": 5
+    },
+    {
+      "query_floor": 0.2,
+      "context_floor": 0.5,
+      "valid_fires": 2,
+      "heldout_benign_fires": 4
+    },
+    {
+      "query_floor": 0.2,
+      "context_floor": 0.55,
+      "valid_fires": 0,
+      "heldout_benign_fires": 3
+    },
+    {
+      "query_floor": 0.2,
+      "context_floor": 0.6,
+      "valid_fires": 0,
+      "heldout_benign_fires": 1
+    },
+    {
+      "query_floor": 0.228,
+      "context_floor": 0.3,
+      "valid_fires": 24,
+      "heldout_benign_fires": 6
+    },
+    {
+      "query_floor": 0.228,
+      "context_floor": 0.4,
+      "valid_fires": 11,
+      "heldout_benign_fires": 5
+    },
+    {
+      "query_floor": 0.228,
+      "context_floor": 0.45,
+      "valid_fires": 4,
+      "heldout_benign_fires": 5
+    },
+    {
+      "query_floor": 0.228,
+      "context_floor": 0.5,
+      "valid_fires": 2,
+      "heldout_benign_fires": 4
+    },
+    {
+      "query_floor": 0.228,
+      "context_floor": 0.55,
+      "valid_fires": 0,
+      "heldout_benign_fires": 3
+    },
+    {
+      "query_floor": 0.228,
+      "context_floor": 0.6,
+      "valid_fires": 0,
+      "heldout_benign_fires": 1
+    },
+    {
+      "query_floor": 0.25,
+      "context_floor": 0.3,
+      "valid_fires": 23,
+      "heldout_benign_fires": 6
+    },
+    {
+      "query_floor": 0.25,
+      "context_floor": 0.4,
+      "valid_fires": 10,
+      "heldout_benign_fires": 5
+    },
+    {
+      "query_floor": 0.25,
+      "context_floor": 0.45,
+      "valid_fires": 4,
+      "heldout_benign_fires": 5
+    },
+    {
+      "query_floor": 0.25,
+      "context_floor": 0.5,
+      "valid_fires": 2,
+      "heldout_benign_fires": 4
+    },
+    {
+      "query_floor": 0.25,
+      "context_floor": 0.55,
+      "valid_fires": 0,
+      "heldout_benign_fires": 3
+    },
+    {
+      "query_floor": 0.25,
+      "context_floor": 0.6,
+      "valid_fires": 0,
+      "heldout_benign_fires": 1
+    }
+  ]
 }

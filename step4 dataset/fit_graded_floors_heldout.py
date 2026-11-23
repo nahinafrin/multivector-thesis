@@ -83,6 +83,19 @@ def main() -> None:
         res["bipia_benign_fires"] = f"{b}/{len(bip_b)}"
         res["rag_heldout_benign_fires"] = f"{sum(fires(r['channels'], floors)[0] for r in held)}/{len(held)}"
         report[name] = res
+    # Sweep: does any (query, context) floor pair beat the two fixed settings above?
+    mv_rows = [x for x in (pa_ch(r) for r in pa if r.get("kind") == "multivector_attack"
+                           and not (r.get("blocked") and r.get("block_stage") in GATE_STAGES)) if x]
+    report["attack_context_percentiles_5_25_50"] = [round(float(v), 3) for v in
+                                                    np.percentile([x["context_vector"] for x in mv_rows], [5, 25, 50])]
+    sweep = []
+    for fq in (0.20, 0.228, 0.25):
+        for fc in (0.30, 0.40, 0.45, 0.50, 0.55, 0.60):
+            fl = {"query_vector": fq, "context_vector": fc}
+            sweep.append({"query_floor": fq, "context_floor": fc,
+                          "valid_fires": sum(fires(x, fl)[1] for x in mv_rows),
+                          "heldout_benign_fires": sum(fires(r["channels"], fl)[0] for r in held)})
+    report["floor_sweep"] = sweep
     (EE / "graded_floors_heldout_report.json").write_text(json.dumps(report, indent=2))
     print(json.dumps(report, indent=2))
 

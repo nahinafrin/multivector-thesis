@@ -355,7 +355,7 @@ def fig_tradeoff() -> str:
 
 def fig_workflow(src: str) -> str:
     boxes = []
-    for m in re.finditer(r"\\node\[step, fill=(\w+)![^\]]*\]\s*\(\w+\)\s*\{(.*?)\};", src):
+    for m in re.finditer(r"\\node\[wfstep, fill=(\w+)![^\]]*\]\s*\(\w+\)\s*\{(.*?)\};", src):
         color = {"blue": "#e8eefb", "green": "#e6f5e6", "orange": "#fdeedd"}[m.group(1)]
         txt = m.group(2).replace("\\\\[2pt]", "\\\\")
         boxes.append(f'<div class="wfbox" style="background:{color}">{unstash(inline(stash_math(txt)))}</div>')
