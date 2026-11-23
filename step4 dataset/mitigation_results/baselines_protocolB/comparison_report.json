@@ -1,0 +1,268 @@
+{
+  "arms": {
+    "Undefended": {
+      "asr": {
+        "k": 59,
+        "n": 200,
+        "ci": "29.5% [23.6, 36.2]"
+      },
+      "blocked": {
+        "k": 0,
+        "n": 200,
+        "ci": "0.0% [0.0, 1.9]"
+      },
+      "correct": {
+        "k": 113,
+        "n": 200,
+        "ci": "56.5% [49.6, 63.2]"
+      }
+    },
+    "LLM-Guard firewall": {
+      "asr": {
+        "k": 42,
+        "n": 200,
+        "ci": "21.0% [15.9, 27.2]"
+      },
+      "blocked": {
+        "k": 17,
+        "n": 200,
+        "ci": "8.5% [5.4, 13.2]"
+      },
+      "correct": {
+        "k": 102,
+        "n": 200,
+        "ci": "51.0% [44.1, 57.8]"
+      }
+    },
+    "ControlNET": {
+      "asr": {
+        "k": 10,
+        "n": 200,
+        "ci": "5.0% [2.7, 9.0]"
+      },
+      "blocked": {
+        "k": 27,
+        "n": 200,
+        "ci": "13.5% [9.4, 18.9]"
+      },
+      "correct": {
+        "k": 92,
+        "n": 200,
+        "ci": "46.0% [39.2, 52.9]"
+      }
+    },
+    "Spotlighting": {
+      "asr": {
+        "k": 46,
+        "n": 200,
+        "ci": "23.0% [17.7, 29.3]"
+      },
+      "blocked": {
+        "k": 0,
+        "n": 200,
+        "ci": "0.0% [0.0, 1.9]"
+      },
+      "correct": {
+        "k": 111,
+        "n": 200,
+        "ci": "55.5% [48.6, 62.2]"
+      }
+    },
+    "This work, 3 layers": {
+      "asr": {
+        "k": 11,
+        "n": 200,
+        "ci": "5.5% [3.1, 9.6]"
+      },
+      "blocked": {
+        "k": 19,
+        "n": 200,
+        "ci": "9.5% [6.2, 14.4]"
+      },
+      "correct": {
+        "k": 104,
+        "n": 200,
+        "ci": "52.0% [45.1, 58.8]"
+      }
+    },
+    "This work, full stack": {
+      "asr": {
+        "k": 7,
+        "n": 200,
+        "ci": "3.5% [1.7, 7.0]"
+      },
+      "blocked": {
+        "k": 17,
+        "n": 200,
+        "ci": "8.5% [5.4, 13.2]"
+      },
+      "correct": {
+        "k": 104,
+        "n": 200,
+        "ci": "52.0% [45.1, 58.8]"
+      }
+    }
+  },
+  "vs_existing": {
+    "This work, 3 layers vs Undefended": {
+      "attack_success (ours-only / theirs-only)": {
+        "n": 200,
+        "only_first": 0,
+        "only_second": 48,
+        "p": 7.105427357601002e-15
+      },
+      "benign_blocked (ours-only / theirs-only)": {
+        "n": 200,
+        "only_first": 19,
+        "only_second": 0,
+        "p": 3.814697265625e-06
+      },
+      "benign_correct (ours-only / theirs-only)": {
+        "n": 200,
+        "only_first": 0,
+        "only_second": 9,
+        "p": 0.00390625
+      }
+    },
+    "This work, 3 layers vs LLM-Guard firewall": {
+      "attack_success (ours-only / theirs-only)": {
+        "n": 200,
+        "only_first": 2,
+        "only_second": 33,
+        "p": 3.6729034036397934e-08
+      },
+      "benign_blocked (ours-only / theirs-only)": {
+        "n": 200,
+        "only_first": 15,
+        "only_second": 13,
+        "p": 0.8505540192127228
+      },
+      "benign_correct (ours-only / theirs-only)": {
+        "n": 200,
+        "only_first": 6,
+        "only_second": 4,
+        "p": 0.75390625
+      }
+    },
+    "This work, 3 layers vs ControlNET": {
+      "attack_success (ours-only / theirs-only)": {
+        "n": 200,
+        "only_first": 10,
+        "only_second": 9,
+        "p": 1.0
+      },
+      "benign_blocked (ours-only / theirs-only)": {
+        "n": 200,
+        "only_first": 15,
+        "only_second": 23,
+        "p": 0.2558750795433298
+      },
+      "benign_correct (ours-only / theirs-only)": {
+        "n": 200,
+        "only_first": 16,
+        "only_second": 4,
+        "p": 0.01181793212890625
+      }
+    },
+    "This work, 3 layers vs Spotlighting": {
+      "attack_success (ours-only / theirs-only)": {
+        "n": 200,
+        "only_first": 4,
+        "only_second": 39,
+        "p": 3.1081526685738936e-08
+      },
+      "benign_blocked (ours-only / theirs-only)": {
+        "n": 200,
+        "only_first": 19,
+        "only_second": 0,
+        "p": 3.814697265625e-06
+      },
+      "benign_correct (ours-only / theirs-only)": {
+        "n": 200,
+        "only_first": 8,
+        "only_second": 15,
+        "p": 0.21003961563110352
+      }
+    },
+    "This work, full stack vs Undefended": {
+      "attack_success (ours-only / theirs-only)": {
+        "n": 200,
+        "only_first": 2,
+        "only_second": 54,
+        "p": 4.4325654258159375e-14
+      },
+      "benign_blocked (ours-only / theirs-only)": {
+        "n": 200,
+        "only_first": 17,
+        "only_second": 0,
+        "p": 1.52587890625e-05
+      },
+      "benign_correct (ours-only / theirs-only)": {
+        "n": 200,
+        "only_first": 7,
+        "only_second": 16,
+        "p": 0.0931396484375
+      }
+    },
+    "This work, full stack vs LLM-Guard firewall": {
+      "attack_success (ours-only / theirs-only)": {
+        "n": 200,
+        "only_first": 3,
+        "only_second": 38,
+        "p": 1.0479197953827679e-08
+      },
+      "benign_blocked (ours-only / theirs-only)": {
+        "n": 200,
+        "only_first": 14,
+        "only_second": 14,
+        "p": 1.0
+      },
+      "benign_correct (ours-only / theirs-only)": {
+        "n": 200,
+        "only_first": 13,
+        "only_second": 11,
+        "p": 0.8388197422027588
+      }
+    },
+    "This work, full stack vs ControlNET": {
+      "attack_success (ours-only / theirs-only)": {
+        "n": 200,
+        "only_first": 7,
+        "only_second": 10,
+        "p": 0.629058837890625
+      },
+      "benign_blocked (ours-only / theirs-only)": {
+        "n": 200,
+        "only_first": 13,
+        "only_second": 23,
+        "p": 0.13249816396273673
+      },
+      "benign_correct (ours-only / theirs-only)": {
+        "n": 200,
+        "only_first": 23,
+        "only_second": 11,
+        "p": 0.05761267291381955
+      }
+    },
+    "This work, full stack vs Spotlighting": {
+      "attack_success (ours-only / theirs-only)": {
+        "n": 200,
+        "only_first": 3,
+        "only_second": 42,
+        "p": 8.654978955746628e-10
+      },
+      "benign_blocked (ours-only / theirs-only)": {
+        "n": 200,
+        "only_first": 17,
+        "only_second": 0,
+        "p": 1.52587890625e-05
+      },
+      "benign_correct (ours-only / theirs-only)": {
+        "n": 200,
+        "only_first": 9,
+        "only_second": 16,
+        "p": 0.2295229434967041
+      }
+    }
+  }
+}

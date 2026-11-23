@@ -19,6 +19,8 @@ Section and table numbers below refer to the revised manuscript.
 ## Reviewer #3
 
 **3.1 — Limited novelty; no demonstrated improvement over simpler defenses.**
+
+* **Comparison with existing defenses on the same attacks.** We ran three existing defenses on Protocol B's 200 planted attacks and 200 benign questions, with the same generator and scoring, paired by row (new Table VIII). The full stack lets 3.5% of attacks succeed, against 21.0% for an LLM-Guard prompt-injection firewall and 23.0% for Spotlighting (datamarking), both p < 10^-7, with no significant difference in benign correctness. ControlNET, the strongest, reaches 5.0%, statistically indistinguishable from the full stack (p = 0.63); it answers fewer benign questions correctly (46.0% vs. 52.0%, p = 0.058; p = 0.012 against the three-layer subset). We therefore claim a clear improvement over an input firewall and prompt-level spotlighting and parity with ControlNET on attack success, not general superiority.
 We agree that most components are known, and we now say so explicitly ("Distinction from prior work", Sec. II, and the new positioning table, Table I). Our contribution is the attribution protocol and its findings, not a new detector. To test directly whether the cascade beats simpler defenses, we added a current-code ablation (new Sec. V-E, Table VII, Figs. 2–3) on 200 attack and 200 benign rows. It covers seven leave-one-out arms, seven single-layer arms, and four subsets, each paired row by row with the same undefended arm.
 
 * No single layer comes close to the full stack. The best single layers leave 15–18% ASR, against 3.5% for the full stack.

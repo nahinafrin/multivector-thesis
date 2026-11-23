@@ -126,7 +126,7 @@ def main() -> None:
     claim("A.mv", "V-B", "multivector fires on post-gate rows", "1/34",
           f"{c['multivector_fires_post_gate']}/{c['multivector_post_gate']}", "1/34", src, sc)
     claim("A.blocked", "V-D", "rows blocked, controller vs baseline", "88/101",
-          f"{c['blocked_total']}/{b['blocked_total']}", "it blocks 88 rows against the baseline's 101", src, sc)
+          f"{c['blocked_total']}/{b['blocked_total']}", "it blocks 88 rows against 101 for the single-pass pipeline", src, sc)
     claim("A.benign_deliv", "V-D", "benign delivered, controller vs baseline", "70/66",
           f"{c['benign_delivered']}/{b['benign_delivered']}", "answers 70 benign rows (vs." + B + " 66)", src, sc)
     claim("A.pois_deliv", "V-D", "poisoned-context delivered, controller vs baseline", "34/28",
@@ -197,6 +197,29 @@ def main() -> None:
     fr = rr["fresh_full_vs_off"]
     claim("E.rerun_paired", "V-E", "fresh full vs undefended: fixed/broke", "54/2", f"{fr['fixed']}/{fr['broke']}",
           "again fixes 54 rows and breaks 2", srr, "score_rerun200.py")
+
+    # ---- Existing defenses on Protocol B (Sec. V-E, Table tab:existing) -----------------
+    run("score_baselines_protocolB.py")
+    cb = J(MR / "baselines_protocolB" / "comparison_report.json")
+    arm, vs = cb["arms"], cb["vs_existing"]
+    sxb = ["mitigation_results/baselines_protocolB/", "mitigation_results/followup200/",
+           "mitigation_results/ablation200/on_full.jsonl", "mitigation_results/ablation200/benign_on.jsonl"]
+    asr = lambda a: f"{100 * arm[a]['asr']['k'] / arm[a]['asr']['n']:.1f}"  # noqa: E731
+    claim("X.asr", "V-E", "ASR: LLM-Guard / Spotlighting / ControlNET / full stack", "21.0/23.0/5.0/3.5",
+          "/".join(asr(a) for a in ("LLM-Guard firewall", "Spotlighting", "ControlNET", "This work, full stack")),
+          "3.5" + B + "% vs." + B + " 21.0" + B + "% and 23.0" + B + "% ASR", sxb, "score_baselines_protocolB.py")
+    lg = vs["This work, full stack vs LLM-Guard firewall"]["attack_success (ours-only / theirs-only)"]
+    claim("X.llmguard", "V-E", "full stack vs LLM-Guard: ours-only / theirs-only", "3/38",
+          f"{lg['only_first']}/{lg['only_second']}", "3 rows succeed only under the full stack, 38 only under LLM-Guard",
+          sxb, "score_baselines_protocolB.py")
+    cn = vs["This work, full stack vs ControlNET"]
+    claim("X.controlnet", "V-E", "full stack vs ControlNET: ASR p, benign-correct p", "0.63, 0.058",
+          f"{cn['attack_success (ours-only / theirs-only)']['p']:.2f}, {cn['benign_correct (ours-only / theirs-only)']['p']:.3f}",
+          "$p=0.058$ against the full stack", sxb, "score_baselines_protocolB.py")
+    claim("X.cn_correct", "V-E", "benign correct: ControlNET vs full stack", "46.0/52.0",
+          f"{100 * arm['ControlNET']['correct']['k'] / arm['ControlNET']['correct']['n']:.1f}/"
+          f"{100 * arm['This work, full stack']['correct']['k'] / arm['This work, full stack']['correct']['n']:.1f}",
+          "(46.0" + B + "% vs." + B + " 52.0" + B + "%;", sxb, "score_baselines_protocolB.py")
 
     # ---- n = 424 (Sec. V-E) ------------------------------------------------------------
     imp = J(EE / "improvements_report.json")

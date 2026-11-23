@@ -1,6 +1,6 @@
 {
-  "git_revision_at_check": "c412789",
-  "n_claims": 75,
+  "git_revision_at_check": "1c7b9eb",
+  "n_claims": 79,
   "n_fail": 0,
   "claims": [
     {
@@ -285,7 +285,7 @@
       "statement": "rows blocked, controller vs baseline",
       "expected": "88/101",
       "computed": "88/101",
-      "tex_snippet": "it blocks 88 rows against the baseline's 101",
+      "tex_snippet": "it blocks 88 rows against 101 for the single-pass pipeline",
       "in_tex": true,
       "inputs": [
         {
@@ -1242,6 +1242,138 @@
         }
       ],
       "scorer": "score_rerun200.py",
+      "status": "PASS"
+    },
+    {
+      "id": "X.asr",
+      "section": "V-E",
+      "statement": "ASR: LLM-Guard / Spotlighting / ControlNET / full stack",
+      "expected": "21.0/23.0/5.0/3.5",
+      "computed": "21.0/23.0/5.0/3.5",
+      "tex_snippet": "3.5\\% vs.\\ 21.0\\% and 23.0\\% ASR",
+      "in_tex": true,
+      "inputs": [
+        {
+          "path": "mitigation_results/baselines_protocolB/",
+          "sha256": "4ca9e07a8b5bd58b34b970c346c7b4974ea03c16dce0b83336068598f68ba52b",
+          "n_files": 16
+        },
+        {
+          "path": "mitigation_results/followup200/",
+          "sha256": "d9917f245945b5b2e5bb45d4e35df7d89865698eede2d0f646ce6fa5c54a5b7f",
+          "n_files": 18
+        },
+        {
+          "path": "mitigation_results/ablation200/on_full.jsonl",
+          "sha256": "549408923f3f7342f978ae4a92c8d809617528ce193b5fd2349d73c24824f0ee",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/ablation200/benign_on.jsonl",
+          "sha256": "269d12515333b9da3ffd5f0fb29338683b520bccfdfe2b86e93bb57e38ce3215",
+          "n_files": 1
+        }
+      ],
+      "scorer": "score_baselines_protocolB.py",
+      "status": "PASS"
+    },
+    {
+      "id": "X.llmguard",
+      "section": "V-E",
+      "statement": "full stack vs LLM-Guard: ours-only / theirs-only",
+      "expected": "3/38",
+      "computed": "3/38",
+      "tex_snippet": "3 rows succeed only under the full stack, 38 only under LLM-Guard",
+      "in_tex": true,
+      "inputs": [
+        {
+          "path": "mitigation_results/baselines_protocolB/",
+          "sha256": "4ca9e07a8b5bd58b34b970c346c7b4974ea03c16dce0b83336068598f68ba52b",
+          "n_files": 16
+        },
+        {
+          "path": "mitigation_results/followup200/",
+          "sha256": "d9917f245945b5b2e5bb45d4e35df7d89865698eede2d0f646ce6fa5c54a5b7f",
+          "n_files": 18
+        },
+        {
+          "path": "mitigation_results/ablation200/on_full.jsonl",
+          "sha256": "549408923f3f7342f978ae4a92c8d809617528ce193b5fd2349d73c24824f0ee",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/ablation200/benign_on.jsonl",
+          "sha256": "269d12515333b9da3ffd5f0fb29338683b520bccfdfe2b86e93bb57e38ce3215",
+          "n_files": 1
+        }
+      ],
+      "scorer": "score_baselines_protocolB.py",
+      "status": "PASS"
+    },
+    {
+      "id": "X.controlnet",
+      "section": "V-E",
+      "statement": "full stack vs ControlNET: ASR p, benign-correct p",
+      "expected": "0.63, 0.058",
+      "computed": "0.63, 0.058",
+      "tex_snippet": "$p=0.058$ against the full stack",
+      "in_tex": true,
+      "inputs": [
+        {
+          "path": "mitigation_results/baselines_protocolB/",
+          "sha256": "4ca9e07a8b5bd58b34b970c346c7b4974ea03c16dce0b83336068598f68ba52b",
+          "n_files": 16
+        },
+        {
+          "path": "mitigation_results/followup200/",
+          "sha256": "d9917f245945b5b2e5bb45d4e35df7d89865698eede2d0f646ce6fa5c54a5b7f",
+          "n_files": 18
+        },
+        {
+          "path": "mitigation_results/ablation200/on_full.jsonl",
+          "sha256": "549408923f3f7342f978ae4a92c8d809617528ce193b5fd2349d73c24824f0ee",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/ablation200/benign_on.jsonl",
+          "sha256": "269d12515333b9da3ffd5f0fb29338683b520bccfdfe2b86e93bb57e38ce3215",
+          "n_files": 1
+        }
+      ],
+      "scorer": "score_baselines_protocolB.py",
+      "status": "PASS"
+    },
+    {
+      "id": "X.cn_correct",
+      "section": "V-E",
+      "statement": "benign correct: ControlNET vs full stack",
+      "expected": "46.0/52.0",
+      "computed": "46.0/52.0",
+      "tex_snippet": "(46.0\\% vs.\\ 52.0\\%;",
+      "in_tex": true,
+      "inputs": [
+        {
+          "path": "mitigation_results/baselines_protocolB/",
+          "sha256": "4ca9e07a8b5bd58b34b970c346c7b4974ea03c16dce0b83336068598f68ba52b",
+          "n_files": 16
+        },
+        {
+          "path": "mitigation_results/followup200/",
+          "sha256": "d9917f245945b5b2e5bb45d4e35df7d89865698eede2d0f646ce6fa5c54a5b7f",
+          "n_files": 18
+        },
+        {
+          "path": "mitigation_results/ablation200/on_full.jsonl",
+          "sha256": "549408923f3f7342f978ae4a92c8d809617528ce193b5fd2349d73c24824f0ee",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/ablation200/benign_on.jsonl",
+          "sha256": "269d12515333b9da3ffd5f0fb29338683b520bccfdfe2b86e93bb57e38ce3215",
+          "n_files": 1
+        }
+      ],
+      "scorer": "score_baselines_protocolB.py",
       "status": "PASS"
     },
     {

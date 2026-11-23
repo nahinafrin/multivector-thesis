@@ -103,7 +103,7 @@ def main():
     ap.add_argument("--no-presidio", action="store_true", help="no Presidio PII masking")
     ap.add_argument("--no-dlp", action="store_true")
     ap.add_argument("--only-grounding", action="store_true")
-    ap.add_argument("--only", choices=["sanitize", "tighten", "prompt", "grounding", "presidio", "dlp", "refuse"],
+    ap.add_argument("--only", choices=["sanitize", "tighten", "prompt", "grounding", "presidio", "dlp", "refuse", "spotlight"],
                     default=None, help="ON arm = exactly this one layer (add-one-in ablation)")
     ap.add_argument("--layers", default=None,
                     help="ON arm = exactly these layers, comma-separated (combination ablation)")

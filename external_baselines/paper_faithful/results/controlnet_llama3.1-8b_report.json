@@ -1,0 +1,23 @@
+{
+  "model": "llama3.1-8b",
+  "layer": 1,
+  "n_anchor": 200,
+  "n_train": 1500,
+  "n_val": 1190,
+  "last": {
+    "val_auroc_asi": 0.80306645984966,
+    "val_f1": 0.9026455026455027,
+    "tree_depth": 2,
+    "val_benign_fpr": 0.25,
+    "val_unsafe_tpr": 0.8651115618661258,
+    "slice_auroc_asi_attack_vs_benign": 0.8007692307692308
+  },
+  "mean": {
+    "val_auroc_asi": 0.6631443145209402,
+    "val_f1": 0.5293691080493111,
+    "tree_depth": 3,
+    "val_benign_fpr": 0.13725490196078433,
+    "val_unsafe_tpr": 0.37018255578093306,
+    "slice_auroc_asi_attack_vs_benign": 0.3444230769230769
+  }
+}

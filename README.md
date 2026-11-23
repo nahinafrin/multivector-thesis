@@ -65,7 +65,7 @@ There are two ways to check a number.
 All commands below run from `step4 dataset/` with the venv active.
 
 **Claim-by-claim check.** `python verify_claims.py` re-runs the standard-library scorers and checks
-75 selected claims: the headline numbers of each results section and every Table VII cell, including
+79 selected claims: the headline numbers of each results section and every Table VII cell, including
 its Wilson interval and exact p-value. Each is recomputed from the committed per-row outputs, compared
 with the value the paper states, and matched against the text of `paper_revision/main.tex`. It writes
 `claims_manifest.json` with, per claim, the paper section, expected and computed values, input files
@@ -82,7 +82,8 @@ failure. It covers selected claims, not every number in the paper, and it does n
 | Seed replicates (Sec. V-E, "Replicates") | `run_seed_study.py` | `score_seed_study.py` | `mitigation_results/seed7/`, `seed1234/`, `seed_study_report.json` |
 | Fresh rerun of the undefended and full-stack arms from the raw slice (Sec. V-E, "Replicates") | `run_mitigation_ab.py --slice planted_attacks_200.jsonl --run-dir mitigation_results/rerun200` (`--off-only`, then `--skip-off --label full`) | `score_rerun200.py` | `mitigation_results/rerun200/` (with `code_revision.txt`, `rerun_report.json`) |
 | LLM-Guard detector baseline (Sec. V-E) | `run_external_guard_baseline.py` | same script | `baseline_comparison/llmguard_detector_baseline.json` |
-| ControlNET and ADO baselines (Sec. V-E) | `../external_baselines/baseline_controlnet.py`, `../external_baselines/run_ado_official_on_slice.py` | `../external_baselines/compare_paper_faithful.py` | `../external_baselines/*_results.txt` |
+| ControlNET and ADO baselines (Sec. V-E) | `../external_baselines/paper_faithful/controlnet_faithful.py` (paper-faithful ControlNET), `../external_baselines/run_ado_official_on_slice.py` | `../external_baselines/compare_paper_faithful.py` | `../external_baselines/*_results.txt` |
+| Existing defenses on Protocol B: Spotlighting, LLM-Guard firewall, ControlNET (Sec. V-E, Table VIII) | `run_mitigation_ab.py --only spotlight` and `run_benign_cost.py --only spotlight`; `dump_undefended_contexts.py`, `run_llmguard_protocolB.py`; `../external_baselines/paper_faithful/run_controlnet_protocolB.py --gguf-dir <reduced Llama-3.1-8B GGUF>` | `score_baselines_protocolB.py` | `mitigation_results/baselines_protocolB/` |
 | PoisonedRAG and BIPIA, complete pipeline (Table VIII) | `convert_external_datasets.py`, `run_full_pipeline.py` | `final_n200_summary.py` | `external_validation_n200.jsonl`, `ext_n200_results.jsonl` |
 | Same rows undefended and same-generator (Table VIII) | `run_mitigation_ab.py --slice external_validation_n200.harness.jsonl` | `score_external_paired.py` | `mitigation_results/external200/` |
 | 40-row semantic slice (Sec. V-H) | `build_semantic_slice.py`, `run_followup_study.py` | `score_followup_study.py` | `semantic_slice_non_yes_no_40.jsonl`, `mitigation_results/followup_nonyesno40/` |

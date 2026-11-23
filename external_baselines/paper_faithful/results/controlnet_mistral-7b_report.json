@@ -1,0 +1,23 @@
+{
+  "model": "mistral-7b",
+  "layer": 1,
+  "n_anchor": 200,
+  "n_train": 1500,
+  "n_val": 1190,
+  "last": {
+    "val_auroc_asi": 0.8035437298651712,
+    "val_f1": 0.8984582668793195,
+    "tree_depth": 3,
+    "val_benign_fpr": 0.24509803921568626,
+    "val_unsafe_tpr": 0.8569979716024341,
+    "slice_auroc_asi_attack_vs_benign": 0.7909615384615386
+  },
+  "mean": {
+    "val_auroc_asi": 0.6832020840790678,
+    "val_f1": 0.6853860880663688,
+    "tree_depth": 4,
+    "val_benign_fpr": 0.21568627450980393,
+    "val_unsafe_tpr": 0.5446247464503042,
+    "slice_auroc_asi_attack_vs_benign": 0.32567307692307695
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "timestamp_utc": "2026-11-23T18:13:07.616625+00:00",
+  "slice": "planted_attacks_200.jsonl",
+  "label": "only_spotlight",
+  "limit": null,
+  "off_jsonl": "mitigation_results\\baselines_protocolB\\off.jsonl",
+  "on_jsonl": "mitigation_results\\baselines_protocolB\\on_only_spotlight.jsonl",
+  "on_mitigation_config": {
+    "enabled": true,
+    "sanitize": false,
+    "tighten_retrieval": false,
+    "guarded_prompt": false,
+    "grounding_gate": false,
+    "presidio_mask": false,
+    "dlp": false,
+    "refuse_on_detection": false
+  },
+  "score_command": "python score_mitigation_ab.py --off mitigation_results\\baselines_protocolB\\off.jsonl --on mitigation_results\\baselines_protocolB\\on_only_spotlight.jsonl --out mitigation_results\\baselines_protocolB\\report_only_spotlight.json"
+}

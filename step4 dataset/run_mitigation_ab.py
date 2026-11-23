@@ -58,6 +58,7 @@ ONLY_LAYERS = {  # --only <name>  ->  MitigationConfig field (add-one-in ablatio
     "sanitize": "sanitize", "tighten": "tighten_retrieval", "prompt": "guarded_prompt",
     "grounding": "grounding_gate", "presidio": "presidio_mask", "dlp": "dlp",
     "refuse": "refuse_on_detection",
+    "spotlight": "spotlight",   # external comparator (Spotlighting datamarking), not a pipeline layer
 }
 
 
