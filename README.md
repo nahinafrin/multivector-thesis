@@ -27,7 +27,6 @@ stage, with paired tests on identical rows. In short:
 | [`paper_revision/`](paper_revision/) | `main.tex`, `refs.bib`, the reviewer response, and `build_pdf.py` (renders a PDF without LaTeX). |
 | [`docs/`](docs/) | Methodology notes, consolidated results, and the reconciliation notes written during the study. |
 | [`download_datasets.py`](download_datasets.py) | Re-downloads the third-party datasets that are not stored in the repository. |
-| [`archive/`](archive/) | Earlier exploratory scripts (row-1 obfuscation / deepset gate probes, legacy root scripts). Not needed to reproduce the paper; paths inside may need adjusting. |
 
 ## Environment
 
@@ -74,7 +73,7 @@ All commands below run from `step4 dataset/` with the venv active.
 | Ablation: layer subsets (Table VII) | `run_followup_study.py` | `score_followup_study.py` | `mitigation_results/followup200/` |
 | Seed replicates (Sec. V-E, "Replicates") | `run_seed_study.py` | `score_seed_study.py` | `mitigation_results/seed7/`, `seed1234/`, `seed_study_report.json` |
 | LLM-Guard detector baseline (Sec. V-E) | `run_external_guard_baseline.py` | same script | `baseline_comparison/llmguard_detector_baseline.json` |
-| ControlNET and ADO baselines (Sec. V-E) | `../external_baselines/baseline_controlnet.py`, `run_ado_official_on_slice.py` | `../external_baselines/compare_paper_faithful.py` | `../external_baselines/*_results.txt` |
+| ControlNET and ADO baselines (Sec. V-E) | `../external_baselines/baseline_controlnet.py`, `../external_baselines/run_ado_official_on_slice.py` | `../external_baselines/compare_paper_faithful.py` | `../external_baselines/*_results.txt` |
 | PoisonedRAG and BIPIA, complete pipeline (Table VIII) | `convert_external_datasets.py`, `run_full_pipeline.py` | `final_n200_summary.py` | `external_validation_n200.jsonl`, `ext_n200_results.jsonl` |
 | Same rows undefended and same-generator (Table VIII) | `run_mitigation_ab.py --slice external_validation_n200.harness.jsonl` | `score_external_paired.py` | `mitigation_results/external200/` |
 | 40-row semantic slice (Sec. V-H) | `build_semantic_slice.py`, `run_followup_study.py` | `score_followup_study.py` | `semantic_slice_non_yes_no_40.jsonl`, `mitigation_results/followup_nonyesno40/` |
@@ -93,8 +92,13 @@ The queue that produced the deepset, held-out, semantic, and n = 424 outputs is 
 ¹ Needs the BIPIA file from `multivector_extra_datasets/row4_indirect_injection_rag_poisoning/download_row4_repos.py`;
 the derived slices it produces are already committed.<br>
 ² Needs the deepset test split from `python download_datasets.py` (repository root). The per-row gate
-decisions are committed, so the summary can be checked without re-running. Earlier exploratory
-deepset probes are in `archive/row1_deepset_exploration/`.
+decisions are committed, so the summary can be checked without re-running.
+
+**Removed files.** Exploratory, debugging, and superseded files (earlier deepset probes, one-off
+diagnostic scripts, smoke-test runs, old pipeline variants, and bundled third-party data copies)
+were moved out of this repository to the private backup repository
+`nahinafrin/multivector-thesis-backup`, with their original paths. None of them is needed to
+reproduce the paper.
 
 Most runners print their options with `--help`. Generation uses seed 42 unless `RAG_GEN_SEED` is set.
 
@@ -105,7 +109,14 @@ cd paper_revision
 python build_pdf.py     # writes main.pdf via headless Edge/Chrome (KaTeX math, SVG figures)
 ```
 
-Overleaf with `IEEEtran` remains the reference build for submission.
+This preview is approximate. The reference build for submission is `IEEEtran` with real LaTeX:
+upload `main.tex` and `refs.bib` to Overleaf (pdfLaTeX), or compile locally with
+[Tectonic](https://tectonic-typesetting.github.io/), which fetches the packages it needs:
+
+```powershell
+cd paper_revision
+tectonic -X compile main.tex --outdir build_tex
+```
 
 ## Data and licences
 

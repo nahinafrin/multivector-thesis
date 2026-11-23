@@ -61,3 +61,7 @@ paper_revision/main.html
 /step4 dataset/external_eval/improvement_queue_stdout.txt
 /step4 dataset/external_eval/gpu_latency_queue.txt
 /step4 dataset/mitigation_results/gpu_encoders/*_log.txt
+
+# local LaTeX compiler (Tectonic)
+/tools/
+/paper_revision/build_tex/
