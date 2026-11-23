@@ -54,3 +54,10 @@ multivector_extra_datasets (1)/
 
 # Local PDF build output
 paper_revision/main.html
+
+# GPU environment and raw run logs from the improvement / latency runs
+/step4 dataset/.venv311gpu/
+/step4 dataset/external_eval/*_log.txt
+/step4 dataset/external_eval/improvement_queue_stdout.txt
+/step4 dataset/external_eval/gpu_latency_queue.txt
+/step4 dataset/mitigation_results/gpu_encoders/*_log.txt

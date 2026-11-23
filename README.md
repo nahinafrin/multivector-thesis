@@ -81,6 +81,14 @@ All commands below run from `step4 dataset/` with the venv active.
 | Latency and memory (Table IX) | `resource_profile/sample_resources.ps1` (during a run) | `summarize_overhead.py` | `resource_profile/` |
 | Earlier-code mitigation arms (Sec. V-F) | `run_planted_mitigation.py` | `score_mitigation_ab.py` | `mitigation_results/planted200/` |
 | deepset gate test (Table VIII)² | `run_deepset_gate_eval.py` | same script | `external_eval/deepset_gate_rows.jsonl`, `deepset_gate_report.json` |
+| deepset gate + graded flag, threshold chosen on the train split (Sec. V-G) | `run_deepset_gate_eval.py --data <deepset train parquet> --tag deepset_gate_train`, `collect_graded_heldout_benign.py` | `fit_gate_graded.py` | `external_eval/gate_graded_report.json`, `deepset_graded_scores.jsonl` |
+| deepset end to end (Sec. V-G) | `run_full_pipeline.py --slice external_eval/deepset_e2e_slice.jsonl` | `score_improvements.py` | `external_eval/deepset_e2e.jsonl`, `improvements_report.json` |
+| Graded floors on held-out benign questions (Sec. V-B) | `collect_graded_heldout_benign.py` | `fit_graded_floors_heldout.py` | `external_eval/graded_heldout_benign.jsonl`, `graded_floors_heldout_report.json` |
+| Ablation at n = 424 (Sec. V-E, "Larger sample") | `build_planted_attacks.py --yesno-only --seed 42`, `run_mitigation_ab.py --slice planted_attacks_extra224.jsonl` | `score_improvements.py` | `planted_attacks_extra224.jsonl`, `mitigation_results/extended424/` |
+| Semantic slice, fused vs. isolate-and-aggregate generator (Sec. V-H) | `run_full_pipeline.py --generator {fused,isolate}` | `score_improvements.py` | `external_eval/semantic40_*.jsonl`, `benign40_*.jsonl` |
+| Encoders on CPU vs. GPU (Sec. V-I) | `run_gpu_latency.sh` (`bench_encoder_device.py`, `run_benign_cost.py` with `RAG_ENCODER_DEVICE=cuda`) | `bench_encoder_device.py` | `external_eval/encoder_latency_*.json`, `mitigation_results/gpu_encoders/` |
+
+The queue that produced the deepset, held-out, semantic, and n = 424 outputs is `run_improvement_queue.py` (sequential, resumable).
 
 ¹ Needs the BIPIA file from `multivector_extra_datasets/row4_indirect_injection_rag_poisoning/download_row4_repos.py`;
 the derived slices it produces are already committed.<br>

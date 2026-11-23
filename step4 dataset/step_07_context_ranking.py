@@ -32,11 +32,25 @@ STRICT_MIN_SCORE = 0.40
 RISK_TIGHTEN_AT = 0.60
 
 
+
+def _encoder_device() -> str:
+    """Device for this stage's encoder. Default "cpu" reproduces every reported run; set
+    RAG_ENCODER_DEVICE=cuda (in an environment with a CUDA build of PyTorch) to move it to the GPU."""
+    import os
+    return os.environ.get("RAG_ENCODER_DEVICE", "cpu")
+
+def _maybe_half(model):
+    """Optional fp16 weights on the GPU (RAG_ENCODER_FP16=1) to halve encoder VRAM next to Ollama."""
+    import os
+    if _encoder_device() == "cuda" and os.environ.get("RAG_ENCODER_FP16") == "1":
+        model.half()
+    return model
+
 def _get_reranker(name: str = _RERANKER_NAME):
     global _RERANKER
     if _RERANKER is None:
         from sentence_transformers import CrossEncoder
-        _RERANKER = CrossEncoder(name)
+        _RERANKER = _maybe_half(CrossEncoder(name, device=_encoder_device()))
     return _RERANKER
 
 

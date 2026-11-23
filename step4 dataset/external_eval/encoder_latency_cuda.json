@@ -1,0 +1,39 @@
+{
+  "device": "cuda",
+  "torch": "2.12.0+cu126",
+  "cuda_device": "NVIDIA GeForce RTX 4060 Laptop GPU",
+  "peak_cuda_mem_mb": 5168.5,
+  "n": 50,
+  "warmup": 3,
+  "stages": {
+    "s4_embed": {
+      "median_ms": 19.0,
+      "p95_ms": 22.2
+    },
+    "s5_retrieve": {
+      "median_ms": 0.7,
+      "p95_ms": 0.9
+    },
+    "s6_sanitize": {
+      "median_ms": 702.9,
+      "p95_ms": 1025.7
+    },
+    "s7_rerank": {
+      "median_ms": 132.3,
+      "p95_ms": 272.5
+    },
+    "s10_judge": {
+      "median_ms": 196.0,
+      "p95_ms": 363.3
+    },
+    "encoders_total": {
+      "median_ms": 346.6,
+      "p95_ms": 645.6
+    },
+    "total": {
+      "median_ms": 1075.6,
+      "p95_ms": 1662.5
+    }
+  },
+  "fp16": false
+}

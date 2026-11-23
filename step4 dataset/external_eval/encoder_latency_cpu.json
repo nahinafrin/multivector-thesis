@@ -1,0 +1,38 @@
+{
+  "device": "cpu",
+  "torch": "2.12.0+cpu",
+  "cuda_device": null,
+  "peak_cuda_mem_mb": null,
+  "n": 50,
+  "warmup": 3,
+  "stages": {
+    "s4_embed": {
+      "median_ms": 115.8,
+      "p95_ms": 174.6
+    },
+    "s5_retrieve": {
+      "median_ms": 0.2,
+      "p95_ms": 0.3
+    },
+    "s6_sanitize": {
+      "median_ms": 1177.1,
+      "p95_ms": 1714.0
+    },
+    "s7_rerank": {
+      "median_ms": 1795.2,
+      "p95_ms": 3381.2
+    },
+    "s10_judge": {
+      "median_ms": 2087.9,
+      "p95_ms": 4075.8
+    },
+    "encoders_total": {
+      "median_ms": 3982.5,
+      "p95_ms": 7559.8
+    },
+    "total": {
+      "median_ms": 5119.0,
+      "p95_ms": 9243.5
+    }
+  }
+}

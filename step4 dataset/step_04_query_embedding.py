@@ -35,6 +35,20 @@ _MODEL = None
 _MODEL_NAME = "BAAI/bge-m3"
 
 
+
+def _encoder_device() -> str:
+    """Device for this stage's encoder. Default "cpu" reproduces every reported run; set
+    RAG_ENCODER_DEVICE=cuda (in an environment with a CUDA build of PyTorch) to move it to the GPU."""
+    import os
+    return os.environ.get("RAG_ENCODER_DEVICE", "cpu")
+
+def _maybe_half(model):
+    """Optional fp16 weights on the GPU (RAG_ENCODER_FP16=1) to halve encoder VRAM next to Ollama."""
+    import os
+    if _encoder_device() == "cuda" and os.environ.get("RAG_ENCODER_FP16") == "1":
+        model.half()
+    return model
+
 def _get_model(name: str = _MODEL_NAME):
     global _MODEL
     if _MODEL is None:
@@ -42,7 +56,7 @@ def _get_model(name: str = _MODEL_NAME):
             from sentence_transformers import SentenceTransformer
         except ImportError as e:
             raise ImportError("pip install sentence-transformers") from e
-        _MODEL = SentenceTransformer(name)
+        _MODEL = _maybe_half(SentenceTransformer(name, device=_encoder_device()))
     return _MODEL
 
 

@@ -121,6 +121,20 @@ _JUDGE = None
 JUDGE_MODEL = "BAAI/bge-reranker-v2-m3"
 
 
+
+def _encoder_device() -> str:
+    """Device for this stage's encoder. Default "cpu" reproduces every reported run; set
+    RAG_ENCODER_DEVICE=cuda (in an environment with a CUDA build of PyTorch) to move it to the GPU."""
+    import os
+    return os.environ.get("RAG_ENCODER_DEVICE", "cpu")
+
+def _maybe_half(model):
+    """Optional fp16 weights on the GPU (RAG_ENCODER_FP16=1) to halve encoder VRAM next to Ollama."""
+    import os
+    if _encoder_device() == "cuda" and os.environ.get("RAG_ENCODER_FP16") == "1":
+        model.half()
+    return model
+
 def _get_judge(model_name: str = JUDGE_MODEL):
     global _JUDGE
     if _JUDGE is not None:
@@ -131,7 +145,17 @@ def _get_judge(model_name: str = JUDGE_MODEL):
         raise ImportError(
             "Step 10 needs sentence-transformers: pip install sentence-transformers"
         ) from e
-    _JUDGE = CrossEncoder(model_name)
+    # Step 7 reranks with the same checkpoint. Share its loaded instance instead of holding a
+    # second copy (~2.2 GB in fp32): same weights, so identical scores, and the second copy is
+    # what overflows an 8 GB GPU next to Ollama when RAG_ENCODER_DEVICE=cuda.
+    try:
+        import step_07_context_ranking as _s7
+        if model_name == _s7._RERANKER_NAME:
+            _JUDGE = _s7._get_reranker()
+            return _JUDGE
+    except ImportError:
+        pass
+    _JUDGE = _maybe_half(CrossEncoder(model_name, device=_encoder_device()))
     return _JUDGE
 
 

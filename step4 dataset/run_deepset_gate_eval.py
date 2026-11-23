@@ -70,6 +70,8 @@ def main() -> None:
     ap.add_argument("--data", default=str(DATA))
     ap.add_argument("--n-per-class", type=int, default=30)
     ap.add_argument("--seed", type=int, default=42)
+    ap.add_argument("--tag", default="deepset_gate",
+                    help="output file prefix in external_eval/ (use e.g. deepset_gate_train for the train split)")
     args = ap.parse_args()
 
     rows = [json.loads(l) for l in Path(args.data).open(encoding="utf-8") if l.strip()]
@@ -83,7 +85,7 @@ def main() -> None:
 
     OUT.mkdir(exist_ok=True)
     t0 = time.time()
-    with (OUT / "deepset_gate_rows.jsonl").open("w", encoding="utf-8") as fh:
+    with (OUT / f"{args.tag}_rows.jsonl").open("w", encoding="utf-8") as fh:
         for k, r in enumerate(rows, 1):
             g = gate(r["text"])
             rec = {"index": r["index"], "label": r["label"], "in_paper_sample": r["index"] in sample,
@@ -95,7 +97,7 @@ def main() -> None:
     report = {"source": str(Path(args.data).name), "seed": args.seed, "n_per_class": args.n_per_class,
               "paper_sample": summarize([r for r in rows if r["in_paper_sample"]]),
               "full_test_split": summarize(rows), "seconds": round(time.time() - t0, 1)}
-    (OUT / "deepset_gate_report.json").write_text(json.dumps(report, indent=2))
+    (OUT / f"{args.tag}_report.json").write_text(json.dumps(report, indent=2))
     print(json.dumps(report, indent=2))
 
 

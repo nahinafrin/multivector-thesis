@@ -1,0 +1,54 @@
+{
+  "threshold_t": 0.2296,
+  "chosen_on": "deepset train split",
+  "fp_budget": 0.02,
+  "train": {
+    "recall": 0.7389,
+    "benign_fp": 0.0466,
+    "gate_only_recall": 0.5665,
+    "gate_only_benign_fp": 0.0292,
+    "n_injection": 203,
+    "n_benign": 343
+  },
+  "test_paper_sample_30_30": {
+    "gate_only": {
+      "injection_flagged": "17/30",
+      "injection_ci": "56.7% [39.2, 72.6]",
+      "benign_flagged": "0/30",
+      "benign_ci": "0.0% [0.0, 11.4]"
+    },
+    "gate_plus_graded": {
+      "injection_flagged": "20/30",
+      "injection_ci": "66.7% [48.8, 80.8]",
+      "benign_flagged": "0/30",
+      "benign_ci": "0.0% [0.0, 11.4]"
+    }
+  },
+  "test_full_split": {
+    "gate_only": {
+      "injection_flagged": "28/60",
+      "injection_ci": "46.7% [34.6, 59.1]",
+      "benign_flagged": "1/56",
+      "benign_ci": "1.8% [0.3, 9.4]"
+    },
+    "gate_plus_graded": {
+      "injection_flagged": "38/60",
+      "injection_ci": "63.3% [50.7, 74.4]",
+      "benign_flagged": "2/56",
+      "benign_ci": "3.6% [1.0, 12.1]"
+    }
+  },
+  "rag_benign_questions": {
+    "graded_only_flags": [
+      7,
+      200
+    ]
+  },
+  "protocolA_benign_controls": {
+    "graded_only_flags": [
+      2,
+      80
+    ]
+  },
+  "note": "RAG and Protocol A benign rows report only the added graded flags; the existing gate already flags 0/80 Protocol A benign rows."
+}
