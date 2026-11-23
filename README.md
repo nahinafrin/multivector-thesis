@@ -24,7 +24,7 @@ stage, with paired tests on identical rows. In short:
 | [`step4 dataset/`](step4%20dataset/) | The pipeline (`step_02_…` to `step_13_…`), evaluation runners, slices, frozen outputs, and scoring scripts. **Everything needed to reproduce the paper lives here.** |
 | [`external_baselines/`](external_baselines/) | ControlNET and Sentinel–Strategist (ADO) baseline code and their comparison results. |
 | [`dataset/`](dataset/) | Builds the merged prompt-injection / jailbreak / toxicity data used to calibrate the input gate. |
-| [`paper_revision/`](paper_revision/) | `main.tex`, `refs.bib`, the reviewer response, and `build_pdf.py` (renders a PDF without LaTeX). |
+| [`paper_revision/`](paper_revision/) | `main_iccit.tex` (ICCIT 2026 camera-ready version, within the 6-page limit), `main.tex` (extended version with all tables, figures, and analyses), `refs.bib`, the reviewer response, and `build_pdf.py` (renders a PDF without LaTeX). |
 | [`docs/`](docs/) | Methodology notes, consolidated results, and the reconciliation notes written during the study. |
 | [`download_datasets.py`](download_datasets.py) | Re-downloads the third-party datasets that are not stored in the repository. |
 

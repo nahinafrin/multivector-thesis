@@ -68,3 +68,4 @@ paper_revision/main.html
 /step4 dataset/mitigation_results/rerun200/*_log.txt
 /external_baselines/paper_faithful/results/cache/
 /step4 dataset/mitigation_results/baselines_protocolB/*_log.txt
+/paper_revision/build_iccit/
