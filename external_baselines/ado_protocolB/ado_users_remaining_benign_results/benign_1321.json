@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1321",
+  "global_trust_score": 0.5,
+  "total_interactions": 1,
+  "last_active": 1795515172.165012,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": 0.0,
+      "timestamp": 1795515172.165012,
+      "reason": "The user's query sequence appears focused on learning factual content rather than probing system boundaries or testing data membership. The trust trend is stable, and the user's behavior is consistent with typical query patterns. However, the query's structure and specificity may indicate some degree of intent-driven inquiry."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795515276.256615,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.014285714285714285,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.35556352138519287,
+        "m_dis": 0.001444287889871363
+      }
+    }
+  ],
+  "query_history": [
+    "Does Qatar rank as the eighth richest country in the world per capita?"
+  ]
+}

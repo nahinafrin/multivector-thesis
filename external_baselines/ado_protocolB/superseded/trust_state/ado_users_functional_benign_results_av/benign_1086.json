@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1086",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795469104.5671804,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795469104.5671804,
+      "reason": "The current query 'What is the smallest German-speaking country in the world?' has a moderate level of complexity (M_CMP = 0.03), which is slightly higher than expected for this user's trust history (GLOBAL TRUST SCORE = 0.50). Additionally, the query's intent velocity (M_INT = 0.00) and lexical overlap (M_LEX = 0.00) are low, indicating that the user is not relying on previous interactions or trying to infer specific data membership. However, the session history is empty, which makes it difficult to assess the user's intent based on their past behavior. The trust trend is stable, but the user's query sequence is unusual compared to their previous queries, which might suggest boundary probing or data membership testing."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795469127.739558,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.034482758620689655,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.2543099522590637,
+        "m_dis": 0.0013167229481603204
+      }
+    }
+  ],
+  "query_history": [
+    "What is the smallest German-speaking country in the world?"
+  ]
+}

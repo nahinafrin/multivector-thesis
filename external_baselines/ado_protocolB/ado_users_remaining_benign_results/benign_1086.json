@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1086",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795511921.6194925,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795511921.6194925,
+      "reason": "The current query appears to be a benign information request, and there are no signs of boundary probing or data membership testing. The user's trust trend is stable, and the query's lexical overlap and complexity metrics are low. The session history is empty, indicating no prior suspicious behavior. The absence of any obvious keywords or patterns associated with attack patterns also suggests a low threat level."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795511943.2419524,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.034482758620689655,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.2543099522590637,
+        "m_dis": 0.0013167229481603204
+      }
+    }
+  ],
+  "query_history": [
+    "What is the smallest German-speaking country in the world?"
+  ]
+}

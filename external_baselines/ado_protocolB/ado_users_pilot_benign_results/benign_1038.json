@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1038",
+  "global_trust_score": 0.55,
+  "total_interactions": 1,
+  "last_active": 1795478217.065639,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": 0.05,
+      "timestamp": 1795478217.065639,
+      "reason": "The user's query, 'What was one of the many species described in Linnaeus's 18th-century work, Systema Naturae?' appears to be a legitimate knowledge-seeking query with low complexity and lexical overlap. The trust trend is stable, and there are no signs of repetitive structure or pattern in how queries are varied. Although the user's intent velocity is low, the query sequence is focused on learning domain knowledge rather than probing boundaries or testing data membership."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795478238.587949,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.043478260869565216,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.42062556743621826,
+        "m_dis": 0.0017318699373607362
+      }
+    }
+  ],
+  "query_history": [
+    "What was one of the many species described in Linnaeus's 18th-century work, Systema Naturae?"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_391",
+  "global_trust_score": 0.5,
+  "total_interactions": 1,
+  "last_active": 1795506279.5557592,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": 0.0,
+      "timestamp": 1795506279.5557592,
+      "reason": "The query 'Where did the expression "
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795506461.2460263,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.057692307692307696,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.48824000358581543,
+        "m_dis": 0.0013426898018916236
+      }
+    }
+  ],
+  "query_history": [
+    "Where did the expression \"a sitting duck\" come from?"
+  ]
+}

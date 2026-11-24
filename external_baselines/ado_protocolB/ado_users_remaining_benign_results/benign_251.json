@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_251",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795505763.9474392,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795505763.9474392,
+      "reason": "The user's query, 'Why did Coolidge not attend law school?', is a seemingly innocuous question. However, considering the user's trust score of 0.50 and stable trust trend, their intent appears to be more focused on understanding a specific historical figure rather than learning general domain knowledge. The low lexical overlap and complexity metrics suggest that the user is not attempting to infer membership or extract content, but the lack of sequence anomalies and semantic drift makes it difficult to determine if the user is probing the system's boundaries. Given the low trust score and the absence of obvious signs of membership inference or content leakage, the overall threat level is Elevated. Further analysis is needed to determine the specific threats."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795505784.496184,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.02564102564102564,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.2521999478340149,
+        "m_dis": 0.0012514528601735991
+      }
+    }
+  ],
+  "query_history": [
+    "Why did Coolidge not attend law school?"
+  ]
+}

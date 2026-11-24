@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1132",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795478701.941809,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795478701.941809,
+      "reason": "The user's current query, 'To whom was Millard Fillmore born to?', has a low lexical overlap (M_LEX = 0.00) but a moderate complexity (M_CMP = 0.03). Considering the user's history, this query seems structured and systematic, probing the boundaries of what the system knows. The user's trust trend is stable, but their trust history is empty. This behavior is unusual for this user, and it resembles a black-box reverse-engineering experiment."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795478722.5540795,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.02702702702702703,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.2299867868423462,
+        "m_dis": 0.00142130352512014
+      }
+    }
+  ],
+  "query_history": [
+    "To whom was Millard Fillmore born to?"
+  ]
+}

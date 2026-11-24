@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1424",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795479268.6426816,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795479268.6426816,
+      "reason": "The user's query, 'How much increase in the media's contribution to GDP is the government seeking?', shows a moderate complexity (M_CMP=0.03) and a high intent velocity (M_INT=0.00). However, the lack of lexical overlap (M_LEX=0.00) and the absence of any previous queries in the session history (SESSION_HISTORY=[]) suggest that the user is not simply learning domain knowledge. The trust trend is stable (TRUST TRENDS: STABLE) but the global trust score is low (GLOBAL TRUST SCORE: 0.50), indicating a need for closer examination. The behavior resembles a systematic probing of boundaries, which is a hallmark of zero-day attacks."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795479577.193743,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.02531645569620253,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.524366557598114,
+        "m_dis": 0.0017756501752751157
+      }
+    }
+  ],
+  "query_history": [
+    "How much increase in the media's contribution to GDP is the government seeking?"
+  ]
+}

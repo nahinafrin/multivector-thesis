@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_769",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795508347.5205147,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795508347.5205147,
+      "reason": "The query 'Which spice originally attracted Europeans to Indonesia?' shows a high intent velocity (M_INT=0.00) and a very low lexical overlap (M_LEX=0.00) with the user's session history. This suggests a systematic probing behavior, potentially aimed at testing boundaries of what the system 'knows'. Additionally, the user's trust trend is stable (Trust Trend: STABLE) but with a relatively low trust score (Global Trust Score: 0.50), indicating some risk. The query does not directly match any suspicious patterns, but its structure and focus on testing the system's knowledge resemble a black-box reverse-engineering experiment."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795508368.27027,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.017857142857142856,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.20156311988830566,
+        "m_dis": 0.0012329532802172
+      }
+    }
+  ],
+  "query_history": [
+    "Which spice originally attracted Europeans to Indonesia?"
+  ]
+}

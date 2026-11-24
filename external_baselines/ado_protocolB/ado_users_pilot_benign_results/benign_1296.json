@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1296",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795479181.551328,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795479181.551328,
+      "reason": "The user's query, 'How heavy is a male polar bear?', exhibits a high level of intent velocity, with no lexical overlap (M_LEX = 0.00) and moderate complexity (M_CMP = 0.03). The trust trend is stable, but the user's behavior deviates significantly from their session history. This sequence of queries appears to be probing the boundaries of the retrieval corpus, with a focus on specific details rather than learning domain knowledge. The absence of semantic drift (M_SEM_DRIFT = 0.00) suggests that the user is not circling around an implicit target sample, but rather making targeted inquiries. This behavior is reminiscent of membership inference attacks, where the user is attempting to infer the presence or absence of specific data within the corpus."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795479204.2264304,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.03225806451612903,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.23400837182998657,
+        "m_dis": 0.0009432514259440469
+      }
+    }
+  ],
+  "query_history": [
+    "How heavy is a male polar bear?"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_32",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795475758.0543108,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795475758.0543108,
+      "reason": "The query 'Who was the general in charge at the Battle of Antietam?' appears to be a factual question, but given the user's current trust score (0.50) and stable trend, it's likely that the user is probing the system for membership or leakage. The M_INT (Intent Velocity) is 0.00, indicating a lack of intent velocity, and M_LEX (Lexical Overlap) is 0.00, suggesting that the user is not attempting to directly infer membership. However, the absence of M_SEQ and M_SEM_DRIFT does not necessarily imply that the user is not attempting to probe the system's boundaries."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795475785.7182002,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.017857142857142856,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.1663152575492859,
+        "m_dis": 0.0010403518920963915
+      }
+    }
+  ],
+  "query_history": [
+    "Who was the general in charge at the Battle of Antietam?"
+  ]
+}

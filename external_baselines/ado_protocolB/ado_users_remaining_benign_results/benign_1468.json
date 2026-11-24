@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1468",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795518370.8521445,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795518370.8521445,
+      "reason": "The user's query sequence shows a high degree of complexity and structure (M_CMP = 0.01), indicating a systematic probing of the system's knowledge boundaries. Although the global trust score is stable (0.50), the trust trend has been rising, suggesting a benign use case. However, the current query itself is unusual, with no lexical overlap (M_LEX = 0.00) and a high intent velocity (M_INT = 0.00), indicating a potential attempt to infer membership. The lack of semantic drift (M_SEM_DRIFT = 0.00) and sequence anomaly (M_SEQ = 0.00) suggests the user is not trying to exhaustively enumerate internal data or engage in content leakage."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795518393.129944,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.009433962264150943,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.444909930229187,
+        "m_dis": 0.001239067530692678
+      }
+    }
+  ],
+  "query_history": [
+    "Has Singapore Changi Airport a network of 81 airlines connecting Singapore to 185 cities in 58 countries ?"
+  ]
+}

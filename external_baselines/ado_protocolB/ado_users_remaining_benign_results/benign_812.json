@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_812",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795509007.0293343,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795509007.0293343,
+      "reason": "The user's query 'What is the first word on the page?' has a low lexical overlap with previous queries (M_LEX=0.00) and is relatively simple in structure (M_CMP=0.03), indicating a potential attempt to infer information about the private retrieval corpus. This behavior is unusual for this user, as indicated by M_SEQ=0.00, and suggests a systematic probing of the system's boundaries. The trust trend is stable, but the user's intent velocity is low (M_INT=0.00), which may indicate a lack of genuine learning motivation."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795509030.9628785,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.02857142857142857,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.16926425695419312,
+        "m_dis": 0.0020337643165400233
+      }
+    }
+  ],
+  "query_history": [
+    "What is the first word on the page?"
+  ]
+}

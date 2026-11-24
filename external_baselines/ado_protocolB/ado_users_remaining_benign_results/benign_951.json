@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_951",
+  "global_trust_score": 0.5,
+  "total_interactions": 1,
+  "last_active": 1795509588.6441948,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": 0.0,
+      "timestamp": 1795509588.6441948,
+      "reason": "The current query appears to be a benign question about a kangaroo's life expectancy. The user's trust score is stable at 0.50, indicating a moderate level of trustworthiness. The query sequence is short and does not exhibit any signs of repetitive structure or pattern. The user is not attempting to infer membership or test boundaries."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795509781.648685,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.02,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.45838654041290283,
+        "m_dis": 0.001366241976798405
+      }
+    }
+  ],
+  "query_history": [
+    "What is the average life expectancy of a kangaroo?"
+  ]
+}

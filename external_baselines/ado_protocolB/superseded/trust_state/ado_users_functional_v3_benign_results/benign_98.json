@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_98",
+  "global_trust_score": 0.51,
+  "total_interactions": 1,
+  "last_active": 1795467442.735761,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": 0.01,
+      "timestamp": 1795467442.735761,
+      "reason": "The user's query appears to be a benign information-seeking query about Amedeo Avogadro's birth. The trust trend is stable, and the query does not show any signs of boundary probing or data membership testing. The user's history is empty, but the query's structure and content do not suggest any malicious intent."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795467467.2326887,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.021052631578947368,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.5682207345962524,
+        "m_dis": 0.0012197648213290394
+      }
+    }
+  ],
+  "query_history": [
+    "Was Amedeo Avogadro born in Turin August 9th 1776 to a noble ancient family of Piedmont, Italy?"
+  ]
+}

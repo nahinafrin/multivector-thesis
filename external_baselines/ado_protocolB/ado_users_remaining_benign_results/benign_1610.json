@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1610",
+  "global_trust_score": 0.5,
+  "total_interactions": 1,
+  "last_active": 1795520084.0334358,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": 0.0,
+      "timestamp": 1795520084.0334358,
+      "reason": "The user's query 'Who founded Montevideo?' appears to be a normal learning behavior, without any signs of boundary probing or data membership testing. The lexical overlap and intent velocity are both low, and the query sequence is short. The user's trust trend is stable, indicating a benign user behavior."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795520106.183602,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.043478260869565216,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.40107351541519165,
+        "m_dis": 0.0012447679511057858
+      }
+    }
+  ],
+  "query_history": [
+    "Who founded Montevideo?"
+  ]
+}

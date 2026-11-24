@@ -1,0 +1,34 @@
+[
+  {
+    "question": "Is the Eiffel Tower in Paris?",
+    "n_passages": 2,
+    "text_identical": true,
+    "scores_official": [
+      4.310683310031891,
+      23.847169280052185
+    ],
+    "scores_proxy": [
+      4.310683310031891,
+      23.847169280052185
+    ],
+    "max_rel_diff": 0.0,
+    "pass": true
+  },
+  {
+    "question": "Did Lincoln sign the Emancipation Proclamation?",
+    "n_passages": 3,
+    "text_identical": true,
+    "scores_official": [
+      7.378371715545654,
+      4.2663978934288025,
+      11.942020416259766
+    ],
+    "scores_proxy": [
+      7.378371715545654,
+      4.2663978934288025,
+      11.942020416259766
+    ],
+    "max_rel_diff": 0.0,
+    "pass": true
+  }
+]

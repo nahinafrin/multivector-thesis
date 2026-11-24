@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1211",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795513865.1652756,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795513865.1652756,
+      "reason": "The query 'What traps a layer of air, and keeps them dry and warm under water?' appears to be a benign, specific question that does not exhibit any signs of boundary probing or data membership testing. The trust trend is stable, and the user's behavior does not deviate significantly from their past interactions. Although the query's semantic structure is relatively simple, the user's intent seems focused on learning factual content rather than testing the system's limits."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795514656.1159668,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.029850746268656716,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.3698713183403015,
+        "m_dis": 0.0013392985434926739
+      }
+    }
+  ],
+  "query_history": [
+    "What traps a layer of air, and keeps them dry and warm under water?"
+  ]
+}

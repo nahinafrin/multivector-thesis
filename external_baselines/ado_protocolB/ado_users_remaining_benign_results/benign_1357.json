@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1357",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795516453.9546292,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795516453.9546292,
+      "reason": "The user's query 'Is Romania a secular state?' is unusual compared to their session history, with a high semantic drift (M_SEM_DRIFT: 0.00) and moderate complexity (M_CMP: 0.04). Although the lexical overlap (M_LEX: 0.00) is low, the query sequence appears to be probing the boundaries of the retrieval corpus, which is characteristic of a membership inference attack. The user's trust trend is stable, but the behavior is strongly out-of-character for this user compared to their own history."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795516476.7213948,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.037037037037037035,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.2390822172164917,
+        "m_dis": 0.0011444061371193035
+      }
+    }
+  ],
+  "query_history": [
+    "Is Romania a secular state?"
+  ]
+}

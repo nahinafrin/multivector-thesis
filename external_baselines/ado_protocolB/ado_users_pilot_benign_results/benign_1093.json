@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1093",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795478477.377354,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795478477.377354,
+      "reason": "The user's query, 'What completed in November?', has a moderate level of complexity (M_CMP=0.04) but low lexical overlap (M_LEX=0.00). Considering the session history is empty, we cannot assess the user's intent based on previous queries. However, the user's trust trend is stable (TRUST TRENDS=STABLE) but with a relatively low global trust score (GLOBAL TRUST SCORE=0.50). This behavior is suspicious because it resembles a systematic probing of the system's knowledge boundaries, which is a hallmark of a 'zero-day' mindset. Although the specific threat levels are moderate at best, the overall threat level is elevated due to the absence of clear intent and the stable but low trust trend."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795478678.7062788,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.037037037037037035,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.23053288459777832,
+        "m_dis": 0.0021261084202768986
+      }
+    }
+  ],
+  "query_history": [
+    "What completed in November?"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1040",
+  "global_trust_score": 0.5,
+  "total_interactions": 1,
+  "last_active": 1795478258.6141517,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": 0.0,
+      "timestamp": 1795478258.6141517,
+      "reason": "The query 'Are leopards circular?' is a benign question with low complexity (M_CMP=0.05) and no lexical overlap (M_LEX=0.00). The user's trust trend is stable (TRUST TRENDS=STABLE), and there is no evidence of sequence anomalies (M_SEQ=0.00) or semantic drift (M_SEM_DRIFT=0.00). The query does not seem to be structured or systematic, and it does not resemble a black-box reverse-engineering experiment. Therefore, we consider the threat level to be LOW."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795478280.0291765,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.045454545454545456,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.09082639217376709,
+        "m_dis": 0.0010962716454046538
+      }
+    }
+  ],
+  "query_history": [
+    "Are leopards circular?"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1595",
+  "global_trust_score": 0.51,
+  "total_interactions": 1,
+  "last_active": 1795480874.2825274,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": 0.01,
+      "timestamp": 1795480874.2825274,
+      "reason": "The user's query, 'Was Grant elected president as a Republican?', does not show any signs of boundary probing or data membership testing. The trust trend is stable, and the user's behavior is consistent with a normal learning pattern."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795480895.444416,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.022727272727272728,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.3653296232223511,
+        "m_dis": 0.0011635441245640861
+      }
+    }
+  ],
+  "query_history": [
+    "Was Grant elected president as a Republican?"
+  ]
+}

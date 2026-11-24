@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_870",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795509229.139533,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795509229.139533,
+      "reason": "The user's query sequence shows a high degree of semantic drift (0.00 -> 0.00), indicating an attempt to probe the system's boundaries. Although the lexical overlap is low (0.00), the complexity of the query is moderate (0.05), suggesting a subtle attempt to infer membership. The trust trend is stable, but the global trust score is relatively low (0.50), making this behavior even more suspicious."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795509251.0889251,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.045454545454545456,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.39772897958755493,
+        "m_dis": 0.0019976553541708442
+      }
+    }
+  ],
+  "query_history": [
+    "What expired on March?"
+  ]
+}

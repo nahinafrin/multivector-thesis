@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_818",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795477766.1407826,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795477766.1407826,
+      "reason": "The user's query 'What is Monroe's father's name?' is unusual because it is a specific, targeted question that could be attempting to probe the system's knowledge about a particular individual. The user's history is empty, making it difficult to determine their intent, but the trust trend is stable, which suggests that this user may be attempting to infer whether specific data is inside the private retrieval corpus. The M_LEX metric is 0.00, indicating low lexical overlap with past queries, but the M_CMP metric is 0.10, indicating some complexity in the query structure. Overall, this behavior looks like boundary probing and data membership testing, which suggests an elevated threat level."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795477786.7124748,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.0967741935483871,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.23120033740997314,
+        "m_dis": 0.0012092567693011951
+      }
+    }
+  ],
+  "query_history": [
+    "What is Monroe's father's name?"
+  ]
+}

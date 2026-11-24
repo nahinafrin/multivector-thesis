@@ -1,0 +1,22 @@
+{
+ "seed": 20261123,
+ "inputs": {
+  "contexts_attack.jsonl": "de6b3941803db906a985d50f188304417c52ca178d30885e4cd1d96d3dc1f9f3",
+  "contexts_benign.jsonl": "c44419b0b3a7824cfd9a2b028bf55ff99edc919a22efccc474116b96b642c327"
+ },
+ "method": "5 + 5 simple random from rows outside the pilot",
+ "attack": [
+  13,
+  25,
+  34,
+  75,
+  173
+ ],
+ "benign": [
+  98,
+  202,
+  1086,
+  1235,
+  1368
+ ]
+}

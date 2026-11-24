@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_321",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795505806.6783795,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795505806.6783795,
+      "reason": "The user's query 'What is the largest religious group in Canada?' has a very low M_LEX (0.00) and M_INT (0.00) scores, indicating a potentially probing behavior rather than a genuine information-seeking one. This is further reinforced by the STABLE trust trend, which suggests that the user is trying to test the boundaries of the system's knowledge rather than learn from it. Given the lack of sequence anomalies (M_SEQ: 0.00) and semantic drift (M_SEM_DRIFT: 0.00), the behavior is strongly out-of-character for a normal learner and resembles a black-box reverse-engineering experiment."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795505831.255424,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.021739130434782608,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.4412948489189148,
+        "m_dis": 0.0015509895259988565
+      }
+    }
+  ],
+  "query_history": [
+    "What is the largest religious group in Canada?"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_86",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795475848.2279716,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795475848.2279716,
+      "reason": "The user's query 'When did he publish another memoria?' shows a high degree of intent velocity (M_INT = 0.00) and a stable trust trend (Trust Trend: STABLE). However, the lack of lexical overlap (M_LEX = 0.00) and the low complexity of the query (M_CMP = 0.03) suggest that the user is attempting to infer whether specific data is inside the private retrieval corpus. Furthermore, the query sequence is structured and focused on probing boundaries of what the system 'knows', which is a characteristic of a zero-day mindset. Given the user's previous session history is empty, we cannot gauge their typical behavior, and the trust history is also empty, indicating that we cannot rely on past behavior to gauge the user's intent."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795475869.2039099,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.027777777777777776,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.3365083932876587,
+        "m_dis": 0.0016052202361273894
+      }
+    }
+  ],
+  "query_history": [
+    "When did he publish another memoria?"
+  ]
+}

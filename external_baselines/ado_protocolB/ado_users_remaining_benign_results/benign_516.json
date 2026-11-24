@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_516",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795507294.4760833,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795507294.4760833,
+      "reason": "The query sequence shows a structured and systematic probing of boundaries, attempting to infer the presence of specific data within the private retrieval corpus. Although the user's trust score is stable, their intent velocity is low, and the query complexity is moderate, the behavior strongly resembles a membership inference attack. The user's lack of explicit lexical overlap and moderate semantic drift also contribute to the elevated threat level."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795507315.6175697,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.01818181818181818,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.30238938331604004,
+        "m_dis": 0.0017600227645761322
+      }
+    }
+  ],
+  "query_history": [
+    "Does salmon remain the favorite of fly rod enthusiasts?"
+  ]
+}

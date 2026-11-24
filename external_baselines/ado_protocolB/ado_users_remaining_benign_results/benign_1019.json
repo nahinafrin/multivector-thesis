@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1019",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795510659.6917198,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795510659.6917198,
+      "reason": "The query 'Where is the leopard distributed?' is a specific and targeted question that may indicate the user is trying to infer the presence or absence of certain data within the retrieval corpus. The user's trust score is stable at 0.50, but their behavior is unusual in the sense that it is highly focused on a specific topic, which could be indicative of membership inference. Additionally, the user has not shown a pattern of behavior that is out-of-character compared to their own history, but the query's structure and specificity raise suspicions."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795510682.0012658,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.030303030303030304,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.13564574718475342,
+        "m_dis": 0.001065428364048207
+      }
+    }
+  ],
+  "query_history": [
+    "Where is the leopard distributed?"
+  ]
+}

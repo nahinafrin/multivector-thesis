@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1177",
+  "global_trust_score": 0.55,
+  "total_interactions": 1,
+  "last_active": 1795478834.746763,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": 0.05,
+      "timestamp": 1795478834.746763,
+      "reason": "The current query is a normal question about Eurasian otters in the UK, and the user's trust trend is stable. However, the query's lack of lexical overlap with the user's previous queries and the low complexity/structure score suggest that the user is not relying on previously learned information or trying to exploit system boundaries."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795478856.0271368,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.02197802197802198,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.45804065465927124,
+        "m_dis": 0.001473304885613894
+      }
+    }
+  ],
+  "query_history": [
+    "What is one of the challenges of re-establishing a population of Eurasian otters in the UK?"
+  ]
+}

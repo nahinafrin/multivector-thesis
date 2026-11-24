@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_776",
+  "global_trust_score": 0.5,
+  "total_interactions": 1,
+  "last_active": 1795508433.2964056,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": 0.0,
+      "timestamp": 1795508433.2964056,
+      "reason": "The user's query 'Is Indonesia a republic?' appears to be a benign question about a specific fact, and the metrics do not indicate any suspicious behavior. The Global Trust Score is 0.50, which is relatively low, but the Trust Trend is STABLE, suggesting that the user's behavior is not rapidly deteriorating. The query sequence is empty, indicating that this is the first interaction with the system, and the metrics do not show any signs of boundary probing or data membership testing. The user's intent appears to be focused on learning a specific fact, rather than probing the system's capabilities or pushing adversarial content."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795508454.8333986,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.041666666666666664,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.2819116711616516,
+        "m_dis": 0.0011594327064031954
+      }
+    }
+  ],
+  "query_history": [
+    "Is Indonesia a republic?"
+  ]
+}

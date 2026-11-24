@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_667",
+  "global_trust_score": 0.5,
+  "total_interactions": 1,
+  "last_active": 1795476651.9617004,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": 0.0,
+      "timestamp": 1795476651.9617004,
+      "reason": "The user's query 'Do wolves leave their pack?' does not exhibit any obvious signs of malicious intent. The lexical overlap is 0.00, which is expected for a single query. The intent velocity is 0.00, indicating the user is not rapidly probing boundaries or searching for membership inference. The trust trend is STABLE, and the user's history is empty, making it difficult to assess their behavior in context. The current metrics do not suggest any boundary probing or data membership testing."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795476887.5820198,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.037037037037037035,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.18908536434173584,
+        "m_dis": 0.0009240158940969865
+      }
+    }
+  ],
+  "query_history": [
+    "Do wolves leave their pack?"
+  ]
+}

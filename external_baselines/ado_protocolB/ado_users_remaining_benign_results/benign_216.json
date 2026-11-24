@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_216",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795505676.9099066,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795505676.9099066,
+      "reason": "The user's query 'What did Coolidge do after graduating from Amherst?' is an unusual sequence for this user, especially considering their empty session history and stable trust trend. While the query itself is innocuous, the lack of lexical overlap (M_LEX: 0.00) and complexity (M_CMP: 0.02) suggests a probing behavior. Additionally, the low trust score (0.50) and stable trend indicate that the user is not acting like a typical learner, which warrants a more cautious assessment."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795505698.7810419,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.0196078431372549,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.37720704078674316,
+        "m_dis": 0.001109747651610771
+      }
+    }
+  ],
+  "query_history": [
+    "What did Coolidge do after graduating from Amherst?"
+  ]
+}

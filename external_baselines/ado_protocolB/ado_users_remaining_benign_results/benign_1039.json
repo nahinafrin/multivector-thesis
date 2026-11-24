@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1039",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795510704.2016275,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795510704.2016275,
+      "reason": "The current query, 'What sort of cats are solitary?', exhibits a moderate level of complexity (M_CMP = 0.03) and intent velocity (M_INT = 0.00), which could be indicative of a user probing the system's boundaries. The trust score is stable at 0.50, but the lack of explicit lexical overlap (M_LEX = 0.00) and sequence anomaly (M_SEQ = 0.00) suggests that the user is not simply seeking information. Additionally, the user's behavior is out-of-character for their own history, which raises suspicions of membership inference or data poisoning. The trust trend is stable, but the user's intent velocity is low, indicating a possible attempt to refine their understanding of the system's capabilities."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795510726.1550562,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.03225806451612903,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.19263488054275513,
+        "m_dis": 0.0015321388733838257
+      }
+    }
+  ],
+  "query_history": [
+    "What sort of cats are solitary?"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_172",
+  "global_trust_score": 0.5,
+  "total_interactions": 1,
+  "last_active": 1795505287.2053409,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": 0.0,
+      "timestamp": 1795505287.2053409,
+      "reason": "The query 'What are the similarities between beetles and grasshoppers?' appears to be a genuine question about comparative biology, and the user's trust score is stable. However, the query's intent velocity is 0.00, indicating that the user is not probing the system's boundaries or attempting to infer membership. The user's session history is empty, suggesting that this is the first interaction with this topic, and the trust history is also empty, indicating no prior interactions. The global trust score of 0.50 suggests a neutral trust level, and the M_LEX, M_CMP, M_INT, M_SEQ, and M_SEM_DRIFT metrics are all low or zero, indicating no significant anomalies in the user's behavior."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795505312.5911741,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.01694915254237288,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.2671539783477783,
+        "m_dis": 0.0012157285316606618
+      }
+    }
+  ],
+  "query_history": [
+    "What are the similarities between beetles and grasshoppers?"
+  ]
+}

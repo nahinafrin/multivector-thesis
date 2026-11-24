@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1442",
+  "global_trust_score": 0.5,
+  "total_interactions": 1,
+  "last_active": 1795518090.8459883,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": 0.0,
+      "timestamp": 1795518090.8459883,
+      "reason": "The user's query, 'Was Lee Kuan Yew a successful leader of Singapore?' appears to be a benign question about a historical figure. The query sequence is short and lacks structure, with low M_LEX and M_CMP metrics. The trust trend is stable at 0.50, indicating no significant changes in user behavior. There is no evidence of boundary probing or data membership testing."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795518114.624658,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.02,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.22728723287582397,
+        "m_dis": 0.0013805554755064655
+      }
+    }
+  ],
+  "query_history": [
+    "Was Lee Kuan Yew a successful leader of Singapore?"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1399",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795517998.9731007,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795517998.9731007,
+      "reason": "The user's query, 'Was Gellu Naum the leader of the surrealist movement in Romania ?', appears to be a well-formulated and specific question. However, the current metrics indicate low lexical overlap (M_LEX = 0.00) and low intent velocity (M_INT = 0.00), suggesting that this query is not typical of this user's past behavior. Furthermore, the user's trust score is stable but relatively low (0.50), which might indicate that the user is probing the system's boundaries. Additionally, the query sequence is not particularly unusual compared to this user's history, but the query itself seems to be designed to test the presence or absence of specific data within the corpus."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795518021.676249,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.015384615384615385,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.5683716535568237,
+        "m_dis": 0.0015140297638091347
+      }
+    }
+  ],
+  "query_history": [
+    "Was Gellu Naum the leader of the surrealist movement in Romania ?"
+  ]
+}

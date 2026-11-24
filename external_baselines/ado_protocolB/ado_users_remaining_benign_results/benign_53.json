@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_53",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795504360.5657349,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795504360.5657349,
+      "reason": "The user's query, 'Did Lincoln's Wife's Family support slavery?' appears to be probing the system's knowledge of specific data points, particularly regarding historical figures and their relationships. The query's structure and specificity, coupled with the absence of explicit lexical overlap, suggest a targeted search for membership inference. Furthermore, the user's trust trend is STABLE, which is unusual given the high specificity of the query. This behavior aligns with zero-day-style boundary probing, where the user is testing the system's knowledge without explicitly asking for it."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795504386.5740652,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.06818181818181818,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.11760377883911133,
+        "m_dis": 0.0011645867097784255
+      }
+    }
+  ],
+  "query_history": [
+    "Did Lincoln's Wife's Family support slavery?"
+  ]
+}

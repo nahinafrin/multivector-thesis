@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1231",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795514678.6683755,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795514678.6683755,
+      "reason": "The user's query 'Why are penguins countershaded?' does not seem particularly suspicious, but the lack of lexical overlap (M_LEX: 0.00) and low complexity (M_CMP: 0.03) suggests a potentially probing behavior. Given the user's global trust score of 0.50 and stable trust trend, this behavior is elevated but not yet critical. The absence of sequence anomalies (M_SEQ: 0.00) and semantic drift (M_SEM_DRIFT: 0.00) also suggests that the user is not attempting to infer membership or poison the corpus."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795514700.1287565,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.03225806451612903,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.18532931804656982,
+        "m_dis": 0.00100051513938174
+      }
+    }
+  ],
+  "query_history": [
+    "Why are penguins countershaded?"
+  ]
+}

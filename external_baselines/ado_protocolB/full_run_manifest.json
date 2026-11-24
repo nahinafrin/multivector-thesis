@@ -1,0 +1,17 @@
+{
+ "written_before_launch": "2026-11-23T20:06:38",
+ "sha256": {
+  "PREREGISTRATION_FULL.md": "2dc77ef09dfacd4232860bfaf30860f2ca7f8a9417f7a94a27c724f944257454",
+  "remaining_selection.json": "9dfef76a328adb617b7d3f68b910d7b9495859f72b1192a6cb92bf71a5ca6115",
+  "full_selection.json": "f018c5aa5655ee08a9c93a3ca34a6794f59fb1bfb301c8c748bb24e22967330b",
+  "pilot_selection.json": "e8612d18485d076ed5b1ee39e894a8d276c657143c37c6cdfb2f019ad7becaf1",
+  "run_ado_protocolB.py": "67d99db1b95d3e6ecaff55a027af1d6af3568623cc5a2a92446e13d8799e2bec",
+  "av_generate.py": "df9a9b32f92e1cd03d5c103c6578a9b339107150dcb629ee7bb5e290e6e2372c",
+  "run_full.sh": "9b2d2ad00796cd2059815b16c21d81af6c7e27fcb79643654ed0f333f2f242a6",
+  "score_ado_protocolB.py": "51a7d9e709b0005490cd46f48fd0549eec554bb21be2b378e4490baefa4f4d9e",
+  "score_sensitivity_refusal.py": "af396f7f02651a805c8c5bc0b10cf3d10a3a2404851ba950dbf37df4aee0f17c",
+  "check_alignment.py": "179e1f81e7e2e57fa152f9b5f29cf40611340706f820a1c31e6517e5542213e5",
+  "pilot_attack_results.jsonl": "28e5e76e8db41d425604b7d91984082ef953c0da123a74b9e4f8e3523f156644",
+  "pilot_benign_results.jsonl": "da55eec508cf48a11fa8db6c4b057f1aca7fcdd7910c018e4891b4d6dea60258"
+ }
+}

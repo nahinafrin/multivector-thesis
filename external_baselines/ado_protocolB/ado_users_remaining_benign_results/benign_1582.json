@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1582",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795519783.653587,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795519783.653587,
+      "reason": "The user's query 'What was Grant's political affiliation?' appears to be a targeted inquiry, and given the current trust score of 0.50, it's possible the user is probing the boundaries of what the system knows. The lack of lexical overlap (M_LEX: 0.00) and moderate complexity (M_CMP: 0.05) suggest a deliberate attempt to test the system's knowledge without providing explicit keywords. Additionally, the stable trust trend indicates the user has shown some level of trustworthiness in the past, but the current query's focus on a specific individual's affiliation raises suspicions. The overall threat level is ELEVATED due to the potential for membership inference or content leakage."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795519980.6956697,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.05128205128205128,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.17584311962127686,
+        "m_dis": 0.0012395045812652104
+      }
+    }
+  ],
+  "query_history": [
+    "What was Grant's political affiliation?"
+  ]
+}

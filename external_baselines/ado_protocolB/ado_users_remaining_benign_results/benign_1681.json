@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1681",
+  "global_trust_score": 0.5,
+  "total_interactions": 1,
+  "last_active": 1795521044.4370341,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": 0.0,
+      "timestamp": 1795521044.4370341,
+      "reason": "The current query 'What field did Woodrow Wilson leave law practice to study?' does not exhibit any signs of boundary probing or data membership testing. The trust trend is stable, and the user's behavior is consistent with learning domain knowledge. The query's low lexical overlap (M_LEX=0.00) and simplicity (M_CMP=0.02) do not suggest an attempt to infer membership or circumvent safety policies."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795521069.1724281,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.017241379310344827,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.2952861189842224,
+        "m_dis": 0.0012200823239699853
+      }
+    }
+  ],
+  "query_history": [
+    "What field did Woodrow Wilson leave law practice to study?"
+  ]
+}

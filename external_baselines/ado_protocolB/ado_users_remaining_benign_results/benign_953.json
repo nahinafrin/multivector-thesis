@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_953",
+  "global_trust_score": 0.5,
+  "total_interactions": 1,
+  "last_active": 1795509807.7677078,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": 0.0,
+      "timestamp": 1795509807.7677078,
+      "reason": "Failed to parse"
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795509829.4834976,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.014705882352941176,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.5356623530387878,
+        "m_dis": 0.0016869831510948107
+      }
+    }
+  ],
+  "query_history": [
+    "When did the first official report of kangaroo blindness take place?"
+  ]
+}

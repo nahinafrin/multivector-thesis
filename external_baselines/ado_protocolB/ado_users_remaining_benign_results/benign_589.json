@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_589",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795507473.631493,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795507473.631493,
+      "reason": "The user's query 'Which future Heisman Trophy winner did Ford tackle?' shows a low lexical overlap (M_LEX: 0.00), but a moderate complexity (M_CMP: 0.02) and a very low intent velocity (M_INT: 0.00), indicating a deliberate and structured probing of the system's knowledge boundaries. The lack of sequence anomalies (M_SEQ: 0.00) and semantic drift (M_SEM_DRIFT: 0.00) in the current session history suggests a targeted attempt to infer the presence or absence of specific data. The user's global trust score is stable (Trust Trend: STABLE) but low (0.50), which, combined with the structured query sequence, raises suspicions of membership inference or data poisoning."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795507494.2670186,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.0196078431372549,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.38481175899505615,
+        "m_dis": 0.0012751158701776748
+      }
+    }
+  ],
+  "query_history": [
+    "Which future Heisman Trophy winner did Ford tackle?"
+  ]
+}

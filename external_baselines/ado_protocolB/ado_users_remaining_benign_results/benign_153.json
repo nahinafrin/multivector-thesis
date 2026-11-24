@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_153",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795505193.5382946,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795505193.5382946,
+      "reason": "The user's query sequence exhibits a structured and systematic probing of boundaries, with a focus on testing presence vs absence of underlying data. The low lexical overlap (M_LEX) and moderate complexity (M_CMP) suggest a deliberate attempt to infer membership, rather than learn factual content. Additionally, the lack of semantic drift (M_SEM_DRIFT) and high M_SEQ anomaly suggest a focused effort to refine queries based on responses, consistent with membership inference tactics."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795505219.0230896,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.03597122302158273,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.2799570560455322,
+        "m_dis": 0.0017902310799431693
+      }
+    }
+  ],
+  "query_history": [
+    "Did he not determine the dependence of the boiling of water with atmospheric pressure -LRB- in excellent agreement with modern data -RRB- ?"
+  ]
+}

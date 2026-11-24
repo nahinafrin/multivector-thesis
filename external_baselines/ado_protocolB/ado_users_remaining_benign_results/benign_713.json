@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_713",
+  "global_trust_score": 0.5,
+  "total_interactions": 1,
+  "last_active": 1795507822.3900127,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": 0.0,
+      "timestamp": 1795507822.3900127,
+      "reason": "The user's query, 'Who did Cleveland run against in 1884?', is a specific and factual question that does not exhibit any signs of boundary probing or data membership testing. The lexical overlap, complexity, and intent velocity metrics are all low, indicating a normal learning behavior. The trust trend is stable, which further supports the conclusion that this interaction is benign. The user's history is empty, making it difficult to assess their behavior over time, but the overall trust score of 0.50 is not indicative of any significant concerns."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795507842.206009,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.02631578947368421,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.23051667213439941,
+        "m_dis": 0.001472894180542106
+      }
+    }
+  ],
+  "query_history": [
+    "Who did Cleveland run against in 1884?"
+  ]
+}

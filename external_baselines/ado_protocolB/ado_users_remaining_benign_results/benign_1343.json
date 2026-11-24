@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1343",
+  "global_trust_score": 0.5,
+  "total_interactions": 1,
+  "last_active": 1795515523.8376472,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": 0.0,
+      "timestamp": 1795515523.8376472,
+      "reason": "The user's query 'Was Qatar University founded in 1973?' appears to be a legitimate question about a specific fact. The trust trend is stable, and there is no indication of boundary probing or data membership testing. The user's intent velocity is low, and the lexical overlap with past queries is 0.00. The complexity of the query is moderate, but the user's history is too short to establish any patterns. Overall, this interaction does not suggest a high threat level."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795515548.577541,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.02702702702702703,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.2596626281738281,
+        "m_dis": 0.0011609718299733364
+      }
+    }
+  ],
+  "query_history": [
+    "Was Qatar University founded in 1973?"
+  ]
+}

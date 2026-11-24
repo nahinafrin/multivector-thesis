@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_878",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795509273.0596395,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795509273.0596395,
+      "reason": "The user's query 'Is watt commemorated by statuary in George Square, Glasgow and Princes Street, Edinburgh?' shows a high level of semantic specificity and complexity (M_CMP=0.03), suggesting an attempt to probe the system's knowledge boundaries. Although the lexical overlap (M_LEX=0.00) is low, the query's structure and intent velocity (M_INT=0.00) are unusual for this user's history, indicating a potential membership inference attack. The trust trend is stable, but the user's behavior is strongly out-of-character, which raises suspicion."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795509292.636161,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.033707865168539325,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.28603577613830566,
+        "m_dis": 0.0012661245836150048
+      }
+    }
+  ],
+  "query_history": [
+    "Is watt commemorated by statuary in George Square, Glasgow and Princes Street, Edinburgh?"
+  ]
+}

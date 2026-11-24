@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_49",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795504075.1473937,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795504075.1473937,
+      "reason": "The user's query sequence shows a focus on probing the system's knowledge boundaries, particularly around the topic of the American Civil War. Although the user's global trust score is stable at 0.50, the query itself is unusual, with a low lexical overlap (M_LEX = 0.00) and a moderate level of complexity (M_CMP = 0.04). The user's intent appears to be testing the system's response to specific queries, potentially indicating membership inference or content leakage. The lack of sequence anomalies (M_SEQ = 0.00) and semantic drift (M_SEM_DRIFT = 0.00) in the user's history suggests that this behavior is out-of-character."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795504339.2977014,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.04,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.14299052953720093,
+        "m_dis": 0.0014331526294015368
+      }
+    }
+  ],
+  "query_history": [
+    "What trail did Lincoln use a Farmers' Almanac in? "
+  ]
+}

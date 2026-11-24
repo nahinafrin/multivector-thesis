@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1245",
+  "global_trust_score": 0.5,
+  "total_interactions": 1,
+  "last_active": 1795514954.3869274,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": 0.0,
+      "timestamp": 1795514954.3869274,
+      "reason": "The query 'Are penguins considered "
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795514977.9034066,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.06818181818181818,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.22271013259887695,
+        "m_dis": 0.00093551778710838
+      }
+    }
+  ],
+  "query_history": [
+    "Are penguins considered \"higher waterbirds\"?"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_982",
+  "global_trust_score": 0.5,
+  "total_interactions": 1,
+  "last_active": 1795510161.1660907,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": 0.0,
+      "timestamp": 1795510161.1660907,
+      "reason": "The user's query 'Are kangaroos farmed to any extent?' is a legitimate question and does not exhibit any signs of boundary probing or data membership testing. The trust score is stable, and the user's behavior is consistent with a normal learner. The metrics M_LEX, M_CMP, M_INT, and M_SEQ are all low, indicating that the query is not attempting to exploit any vulnerabilities or test the system's boundaries. The query sequence is short and does not show any repetitive structure or pattern that would indicate membership inference or data poisoning."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795510237.7679226,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.02857142857142857,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.3436241149902344,
+        "m_dis": 0.0011272890702426033
+      }
+    }
+  ],
+  "query_history": [
+    "Are kangaroos farmed to any extent?"
+  ]
+}

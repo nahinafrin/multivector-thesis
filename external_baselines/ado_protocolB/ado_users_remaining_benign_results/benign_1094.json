@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1094",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795511966.8183978,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795511966.8183978,
+      "reason": "The current query 'The State Court rules what?' has a moderate complexity score (M_CMP = 0.04) and lacks explicit lexical overlap (M_LEX = 0.00), which is unusual for a query of this nature. Additionally, the user's trust trend is stable, but their intent velocity (M_INT = 0.00) and sequence anomaly (M_SEQ = 0.00) scores are both low, indicating a lack of pattern in their query history. Given the absence of explicit keywords related to membership inference or content leakage, I'm concerned that the user may be engaging in subtle boundary probing or data membership testing, as evidenced by the query's structure and lack of clear intent."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795512189.434636,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.037037037037037035,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.3318694829940796,
+        "m_dis": 0.0015174360728282153
+      }
+    }
+  ],
+  "query_history": [
+    "The State Court rules what?"
+  ]
+}

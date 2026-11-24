@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_203",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795505595.1894727,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795505595.1894727,
+      "reason": "The user's query sequence 'What happened on plants and fungi?' shows a low lexical overlap (M_LEX=0.00), but given the user's low trust score (0.50) and stable trust trend, we should be cautious. Although the query complexity (M_CMP=0.03) is low, the intent velocity (M_INT=0.00) is also low, suggesting that the user may not be trying to learn new information. The absence of a session history ([]) and trust history ([]) makes it difficult to assess the user's behavior, but the low M_SEQ (0.00) and M_SEM_DRIFT (0.00) suggest that the user is not engaging in boundary probing or data membership testing. However, the user's low trust score and stable trust trend indicate that we should remain vigilant."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795505616.858026,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.029411764705882353,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.22798317670822144,
+        "m_dis": 0.0018751486232434736
+      }
+    }
+  ],
+  "query_history": [
+    "What happened on plants and fungi?"
+  ]
+}

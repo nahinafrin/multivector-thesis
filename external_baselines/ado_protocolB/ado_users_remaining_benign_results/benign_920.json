@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_920",
+  "global_trust_score": 0.51,
+  "total_interactions": 1,
+  "last_active": 1795509312.936249,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": 0.01,
+      "timestamp": 1795509312.936249,
+      "reason": "The current query 'What is now part of Adams National Historical Park?' appears to be a genuine information-seeking query with low lexical overlap (M_LEX = 0.00) and complexity (M_CMP = 0.02). The trust trend is stable, and there is no indication of a structured, systematic, or probing sequence. The user's intent velocity is also low (M_INT = 0.00), suggesting a normal learning behavior. However, we should monitor the user's future interactions to ensure this behavior is consistent."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795509504.2573292,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.0196078431372549,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.20403575897216797,
+        "m_dis": 0.001212824501489105
+      }
+    }
+  ],
+  "query_history": [
+    "What is now part of Adams National Historical Park?"
+  ]
+}

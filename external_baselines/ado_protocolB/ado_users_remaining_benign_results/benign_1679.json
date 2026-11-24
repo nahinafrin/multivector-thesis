@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1679",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795520844.5337203,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795520844.5337203,
+      "reason": "The user's query sequence, 'Who was President when Wilson finished Congressional Government?', suggests a deliberate attempt to probe the boundaries of the private retrieval corpus. The query's structure and specificity are unusual for this user, and the Global Trust Score of 0.50 indicates a need for cautious interpretation. Additionally, the low M_LEX and M_CMP metrics, along with the lack of semantic drift, suggest a focused effort to test the presence of specific data rather than learning factual content. This behavior aligns with membership inference attack patterns, where the user is attempting to infer whether specific samples are inside the corpus."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795521023.2902203,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.015625,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.1704568862915039,
+        "m_dis": 0.0011649886984032001
+      }
+    }
+  ],
+  "query_history": [
+    "Who was President when Wilson finished Congressional Government?"
+  ]
+}

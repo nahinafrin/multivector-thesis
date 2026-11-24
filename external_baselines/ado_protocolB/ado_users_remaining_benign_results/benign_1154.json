@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1154",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795512498.6073978,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795512498.6073978,
+      "reason": "This user's query 'Is the comic strip Mallard Fillmore named after the president ?' exhibits a subtle, yet suspicious pattern. The query's structure and intent seem to focus on probing the system's knowledge, rather than learning domain knowledge. Specifically, the query is attempting to infer the presence or absence of specific data within the retrieval corpus, without directly asking for it. This behavior is strongly out-of-character for a normal user, given the lack of explicit lexical overlap and the absence of any clear intent to learn factual content."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795512520.1742432,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.015873015873015872,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.5459023714065552,
+        "m_dis": 0.0013933050292649224
+      }
+    }
+  ],
+  "query_history": [
+    "Is the comic strip Mallard Fillmore named after the president ?"
+  ]
+}

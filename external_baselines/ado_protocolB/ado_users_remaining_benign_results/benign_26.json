@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_26",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795504030.2621112,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795504030.2621112,
+      "reason": "The user's query 'When did Lincoln first serve as President?' seems innocuous, but the global trust score is only 0.50, indicating some level of risk. The query's lexical overlap and intent velocity are both 0.00, suggesting a possible attempt to infer whether specific data is inside the private retrieval corpus. The user's history is empty, and there's no trust history, which raises suspicions. Furthermore, the query's structure and semantics are not out of character for this user, but the overall trend is to probe boundaries of what the system 'knows'. This behavior is strongly out-of-character compared to their own history and resembles a black-box reverse-engineering experiment."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795504052.5709758,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.023809523809523808,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.1560267210006714,
+        "m_dis": 0.001371579605931991
+      }
+    }
+  ],
+  "query_history": [
+    "When did Lincoln first serve as President?"
+  ]
+}

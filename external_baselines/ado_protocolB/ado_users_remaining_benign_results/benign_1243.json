@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1243",
+  "global_trust_score": 0.5,
+  "total_interactions": 1,
+  "last_active": 1795514917.8447053,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": 0.0,
+      "timestamp": 1795514917.8447053,
+      "reason": "The current query does not show any signs of boundary probing or data membership testing. The user's trust score is stable, and their query sequence is not structured or systematic. The query is a simple factual question, and the user's intent appears to be genuine learning."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795514939.2351975,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.015151515151515152,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.3456127643585205,
+        "m_dis": 0.000915343382547961
+      }
+    }
+  ],
+  "query_history": [
+    "Do penguins have a better than average sense of hearing for birds?"
+  ]
+}

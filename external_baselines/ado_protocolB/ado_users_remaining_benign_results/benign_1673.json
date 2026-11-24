@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1673",
+  "global_trust_score": 0.55,
+  "total_interactions": 1,
+  "last_active": 1795520800.1595862,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": 0.05,
+      "timestamp": 1795520800.1595862,
+      "reason": "The user's query 'Did the U.S. join the League of Nations?' appears to be a straightforward factual question with no apparent intent to probe system boundaries or infer membership. The low lexical overlap (M_LEX=0.00) and moderate complexity (M_CMP=0.07) suggest a legitimate inquiry rather than a systematic or adversarial behavior. Furthermore, the trust trend is stable (STABLE) and the global trust score is moderate (0.50), which further indicates a low risk of malicious intent."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795520823.218118,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.075,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.3512638211250305,
+        "m_dis": 0.0013464388185953295
+      }
+    }
+  ],
+  "query_history": [
+    "Did the U.S. join the League of Nations?"
+  ]
+}

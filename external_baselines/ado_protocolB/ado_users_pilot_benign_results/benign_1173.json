@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1173",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795478789.02631,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795478789.02631,
+      "reason": "The user's current query, 'How do sea otters insulate themselves?', has a low M_LEX (0.00) and M_CMP (0.03), suggesting a specific and structured intent. Given the user's trust score of 0.50 and stable trust trend, this behavior seems more suspicious. The lack of sequence anomalies (M_SEQ: 0.00) and semantic drift (M_SEM_DRIFT: 0.00) indicates that the user is not walking around a topic with small changes, which is a common pattern for membership inference. However, the user's intent appears to be focused on learning factual content, not probing boundaries or testing presence vs absence of underlying data."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795478814.9668696,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.02631578947368421,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.2997286319732666,
+        "m_dis": 0.0011796151635298988
+      }
+    }
+  ],
+  "query_history": [
+    "How do sea otters insulate themselves?"
+  ]
+}

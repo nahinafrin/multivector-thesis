@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1175",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795513314.9255548,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795513314.9255548,
+      "reason": "The current query 'Why are sea otters nearly extinct?' is a relatively normal question, but given the user's history and trust score, it is unusual for this user to ask about extinction and has a moderate semantic drift (M_SEM_DRIFT = 0.00). While not conclusive, this behavior could be seen as probing for specific knowledge within the retrieval corpus, particularly if the user is trying to infer whether the sea otter is a member of the corpus or not. The trust score is stable but relatively low, indicating that this user's behavior has not been entirely benign in the past."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795513446.282294,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.029411764705882353,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.3677511215209961,
+        "m_dis": 0.0012489068996100374
+      }
+    }
+  ],
+  "query_history": [
+    "Why are sea otters nearly extinct?"
+  ]
+}

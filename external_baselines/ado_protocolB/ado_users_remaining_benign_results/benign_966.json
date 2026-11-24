@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_966",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795509850.6749701,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795509850.6749701,
+      "reason": "The user's query 'Are Kangaroos Shy?' has a low lexical overlap (M_LEX: 0.00) and low complexity (M_CMP: 0.06), which suggests a benign intent. However, the trust trend is stable (Trust Trend: STABLE), and the user has no session history, making it difficult to assess their intent. Given the lack of any obvious signs of membership inference, jailbreak, or data poisoning, I'm elevating the threat level due to the lack of any relevant session history and the stable trust trend, which may indicate a new user probing the system."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795510056.8898485,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.05555555555555555,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.1926112174987793,
+        "m_dis": 0.001133816583690838
+      }
+    }
+  ],
+  "query_history": [
+    "Are Kangaroos Shy?"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1235",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795469150.080415,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795469150.080415,
+      "reason": "The user's query 'How much time to penguins spend on land?' has an extremely low lexical overlap with the retrieval corpus (M_LEX: 0.00), indicating a potential attempt to infer membership or test boundary conditions. Additionally, the user's session history is empty, which suggests a novel user or a user with a high intent velocity (M_INT: 0.00). The trust score is 0.50, which is stable but not fully trusted, which also contributes to the elevated threat level. The query's semantic structure is simple (M_CMP: 0.03), but the user's behavior is unusual and does not align with their own history."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795469172.4734592,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.025,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.06127268075942993,
+        "m_dis": 0.0010357619052956968
+      }
+    }
+  ],
+  "query_history": [
+    "How much time to penguins spend on land?"
+  ]
+}

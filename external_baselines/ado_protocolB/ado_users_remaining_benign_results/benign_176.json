@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_176",
+  "global_trust_score": 0.55,
+  "total_interactions": 1,
+  "last_active": 1795505334.085109,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": 0.05,
+      "timestamp": 1795505334.085109,
+      "reason": "The current query 'Is a beetle's general anatomy uniform?' does not exhibit any obvious signs of membership inference, jailbreak, or content leakage. The trust score is stable, and the user's behavior is consistent with normal learning patterns. The query's lexical overlap and complexity metrics are low, suggesting that the user is not attempting to probe for specific data or test boundaries. However, the lack of any query sequences or semantic drift in the session history raises some minor concern. We will monitor this user's behavior and update the trust score accordingly."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795505526.4980557,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.05263157894736842,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.27597540616989136,
+        "m_dis": 0.0012170197566109186
+      }
+    }
+  ],
+  "query_history": [
+    "Is a beetle's general anatomy uniform?"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_414",
+  "global_trust_score": 0.5,
+  "total_interactions": 1,
+  "last_active": 1795506610.227458,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": 0.0,
+      "timestamp": 1795506610.227458,
+      "reason": "The user's query, 'Does Egypt's foreign policy operates along moderate lines?', appears to be a legitimate question seeking factual information. The trust trend is stable, and there are no signs of boundary probing, membership inference, or data poisoning. The user's query style is not unusual for this user, and the lexical overlap is minimal. However, we should continue to monitor the user's behavior and adjust the trust score accordingly."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795506633.9153986,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.034482758620689655,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.37464439868927,
+        "m_dis": 0.0012014056792036805
+      }
+    }
+  ],
+  "query_history": [
+    "Does Egypt's foreign policy operates along moderate lines?"
+  ]
+}

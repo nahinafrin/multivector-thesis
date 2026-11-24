@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1668",
+  "global_trust_score": 0.5,
+  "total_interactions": 1,
+  "last_active": 1795520652.5027163,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": 0.0,
+      "timestamp": 1795520652.5027163,
+      "reason": "The user's query appears to be a genuine question seeking information about a specific topic. The query sequence does not exhibit any patterns of boundary probing or data membership testing. The trust trend is stable, indicating a consistent pattern of behavior. However, the user's intent velocity is low, which may indicate a cautious or exploratory approach."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795520779.108079,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.01680672268907563,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.30384010076522827,
+        "m_dis": 0.0014776762547936888
+      }
+    }
+  ],
+  "query_history": [
+    "Is it a constitutional democracy , where the president fulfills the roles of both head of state and head of government?"
+  ]
+}

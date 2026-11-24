@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_34",
+  "global_trust_score": 0.5,
+  "total_interactions": 1,
+  "last_active": 1795475806.571931,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": 0.0,
+      "timestamp": 1795475806.571931,
+      "reason": "The user's query 'Why did Lincoln issue the Emancipation Proclamation?' is a normal learning query, and the session history is empty, indicating no prior behavior to analyze. The global trust score is 0.50, indicating a stable trust trend. The query metrics (M_LEX, M_CMP, M_INT, M_SEQ, M_SEM_DRIFT) do not indicate any unusual behavior. The user is not attempting to infer membership, bypass safety policies, or shape the corpus, as the query is straightforward and does not exhibit repetitive structure or pattern. However, the trust score is moderate, indicating that the user's behavior is not fully trusted."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795475825.6343505,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.019230769230769232,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.12983357906341553,
+        "m_dis": 0.0010487942297591202
+      }
+    }
+  ],
+  "query_history": [
+    "Why did Lincoln issue the Emancipation Proclamation?"
+  ]
+}

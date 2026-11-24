@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_503",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795507251.8092692,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795507251.8092692,
+      "reason": "The user's query 'Does it have a border with Norway?' has a low lexical overlap (M_LEX=0.00) and complexity (M_CMP=0.03), but the trust score is stable at 0.50. However, the intent velocity (M_INT=0.00) is also very low, which suggests the user is not asking a typical question but is instead probing the system's knowledge. The session history is empty, and the trust history is also empty, indicating this is a new user or a new session. Given these factors, the behavior looks like membership inference or boundary probing, which warrants an ELEVATED threat level."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795507274.5302486,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.029411764705882353,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.19983428716659546,
+        "m_dis": 0.0016372781479402103
+      }
+    }
+  ],
+  "query_history": [
+    "Does it have a border with Norway?"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1506",
+  "global_trust_score": 0.5,
+  "total_interactions": 1,
+  "last_active": 1795480064.4190826,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": 0.0,
+      "timestamp": 1795480064.4190826,
+      "reason": "The user's query 'Did Roosevelt support racial integration in schools?' appears to be a factual question with a specific historical focus. The metrics indicate a low lexical overlap, complexity, and intent velocity, suggesting a normal learner's behavior. The trust trend is stable, and the session history is empty, implying no prior malicious activity. The query does not resemble a structured, systematic, or boundary-probing behavior."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795480680.6609604,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.019230769230769232,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.29676204919815063,
+        "m_dis": 0.0013825550628515642
+      }
+    }
+  ],
+  "query_history": [
+    "Did Roosevelt support racial integration in schools?"
+  ]
+}

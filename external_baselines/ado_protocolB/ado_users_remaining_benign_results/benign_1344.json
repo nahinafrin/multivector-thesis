@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1344",
+  "global_trust_score": 0.5,
+  "total_interactions": 1,
+  "last_active": 1795515569.3115609,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": 0.0,
+      "timestamp": 1795515569.3115609,
+      "reason": "The query 'Is Qatar bordered by Saudi Arabia to the south?' is a typical information-seeking question with no obvious signs of boundary probing or data membership testing. The user's trust score is stable, and the query sequence is consistent with normal learner behavior. However, we should monitor this user's activity to ensure they do not gradually build up to more suspicious behavior."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795516346.4002993,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.02127659574468085,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.2225738763809204,
+        "m_dis": 0.0010915615520839092
+      }
+    }
+  ],
+  "query_history": [
+    "Is Qatar bordered by Saudi Arabia to the south?"
+  ]
+}

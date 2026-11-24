@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1556",
+  "global_trust_score": 0.5,
+  "total_interactions": 1,
+  "last_active": 1795519478.9779906,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": 0.0,
+      "timestamp": 1795519478.9779906,
+      "reason": "The query 'What are turtle eggs covered in when they incubate?' appears to be a genuine information-seeking question, with no signs of boundary probing or data membership testing. The user's global trust score is stable at 0.50, indicating a trusted user. The current metrics show low lexical overlap, low complexity, and no semantic drift, suggesting a typical user behavior. The session history is empty, indicating this is the user's first interaction. The trust history is also empty. Overall, this query sequence does not exhibit any suspicious patterns or anomalies that would suggest a threat."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795519500.8676798,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.0196078431372549,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.3895682096481323,
+        "m_dis": 0.0013194601304797697
+      }
+    }
+  ],
+  "query_history": [
+    "What are turtle eggs covered in when they incubate?"
+  ]
+}

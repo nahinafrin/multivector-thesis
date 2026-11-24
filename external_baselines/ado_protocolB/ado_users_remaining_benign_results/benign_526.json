@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_526",
+  "global_trust_score": 0.55,
+  "total_interactions": 1,
+  "last_active": 1795507380.376099,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": 0.05,
+      "timestamp": 1795507380.376099,
+      "reason": "The current query, 'What is the most extensively celebrated holiday?', is a fairly general and innocuous question that doesn't show any signs of boundary probing or data membership testing. The trust trend is stable, indicating no sharp deviations from normal behavior. The user's intent velocity is low, and the query complexity is moderate, but not unusual for a user with a global trust score of 0.50. The session history is empty, so there's no evidence of repetitive or structured behavior. Given these factors, the threat level is LOW."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795507400.2592113,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.020833333333333332,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.4813218116760254,
+        "m_dis": 0.0018067385752510892
+      }
+    }
+  ],
+  "query_history": [
+    "What is the most extensively celebrated holiday?"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_733",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795477121.7125576,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795477121.7125576,
+      "reason": "The query 'Is it true that he sent in federal troops to chicago?' seems designed to test presence vs absence of specific historical information, which is a hallmark of membership inference attacks. While the user's trust score is stable, the query sequence lacks lexical overlap, but the intent velocity is high, indicating a focused probing behavior. The M_LEX, M_CMP, and M_INT metrics are low, moderate, and high, respectively, suggesting a deliberate attempt to extract specific knowledge from the system."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795477497.9265351,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.018867924528301886,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.2545691728591919,
+        "m_dis": 0.0013302722899761737
+      }
+    }
+  ],
+  "query_history": [
+    "Is it true that he sent in federal troops to chicago?"
+  ]
+}

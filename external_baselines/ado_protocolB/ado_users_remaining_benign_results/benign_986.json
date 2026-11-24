@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_986",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795510484.7836027,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795510484.7836027,
+      "reason": "The user's query 'Is a collision with a vehicle capable of killing a kangaroo?' appears to be probing the boundaries of what the system knows, with a very low lexical overlap (M_LEX = 0.00) and a moderate complexity level (M_CMP = 0.02). The trust trend is stable, but the trust score is only 0.50, indicating that we should be cautious. The query sequence is unusual for this user, with a high sequence anomaly score (M_SEQ = 0.00), suggesting that the user is testing the system's knowledge rather than learning domain-specific facts. The user's intent velocity (M_INT = 0.00) is also low, indicating that the user is not simply trying to learn new information but is instead focusing on specific aspects of the system's knowledge."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795510507.8177567,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.01639344262295082,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.3248192071914673,
+        "m_dis": 0.0011714799211929342
+      }
+    }
+  ],
+  "query_history": [
+    "Is a collision with a vehicle capable of killing a kangaroo ?"
+  ]
+}

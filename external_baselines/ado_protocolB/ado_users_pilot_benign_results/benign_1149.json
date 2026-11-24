@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1149",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795478745.5024788,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795478745.5024788,
+      "reason": "The user's query sequence shows a stable underlying topic ('Abigail Powers') with many small semantic mutations, which may be indicative of membership inference attempts. The M_SEQ metric is unusually high, indicating an unusual query pattern for this user. The lack of lexical overlap (M_LEX = 0.00) and low complexity (M_CMP = 0.02) suggest a systematic and focused probing of the system's boundaries. The trust trend is stable, but the user's behavior is strongly out-of-character compared to their own history. This behavior resembles a black-box reverse-engineering experiment, with small perturbations and a focus on probing the system's knowledge."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795478767.1842422,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.022222222222222223,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.36284005641937256,
+        "m_dis": 0.0017844022691774408
+      }
+    }
+  ],
+  "query_history": [
+    "Who or what fell in love with abigail powers?"
+  ]
+}

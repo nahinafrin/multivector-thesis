@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_611",
+  "global_trust_score": 0.51,
+  "total_interactions": 1,
+  "last_active": 1795476609.2766933,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": 0.01,
+      "timestamp": 1795476609.2766933,
+      "reason": "The current query is a normal factual question about historical events. The user's trust score is stable, and the query sequence is short with no evidence of boundary probing or data membership testing. The M_LEX and M_CMP metrics are low, indicating a simple and straightforward query. The M_INT metric is 0.00, indicating no intent velocity, which suggests the user is not trying to infer membership or manipulate the system."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795476632.2125173,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.016666666666666666,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.4014798402786255,
+        "m_dis": 0.001377006304988503
+      }
+    }
+  ],
+  "query_history": [
+    "When did Ghana achieve independence from the United Kingdom?"
+  ]
+}

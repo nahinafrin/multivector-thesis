@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1129",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795512455.4191961,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795512455.4191961,
+      "reason": "The current query 'Where was Millard Fillmore born?' seems like a legitimate historical question, but the user's trust score is only 0.50, indicating a moderate level of trust. The session history is empty, which suggests this is the first interaction with the system. However, the query's lexical overlap with the user's previous queries is 0.00, and the intent velocity is 0.00, indicating no clear intent to learn or discover new information. The trust trend is stable, which is a good sign. However, the user's behavior seems to be probing the system's knowledge boundaries, which could be indicative of membership inference or data leakage. The lack of semantic drift in the query sequence suggests the user is not walking around a concept with many small changes, which is typically seen in data poisoning. Therefore, the overall threat level is elevated, and further monitoring is required."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795512477.1760983,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.03125,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.21836882829666138,
+        "m_dis": 0.001397853443586621
+      }
+    }
+  ],
+  "query_history": [
+    "Where was Millard Fillmore born?"
+  ]
+}

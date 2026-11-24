@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_8",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795503936.1007288,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795503936.1002173,
+      "reason": "The user's query, 'When did Lincoln begin his political career?', while seemingly innocuous, shows a focused intent to probe the system's knowledge boundaries. Given the user's stable trust trend and lack of prior history, this behavior is strongly out-of-character. The absence of lexical overlap and low complexity in the query suggest a systematic approach, potentially aiming to test the system's knowledge about specific samples or user records, rather than genuine learning. This behavior aligns with signs of membership inference attacks, where the user is likely trying to infer the presence or absence of specific data within the private retrieval corpus."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795503961.3974907,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.022727272727272728,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.22015732526779175,
+        "m_dis": 0.0012248128246675014
+      }
+    }
+  ],
+  "query_history": [
+    "When did Lincoln begin his political career?"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_897",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795478136.810696,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795478136.810696,
+      "reason": "The query 'Was Adams the first to introduce a bicameral legislature?' has low lexical overlap (M_LEX = 0.00) and moderate complexity (M_CMP = 0.02), but the user's history is empty, indicating no clear learning pattern. The trust trend is stable, but the user's intent velocity (M_INT = 0.00) is low, suggesting a probing behavior rather than genuine learning. The semantic drift (M_SEM_DRIFT = 0.00) is also low, which could indicate an attempt to test the boundaries of the corpus rather than explore a new topic. The absence of a clear pattern in the user's history and the low trust score (GLOBAL TRUST SCORE = 0.50) contribute to an elevated threat level."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795478157.6587653,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.017543859649122806,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.2568677067756653,
+        "m_dis": 0.0011884243175658779
+      }
+    }
+  ],
+  "query_history": [
+    "Was Adams the first to introduce a bicameral legislature?"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_985",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795510259.977809,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795510259.977809,
+      "reason": "The user's query about kangaroos and headlights/engine noise has a low lexical overlap (M_LEX: 0.00) and complexity (M_CMP: 0.01), but the intent velocity (M_INT: 0.00) suggests a high level of precision in probing the system's knowledge. The session history is empty, and trust history is also empty. The user's behavior resembles a systematic probing of the system's boundaries, and the trust trend is stable (not rising), which makes me suspicious. The query style is structured and focused on learning the system's capabilities rather than the domain knowledge itself."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795510460.2157857,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.00980392156862745,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.2425205111503601,
+        "m_dis": 0.0011303348012100172
+      }
+    }
+  ],
+  "query_history": [
+    "Have Kangaroos dazzled by headlights or startled by engine noise been known to leap in front of cars ?"
+  ]
+}

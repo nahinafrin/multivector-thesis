@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_739",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795477521.156827,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795477521.156827,
+      "reason": "This query sequence appears to be probing the system's knowledge boundary, with a specific and unusual structure that seems designed to test the presence or absence of a particular text fragment. The user's intent velocity is low, indicating a deliberate and focused effort to extract information. Although the trust score is stable, the unusual behavior is a cause for concern, especially given the lack of lexical overlap with the current query. This behavior is strongly out-of-character for a user who has not demonstrated such patterned and systematic querying in the past."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795477544.2190542,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.04895104895104895,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.3682903051376343,
+        "m_dis": 0.0014275579387335062
+      }
+    }
+  ],
+  "query_history": [
+    "Did the team , sedating Cleveland with nitrous oxide -LRB- laughing gas -RRB- , not remove his upper left jaw and portions of his hard palate ?"
+  ]
+}

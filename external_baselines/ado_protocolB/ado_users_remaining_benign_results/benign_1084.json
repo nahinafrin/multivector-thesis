@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1084",
+  "global_trust_score": 0.5,
+  "total_interactions": 1,
+  "last_active": 1795511877.414617,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": 0.0,
+      "timestamp": 1795511877.414617,
+      "reason": "The query 'How many municipalities are within Oberland?' is a factual question with a specific, well-defined intent. The user has no session history, and the global trust score is moderate. The metrics suggest a normal user intent, and the query is not structured like a systematic probing of boundaries. The trust trend is stable, indicating no sharp increases or decreases in trustworthiness."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795511900.610462,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.022727272727272728,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.47517961263656616,
+        "m_dis": 0.001916520578012542
+      }
+    }
+  ],
+  "query_history": [
+    "How many municipalities are within Oberland?"
+  ]
+}

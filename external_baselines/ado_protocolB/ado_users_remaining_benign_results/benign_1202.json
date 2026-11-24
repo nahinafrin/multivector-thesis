@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1202",
+  "global_trust_score": 0.51,
+  "total_interactions": 1,
+  "last_active": 1795513678.4096751,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": 0.01,
+      "timestamp": 1795513678.4096751,
+      "reason": "The current query 'What is an otter's den called?' appears to be a genuine information-seeking query. The trust score is stable at 0.50, indicating a lack of significant deviation from the user's normal behavior. The session history is empty, suggesting no prior attempts to probe the system's boundaries or test its knowledge. The current metrics, including M_LEX, M_CMP, M_INT, and M_SEQ, do not raise any significant alarms, indicating a normal information-seeking query."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795513843.4037738,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.06666666666666667,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.5356619358062744,
+        "m_dis": 0.0012127864364485325
+      }
+    }
+  ],
+  "query_history": [
+    "What is an otter's den called?"
+  ]
+}

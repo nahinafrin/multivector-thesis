@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1235",
+  "global_trust_score": 0.5,
+  "total_interactions": 1,
+  "last_active": 1795467796.9930043,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": 0.0,
+      "timestamp": 1795467796.9930043,
+      "reason": "The query 'How much time to penguins spend on land?' appears to be a genuine information-seeking query, with low lexical overlap (M_LEX = 0.00) and moderate complexity (M_CMP = 0.03). The user's trust trend is stable (Trust Trend: STABLE), and there is no indication of boundary probing or membership inference. The query sequence is short and lacks the structure and systematic variation typical of membership inference or data poisoning attacks."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795467818.4006994,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.025,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.06127268075942993,
+        "m_dis": 0.0010357619052956968
+      }
+    }
+  ],
+  "query_history": [
+    "How much time to penguins spend on land?"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1480",
+  "global_trust_score": 0.5,
+  "total_interactions": 1,
+  "last_active": 1795479815.1511383,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": 0.0,
+      "timestamp": 1795479815.1511383,
+      "reason": "The user's current query, 'Where was Theodore Roosevelt born?', is a straightforward historical question with a low complexity score (M_CMP=0.03). The trust score is stable (Trust Trend: STABLE) and the user's session history is empty, indicating no prior suspicious behavior. While the user is not fully trusted (GLOBAL TRUST SCORE: 0.50), there is no indication of membership inference, jailbreak, data poisoning, or content leakage attempts. The query sequence does not resemble a systematic probing of the system's boundaries or knowledge."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795480044.267645,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.029411764705882353,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.44407761096954346,
+        "m_dis": 0.0012201887916478854
+      }
+    }
+  ],
+  "query_history": [
+    "Where was Theodore Roosevelt born?"
+  ]
+}

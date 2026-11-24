@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_775",
+  "global_trust_score": 0.45,
+  "total_interactions": 1,
+  "last_active": 1795508391.8904233,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": -0.05,
+      "timestamp": 1795508391.8904233,
+      "reason": "The user's query 'Is it true that indonesia has vast areas of wilderness?' is phrased as a factual question, but the lack of explicit lexical overlap (M_LEX: 0.00) and the low complexity of the query (M_CMP: 0.02) suggest a more targeted approach. The user's intent is unclear, but the behavior is unusual for this user (M_SEQ: 0.00). The trust trend is stable (TRUST TRENDS: STABLE), but the user's history is empty, making it difficult to assess their normal behavior. Considering the user's goal is not immediately clear, and the behavior is out-of-character, I conclude that the threat level is elevated."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795508412.5095701,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.01818181818181818,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.15415585041046143,
+        "m_dis": 0.0010510194256019058
+      }
+    }
+  ],
+  "query_history": [
+    "Is it true that indonesia has vast areas of wilderness?"
+  ]
+}

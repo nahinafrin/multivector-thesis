@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_1706",
+  "global_trust_score": 0.5,
+  "total_interactions": 1,
+  "last_active": 1795521135.3640034,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": 0.0,
+      "timestamp": 1795521135.3640034,
+      "reason": "The user's query 'Who did Wilson win in 1917?' is a normal factual question, and the lack of lexical overlap with past queries (M_LEX = 0.00) suggests a genuine attempt to learn new information. The trust trend is stable, indicating that the user's behavior is consistent with their past interactions. Although the M_INT metric is 0.00, indicating no intent velocity, this is a typical case for a user asking a single, straightforward question. The session history is empty, and there are no signs of boundary probing or data membership testing."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795521159.4904335,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.037037037037037035,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.21886330842971802,
+        "m_dis": 0.0011140539636542253
+      }
+    }
+  ],
+  "query_history": [
+    "Who did Wilson win in 1917?"
+  ]
+}

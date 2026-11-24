@@ -1,0 +1,32 @@
+{
+  "user_id": "benign_947",
+  "global_trust_score": 0.5,
+  "total_interactions": 1,
+  "last_active": 1795509525.535779,
+  "history_summary": "",
+  "trust_history": [
+    {
+      "score": 0.5,
+      "delta": 0.0,
+      "timestamp": 1795509525.535779,
+      "reason": "The user's query appears to be a legitimate question about the impact of European settlement on kangaroos. The query structure is simple and does not show signs of boundary probing or data membership testing. The trust trend is stable, indicating that the user has been interacting with the system in a benign manner."
+    }
+  ],
+  "metrics_history": [
+    {
+      "timestamp": 1795509562.4424107,
+      "pre_retrieval": {
+        "m_lex": 0.0,
+        "m_cmp": 0.03571428571428571,
+        "m_int": 0.0
+      },
+      "post_retrieval": {
+        "m_drp": 0.422451376914978,
+        "m_dis": 0.001279826143884725
+      }
+    }
+  ],
+  "query_history": [
+    "Have kangaroos fared well since European S08_settlement?"
+  ]
+}
