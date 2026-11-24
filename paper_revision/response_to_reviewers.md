@@ -2,150 +2,288 @@
 
 **Paper:** Attributing Security in a Local, Zero-Cost Defense-in-Depth Pipeline for Retrieval-Augmented Generation
 
-We thank the reviewers for their careful and constructive comments. Several of them changed our conclusions, not just the wording. The main changes are:
+We thank the reviewers for their careful and constructive comments. Several of them changed our
+conclusions, not just the wording. Section, table and figure numbers below refer to the revised
+6-page manuscript. Material that did not fit in six pages is in the extended version, released with
+the code, data and per-row outputs at https://github.com/nahinafrin/multivector-thesis
+(`paper_revision/main.tex`); we mark it "extended version" below.
 
-* **Larger, independent evaluation.** We now report 920 scored rows across seven sets, up from 220. These include 150 PoisonedRAG rows, 50 BIPIA rows, and 60 deepset rows, none of which we constructed.
-* **Ablation against simpler defenses.** A three-layer subset (sanitization, grounding, and refusal on detection) is statistically indistinguishable from the full stack. We now recommend that subset.
-* **Narrower neutralization claim.** "100% neutralization" is gone. We separate canary integrity (0 leaks; checked on 175/220 rows, the rest blocked first, and intact in all 132 delivered answers) from attacker content in delivered outputs, where attack success is 3.5%, not 0%.
-* **Correction to the conjunctive-detector result.** The structural impossibility holds for *saturated* classifier scores only. Reading graded logit margins instead restores detection in-sample (24/30), but only modestly on external data (8/30), and benign false fires rise from 1/80 to 6/200 on held-out questions.
-* **Explicit scope.** The title, abstract, and a new "Scope" paragraph in the introduction now state the paper's central boundary: the pipeline contains instruction-carrying injection but offers no measurable protection against knowledge corruption. We present the latter as a measured limit of this defense class, not as a threat we mitigate.
-* **Semantic gap.** It is now measured on 40 rows (up from 8) and replicated on PoisonedRAG, where the defended pipeline is no better than undefended RAG (90.7% vs. 91.3% attack success, paired p = 1.0). We add a practical-implications discussion.
-* **New sections and material.** We add measured latency, VRAM, and RAM; a full environment and version table; an explicit statistical-methods paragraph; and four redrawn vector figures.
+The main changes are:
 
-Section and table numbers below refer to the revised manuscript.
+* **Larger, independent evaluation.** We now report 920 scored rows across seven sets, up from 220
+  (Table IV). They include 150 PoisonedRAG rows, 50 BIPIA rows and 60 deepset rows, none of which we
+  constructed.
+* **Comparison with simpler and existing defenses.**
+  * A three-layer subset (sanitization, grounding, refusal on detection) is statistically
+    indistinguishable from the seven-layer stack, and we now recommend it.
+  * On the same 200 attacks, the seven-layer stack outperforms an LLM-Guard firewall, Spotlighting and
+    the ADO orchestrator, and matches the ControlNET detector used as a firewall (Table VI).
+* **Narrower neutralization claim.** "100% neutralization" is gone. We separate canary integrity (no
+  leak in any of the 132 delivered answers) from attacker content in delivered outputs. In delivered
+  outputs, attack success is 3.5%, not 0%.
+* **Correction to the conjunctive-detector result.** The impossibility holds for *saturated* classifier
+  scores only. Graded logit margins restore detection in-sample (24/30), but only modestly on external
+  data (8/30).
+* **Explicit scope.** The pipeline contains instruction-carrying injection but offers no measurable
+  protection against knowledge corruption. We present this as a measured limit of this defense class
+  (contribution C4).
+* **Semantic gap.** It is now measured on 40 rows (up from 8) and replicated on PoisonedRAG. We add a
+  practical-implications discussion.
+* **New material.**
+  * Measured latency and memory (Table VIII).
+  * An environment and version table (Table III).
+  * A statistics paragraph (Sec. IV).
+  * Redrawn vector figures.
 
 ---
 
 ## Reviewer #3
 
-**3.1 — Limited novelty; no demonstrated improvement over simpler defenses.**
+**3.1. Limited novelty; no demonstrated improvement over simpler defenses.**
 
-* **Comparison with existing defenses on the same attacks.** We ran three existing defenses on Protocol B's 200 planted attacks and 200 benign questions, with the same generator and scoring, paired by row (new Table VIII). The full stack lets 3.5% of attacks succeed, against 21.0% for an LLM-Guard prompt-injection firewall and 23.0% for Spotlighting (datamarking), both p < 10^-7, with no significant difference in benign correctness. ControlNET, the strongest (given exactly the passages the undefended generator received), reaches 4.5%, statistically indistinguishable from the full stack (p = 0.77); it answers fewer benign questions correctly (46.0% vs. 52.0%, p = 0.058; p = 0.012 against the three-layer subset). We therefore claim a clear improvement over an input firewall and prompt-level spotlighting and parity with ControlNET on attack success, not general superiority.
-We agree that most components are known, and we now say so explicitly ("Distinction from prior work", Sec. II, and the new positioning table, Table I). Our contribution is the attribution protocol and its findings, not a new detector. To test directly whether the cascade beats simpler defenses, we added a current-code ablation (new Sec. V-E, Table VII, Figs. 2–3) on 200 attack and 200 benign rows. It covers seven leave-one-out arms, seven single-layer arms, and four subsets, each paired row by row with the same undefended arm.
+*Novelty.* We agree that most components are known, and we now say so explicitly (Sec. I,
+contributions C1–C4; Sec. II; positioning Table I). Our contribution is the attribution protocol and
+its findings, not a new detector.
 
-* No single layer comes close to the full stack. The best single layers leave 15–18% ASR, against 3.5% for the full stack.
-* The subset sanitize + grounding + refuse reaches 5.5% ASR against 3.5% for the full stack (exact McNemar p = 0.34), with 9.5% vs. 8.5% benign blocking. The two are statistically indistinguishable, so the paper now explicitly recommends this simpler configuration.
-* We repeated the undefended, full-stack, and subset arms with two more generation seeds (7 and 1234) on the same rows. Undefended ASR is 30.3 ± 0.8%, full stack 4.2 ± 0.6%, and subset 6.0 ± 0.9% across the three replicates. The subset is not significantly different from the full stack in any replicate (p = 0.34, 0.27, 0.77), but it is worse in all three, by 1.8 ± 0.8 points, and the paper now states this small cost. To narrow the interval, we built 224 further planted attacks with the same constructor (all remaining yes/no questions in the bank; n = 424 in total) and ran the three arms on them. At n = 424 the subset reaches 4.7% against 4.2% for the full stack (p = 0.81; paired difference +0.5 points, 95% CI [−1.5, +2.4]), so the cost of dropping the other four layers is bounded at about 2.4 points (Sec. V-E, "Larger sample").
+*Simpler defenses: ablation* (Sec. V-B, Table V, Figs. 1–2). The ablation covers 200 attack and 200
+benign rows: seven leave-one-out arms, seven single-layer arms and four subsets, each paired row by row
+with the same undefended arm.
 
-We also compared against three external defenses on the same 210 paired rows (Sec. V-E, "External baselines"):
+* No single layer comes close to the full stack. The best single layers leave 15–18% attack success
+  (ASR), against 3.5% for the full stack.
+* The subset sanitize + grounding + refuse reaches 5.5% ASR (7 vs. 3 discordant rows, exact McNemar
+  p = 0.34), with 9.5% vs. 8.5% benign blocking. The paper therefore recommends this simpler
+  configuration.
+* **Seed replicates.** Across three generation seeds, the subset is worse by 1.8 ± 0.8 points but never
+  significantly (p ≥ 0.27).
+* **Enlarged set.** On an enlarged set of 424 planted attacks, ASR is 29.7% undefended, 4.2% for the
+  full stack and 4.7% for the subset. The paired difference is +0.5 points (95% CI [−1.5, +2.4]), so
+  dropping the other four layers costs at most about 2.4 points.
+* **Fresh rerun.** A rerun from the raw slice gives 29.0% and 3.0%, and agrees with the reported run on
+  189 and 199 of 200 rows.
 
-* **LLM-Guard detector alone:** 50% attack recall.
-* **Paper-faithful ControlNET:** same blocking rate as our pipeline (p = 0.85), but it removes the poison before generation on 33/70 context-attack rows, versus 67/70 for ours.
-* **Official Sentinel–Strategist (ADO) code:** removes the poison on 25–44 of 70 rows, versus 67/70 for ours (p ≤ 1.6×10⁻⁶).
+*Existing defenses* (Sec. V-C, Table VI). We ran four existing defenses on the same 200 planted attacks
+and 200 benign questions, with the same generator and scoring, paired by row.
 
-**3.2 — Small, artificial 220-row dataset.**
-The evaluation now covers 920 rows across seven sets (Table III, Sec. IV):
+| Existing defense | Its ASR | Paired test vs. our 3.5% | Benign correct, theirs vs. ours (52.0%) |
+|---|---|---|---|
+| LLM-Guard prompt-injection firewall | 21.0% | 3 vs. 38 discordant rows, p = 1×10⁻⁸ | no significant difference |
+| Spotlighting (datamarking) | 23.0% | p < 10⁻⁹ | no significant difference |
+| ADO (Sentinel–Strategist orchestrator) | 28.5% | 54 vs. 4 discordant rows, p = 3×10⁻¹² | 35.5% (p = 6×10⁻⁶) |
+| ControlNET detector, used as a firewall | 4.5% | p = 0.77 (statistically indistinguishable) | 46.0% (p = 0.058) |
+
+* **ADO.** We ran the authors' unmodified code through an adapter. Local hardware forced a substitute
+  controller and a 4-bit attention filter, so we call it an adapted implementation.
+  * Most of its cost comes from DP-RAG removing every passage, which makes the generator refuse.
+  * The scorer counts a refusal such as "No relevant information…" as a successful attack when the
+    planted answer is "No". If refusals are not counted as successes for any arm, ADO's ASR is 13.5% vs.
+    3.5% (p = 2×10⁻⁴).
+* **ControlNET.** The ControlNET detector was given exactly the passages the undefended generator
+  received.
+
+We therefore claim a clear improvement over an input firewall, prompt-level spotlighting and an
+adaptive orchestrator, and parity with ControlNET on attack success. We do not claim general
+superiority.
+
+**3.2. Small, artificial 220-row dataset.**
+The evaluation now covers 920 rows across seven sets (Table IV):
 
 * Protocol A: the original 220 rows.
-* Protocol B: 200 planted attacks and 200 benign rows.
+* Protocol B: 200 planted attacks and 200 benign questions.
 * A 40-row semantic slice.
-* External data: PoisonedRAG (NQ, HotpotQA, MS MARCO; 150 rows), BIPIA (50), and deepset prompt-injections (60).
+* External data: PoisonedRAG (150 rows), BIPIA (50) and deepset prompt-injections (60).
 
-We justify the stratified slice as an attribution instrument, not a prevalence sample. We also report a simulated power analysis: at n = 200, an exact McNemar test detects a 10-point ASR difference with power 0.87–0.96.
+We justify the stratified slice as an attribution instrument, not a prevalence sample: each class
+isolates one threat model and carries machine-checkable expectations (Sec. IV). A simulated power
+analysis is in the extended version: at n = 200, an exact McNemar test detects a 10-point ASR difference
+with power 0.87–0.96.
 
-**3.3 — 100% neutralization is insufficiently supported; it relies on canary integrity rather than verification of malicious output.**
-We agree, and we removed the claim. Sec. V-C now reports two levels:
+**3.3. 100% neutralization is insufficiently supported; it relies on canary integrity rather than
+verification of malicious output.**
+We agree, and we removed the claim. The paper now reports two levels.
 
-* **Level 1, canary integrity:** 0 leaks and 74/74 redactions. The canary is checked at Stage 10, so it was evaluated on 175 of the 220 rows; the other 45 were blocked before that point (44 at the gate), and all 132 delivered answers have an intact canary. This shows that no canary leaked into a delivered answer and that every poisoned chunk was removed before generation, and nothing more. (Some blocked direct-attack rows are stopped after generation, so we no longer say that no injected instruction reached the generator.)
-* **Level 2, target-string checks on delivered outputs:** 7/200 planted attacks still succeed under the full stack (3.5%, 95% CI [1.7, 7.0], against 29.5% undefended). On the semantic slice, 14/40 succeed; on PoisonedRAG, 136/150 succeed, against 137/150 for a paired undefended arm. BIPIA blocks 45/50. BIPIA goals are not string-scorable, so we read the 5 unblocked answers manually: 2 followed the injected instruction, 2 did not, and 1 is indeterminable, giving 2–3/50 (4–6%) defended attack success.
+* **Canary integrity (Sec. V-A).**
+  * No canary leaks into any of the 132 delivered answers.
+  * The canary was checked on the 175 rows that reached Stage 10; the other 45 were blocked earlier,
+    44 of them at the gate.
+  * Every poisoned chunk (74/74) is removed before generation.
+  * This shows only that no canary leaked into a delivered answer and that every poisoned chunk was
+    removed. It does not show that the outputs are safe.
+* **Attacker content in delivered outputs** (Protocol B and external sets: Secs. V-B and V-E, Tables V
+  and VII).
+  * 7/200 planted attacks still succeed under the full stack: 3.5%, 95% CI [1.7, 7.0], against 29.5%
+    undefended.
+  * On the semantic slice, 14/40 succeed.
+  * On PoisonedRAG, 136/150 succeed, against 137/150 for a paired undefended arm.
+  * BIPIA blocks 45/50. BIPIA goals are not string-scorable, so we read the 5 unblocked answers: 2
+    followed the injected instruction, 2 did not, and 1 is indeterminable. Defended attack success is
+    therefore 2–3 of 50.
 
-The abstract, claims table (Table X), and conclusion were rewritten to match.
+The abstract and conclusion were rewritten to match.
 
-**3.4 — The conjunctive detector fails, and semantic misinformation succeeds in 50% of cases.**
+**3.4. The conjunctive detector fails, and semantic misinformation succeeds in 50% of cases.**
 
-*Detector.* While re-examining this result we found that the closed-form impossibility depends on one premise: the scanner's outputs are saturated (near-binary). With graded DeBERTa logit margins as channels, the detector fires validly (both channels sub-threshold) on 24/30 multivector rows, with 1/80 false fires on benign rows (Sec. V-B, Table VI). We state two limits plainly. First, the floors were set on the same slice's benign rows, so 1/80 is an in-sample rate. We have now tested this out of sample on 200 benign rag-mini-wikipedia questions that appear in no evaluation slice: the detector fires on 6/200 (3.0%, 95% CI [1.4, 6.4]). The query floor transfers (benign 95th percentile 0.18), but the 0.30 context floor sits inside the benign range (95th percentile 0.59), so the detector relies on the query floor and joint minimum; raising the context floor to the held-out 95th percentile removes the false fires and the valid fires alike (1/200 and 0/30). We therefore present the graded repair as evidence that the impossibility is specific to saturated channels, not as a deployable detector. Second, on external BIPIA conjunctive data the detector fires on 8/30 attacks and on 4/30 benign controls. (An earlier draft reported 10/30, which came from the mitigation harness's looser co-activation rule; we now apply the pipeline's own rule to both attacks and controls.) We also explain why the original failure was not a security failure: every multivector row was neutralized anyway by Stage-6 redaction.
+*Detector* (Sec. V-D).
+* **Why it failed.** The failure depends on one premise: the scanner's outputs are saturated
+  (near-binary). A valid fire requires both channels to be below threshold, so a signal built from
+  saturated scores is low on exactly the rows it targets. The 6-page version gives this argument in
+  prose; the closed-form statement is in the extended version.
+* **Repair.** With graded DeBERTa logit margins as channels, the detector fires validly on 24/30 rows,
+  at 1/80 benign false fires.
+* **Limits of the repair.**
+  * The 1/80 rate is in-sample.
+  * On 200 held-out benign questions it fires 6 times.
+  * On external BIPIA conjunctive data it fires on 8/30 attacks and on 4/30 benign controls.
+* **Conclusion.** We present the repair as evidence that the impossibility is specific to saturated
+  channels, not as a deployable detector.
+* **Security cost.** The original failure did not cost security, because Stage 6 redacted every
+  conjunctive chunk.
 
-*Semantic.* The 50% rate came from n = 8 rows, whose 95% CI is [21.5, 78.5]. On the new 40-row slice, the full stack reduces ASR from 75.0% to 35.0% (p = 4×10⁻⁴). On PoisonedRAG, the defended pipeline is no better than a paired undefended arm (90.7% vs. 91.3%, p = 1.0). We now state this as the dominant open risk and add a practical-implications discussion (see 5.4).
+*Semantic* (Sec. V-E).
+* The 50% rate came from n = 8 rows, whose 95% CI is [21.5, 78.5].
+* On the new 40-row slice, the full stack reduces ASR from 75.0% to 35.0% (p = 4×10⁻⁴).
+* On PoisonedRAG, the defended pipeline is no better than a paired undefended arm (90.7% vs. 91.3%,
+  p = 1.0).
+
+We now state this as the dominant open risk and discuss its practical implications (see 5.4).
 
 ---
 
 ## Reviewer #4
 
-**4.1 — Validate on standardized benchmarks (e.g., BIPIA) or larger RAG benchmarks.**
-We added BIPIA (50 rows), PoisonedRAG on NQ, HotpotQA, and MS MARCO (150 rows), and deepset prompt-injections (60 rows), all run through the complete pipeline and paired row by row with an undefended arm on the same rows and poison (new Sec. V-G, Table VIII). Results:
+**4.1. Validate on standardized benchmarks (e.g., BIPIA) or larger RAG benchmarks.**
+We added BIPIA (50 rows), PoisonedRAG on NQ, HotpotQA and MS MARCO (150 rows) and deepset
+prompt-injections (60 rows). Each was run through the complete pipeline and paired row by row with an
+undefended arm on the same rows and poison (Sec. V-E, Table VII).
 
-* **BIPIA:** 45/50 blocked (0/50 undefended) and 33/49 injected chunks redacted.
-* **PoisonedRAG:** no measurable protection. Attack success is 91.3% undefended and 90.7% defended (7 rows fixed, 6 broken, exact McNemar p = 1.0). Because the complete pipeline uses a 3-model ensemble, we also ran a same-generator comparison (llama3.2:3b in both arms, seven defense layers): 91.3% → 85.3% (16 fixed, 7 broken, p = 0.09; 95% CI for the difference [−12.2, +0.2] points). Neither comparison shows a significant reduction. This is PoisonedRAG passages carry no instruction signature and a planted fact is "grounded" in the poisoned passage.
-* **deepset:** the gate blocks 14/30 real injections (17/30 including review flags) with 0/30 benign false positives; on the full held-out test split it blocks 23/60 at 1/56 benign false positives. (An earlier draft reported 11/30 from a run whose output was not saved; we re-ran the evaluation with a committed script and per-row outputs.) 31 of the 32 injections the gate passes have a scanner score of exactly 0, so no threshold change can catch them. Without changing the architecture, we let the gate also flag a prompt when the graded DeBERTa margin that Stage 3 already computes exceeds a threshold chosen on the deepset *train* split. On the test split this raises flagged injections from 28/60 to 38/60 at 2/56 benign flags, and adds review flags on 7/200 held-out benign RAG questions. End to end the pipeline refuses all 30 sampled injections, but also all 30 benign deepset prompts (they are off-topic for the wiki corpus), so we do not count downstream refusal on this set as detection.
+* **BIPIA:** 45/50 blocked (0/50 undefended). Of the 5 unblocked, 2 followed the injected instruction.
+* **PoisonedRAG:** no measurable protection.
+  * The complete pipeline (three-model ensemble) gives 90.7% ASR, against 91.3% undefended (7 rows fixed,
+    6 broken, p = 1.0).
+  * A same-generator comparison (seven layers) gives 85.3% (16 fixed, 7 broken, p = 0.09).
+  * PoisonedRAG passages carry no instruction signature, and Stage 6 redacts none of the 148 injected
+    passages.
+* **deepset:**
+  * The gate flags 17 of 30 real injections at 0/30 benign.
+  * On the full test split, it flags 28/60 injections.
+  * Without changing the architecture, we let the gate also flag on the graded margin Stage 3 already
+    computes, with a threshold chosen on the deepset *train* split. This raises flagged injections on
+    the test split to 38/60, at 2/56 benign flags.
 
 We report the weak results with the same prominence as the strong ones.
 
-**4.2 — Latency and VRAM/RAM overhead per query.**
-New Sec. V-I with Table IX reports median and 95th-percentile end-to-end latency for each configuration, taken from per-row timings on 200 rows per arm:
+**4.2. Latency and VRAM/RAM overhead per query.**
+Sec. V-F and Table VIII report median and 95th-percentile end-to-end latency per configuration, from
+per-row timings on 200 rows per arm. Median latency per benign query:
 
 | Configuration | Median latency per benign query |
 |---|---|
 | Undefended | 8.6 s |
 | Sanitize + refuse | 10.7 s |
 | Full seven-layer stack | 15.3 s |
-| Complete 13-stage pipeline with 3-model ensemble | 23.8 s (mean) |
-| ADO baseline | 31.5 s |
+| Three-layer subset (sanitize + ground + refuse) | 19.0 s |
+| Complete 13-stage pipeline, 3-model ensemble | 23.8 s (mean) |
+| ADO, Protocol A run (without its attention filter) | 31.5 s |
+| ADO, Protocol B (adapted, with attention filter) | 45.3 s |
 
-Memory was measured with a ~1 Hz sampler during a 20-query profiled run of the complete pipeline: peak GPU memory 6.3 GB of 8 GB (median 2.2 GB), and host RAM for the Python process a median of 6.4 GB and a peak of 8.0 GB. The pipeline therefore fits an 8 GB laptop GPU with about 8 GB of free host RAM (Sec. V-I, "Memory"). We also identify the main cost, the CPU-bound grounding judge, and give a throughput estimate.
+The grounding judge, which runs on the CPU, is the dominant cost.
 
-We have now also tested the optimization the first submission left open: moving the encoders (bge-m3, the shared bge-reranker of Stages 7 and 10, DeBERTa) to the GPU, with no change to any stage or threshold. In isolation the encoder stages fall from 4.0 s to 0.11 s per query (fp16). End to end, fp32 GPU encoders are counter-productive on an 8 GB card (median 13.3 → 22.6 s) because their 5.2 GB peak leaves too little room for the generators; in fp16 (3.0 GB peak) the full stack runs at a median of 8.6 s (95th percentile 10.1 s) against 13.3 s with CPU encoders in the same session, with identical decisions on all 50 benign questions. This required one fix: Stage 10 now shares Stage 7's reranker instead of loading a second copy of the same model (Sec. V-I, "Encoders on the GPU"; Table IX). CPU remains the default, so every reported number reproduces unchanged.
+**Memory.** We sampled memory at about 1 Hz during a profiled run of the complete pipeline. Peak usage
+is 6.3 GB of the 8 GB GPU and 8.0 GB of host RAM, so the pipeline fits an 8 GB laptop GPU.
 
-**4.3 — Readability of Figs. 1 and 4.**
-All figures are now vector graphics (TikZ/pgfplots) with ≥ 8 pt labels. Fig. 1 is redrawn as a six-step workflow at full text width. Fig. 4 is redrawn as one labeled bar chart, with 95% Wilson CIs and n on every bar. Figs. 2 and 3 are regenerated from current-code data.
+**Encoders on the GPU.** We moved the encoders to the GPU in fp16, with no change to any stage or
+threshold. This cuts the full stack's median latency to 8.6 s, against 13.3 s with CPU encoders in the
+same session, with identical decisions on all 50 benign questions tested. CPU remains the default, so
+every reported number reproduces unchanged. The fp32 result, which is slower on an 8 GB card, and a
+throughput estimate are in the extended version.
+
+**4.3. Readability of Figs. 1 and 4.**
+* **Old Fig. 1 (workflow).** In the 6-page version it is replaced by Table II, which lists each stage
+  and its implementation. A redrawn full-width vector workflow figure is in the extended version.
+* **Old Fig. 4.** It is now Fig. 1: a single labeled bar chart with 95% Wilson CIs, n given in the
+  caption, and small-font axis and tick labels.
+* **Fig. 2.** The security-versus-latency trade-off is regenerated from current-code data.
+* All figures are vector graphics (TikZ/pgfplots).
 
 ---
 
 ## Reviewer #5
 
-**5.1 — Distinguish contributions from existing defenses.**
-See 3.1. We added "Distinction from prior work" with contributions C1–C4, a "Defense systems for RAG" paragraph (ControlNET, ADO, layered frameworks), the positioning table (Table I), and head-to-head comparisons.
+**5.1. Distinguish contributions from existing defenses.**
+See 3.1. Sec. I lists contributions C1–C4 and states that we do not claim a new detector. Sec. II covers
+detectors, structural defenses and RAG defense systems (ControlNET, ADO, layered frameworks). Table I
+positions the work, and Table VI gives head-to-head comparisons on identical rows.
 
-**5.2 — Environment, hardware, software versions, model configurations.**
-We added a new "Environment and configuration" paragraph and Table V. They cover:
+**5.2. Environment, hardware, software versions, model configurations.**
+Table III and Sec. IV cover:
 
-* **Hardware:** Ryzen 5 7640HS, 16 GB RAM, RTX 4060 Laptop with 8 GB.
-* **Software:** OS, Python, Ollama, and exact library versions.
+* **Hardware:** Ryzen 5 7640HS, 16 GB RAM, RTX 4060 Laptop GPU with 8 GB.
+* **Software:** OS, Python, Ollama and exact library versions.
 * **Models:** model IDs and quantization (Q4_K_M generators, Q8_0 Llama Guard).
-* **Settings:** every threshold and fusion weight, k/top-n, temperatures, and seeds.
-* **Protocols:** which protocol uses which generator configuration.
+* **Settings:**
+  * gate thresholds and retrieval depth;
+  * Protocol B generator, temperature and seed;
+  * which protocol uses which configuration.
 
-A pinned `requirements_lock_venv311.txt` is added to the repository. The repository now has a README that maps every table and figure to the script that produces it and the committed per-row outputs it reads, plus an MIT licence and a dataset-licence table. The paper adds "Data and Code Availability" and "Ethics Statement" sections.
+Every threshold and fusion weight is listed in the extended version. The repository includes:
+* a pinned `requirements_lock_venv311.txt`;
+* a README that maps every table and figure to the script that produces it and to the per-row outputs it
+  reads;
+* a claim-by-claim checker that recomputes the paper's numbers from those outputs;
+* an MIT licence and a dataset-licence table.
 
-**5.3 — Small dataset; justify representativeness; evaluate on independent test sets.**
-See 3.2 and 4.1. Sec. IV now explains what the stratified slice represents (one OWASP LLM01 threat model per class) and what it does not represent (real-world prevalence). It also adds three independent external test sets.
+**5.3. Small dataset; justify representativeness; evaluate on independent test sets.**
+See 3.2 and 4.1. Sec. IV explains what the stratified slice represents (one threat model per class) and
+what it does not (real-world prevalence). Three independent external test sets were added.
 
-**5.4 — Investigate the semantic vulnerability (4/8) and discuss practical implications.**
-The slice grows to 40 rows, with layer-level attribution (Sec. V-H):
+**5.4. Investigate the semantic vulnerability (4/8) and discuss practical implications.**
+The slice grows to 40 rows, with layer-level attribution (Sec. V-E):
 
-* Grounding cannot help, because a planted fact is "grounded" in the poisoned context.
-* The guarded prompt and refusal account for the reduction, but neither survives Bonferroni correction at n = 40.
-* We also ran the pipeline's isolate-and-aggregate generator (answer per chunk, accept only cross-chunk agreement) on the same 40 rows. ASR falls to 0/40 against 18/40 for the fused ensemble in the same run, but almost entirely by abstaining (34/40). On 40 benign questions it answers only 15 (fused: 37), so the paper reports it as a utility-prohibitive option, not a fix (Sec. V-H). A routed variant that uses the agreement check only when retrieved passages disagree keeps utility (36/40 benign answered) but reduces semantic ASR only from 18/40 to 15/40 (p = 0.45), which is not significant.
+* Grounding cannot help, because a planted fact is "grounded" in its poisoned passage.
+* **Agreement-based generator.** It answers per chunk and accepts only cross-chunk agreement. It removes
+  the attack (0/40) only by abstaining, and answers only 15 of 40 benign questions. We therefore report
+  it as a utility-prohibitive option, not a fix.
+* **Routed variant.** A variant that uses the agreement check only when passages disagree keeps utility,
+  but reduces ASR only from 18/40 to 15/40 (p = 0.45).
 * PoisonedRAG replicates the gap externally.
 
-A new "Practical security implications" paragraph covers who is exposed (any corpus an outsider can write to), the consequence (integrity loss through confident, cited false answers), and four deployment measures: provenance as a security boundary, corroboration, surfaced citations, and human review for high-stakes answers. We state clearly that these measures are not evaluated here.
+A "Practical implications" paragraph (Sec. V-E) covers:
+* who is exposed: any corpus an outsider can write to;
+* the consequence: confident, citation-backed false answers;
+* four deployment measures: provenance as a security boundary, corroboration, surfaced citations, and
+  human review for high-stakes answers.
 
-**5.5 — Statistical analysis: McNemar interpretation, CIs, sample sizes.**
-A new "Statistical analysis" paragraph (Sec. IV) explains:
+We state that these measures are not evaluated here.
 
-* McNemar uses only discordant pairs b/c, under H₀ b ~ Bin(b+c, ½). We use the exact test because b+c is often below 25, and we print b/c next to every p.
-* A small p says nothing about effect size, and a large p is not evidence of equivalence. This is why we call the three-layer subset "indistinguishable", not "equivalent".
-* We use Wilson intervals because they keep coverage near 0 and 1.
-* We state the n for every test.
-* We apply Bonferroni correction to the leave-one-out (α = 0.007) and subset (α = 0.0125) families and flag results that do not survive it. As a result, two semantic-slice attributions are now labeled "suggestive".
-* We define AUC and the percentile gap precisely.
-* Run-to-run variance: the headline Protocol B arms are now replicated under three generation seeds and reported as mean ± SD with per-replicate tests (Sec. V-E, "Replicates"). Ollama GPU generation is not bit-reproducible at a fixed seed, so the paper treats these runs as independent replicates and says so in the threats to validity.
-* Fresh reproduction: we regenerated the undefended and full-stack Protocol B arms from the raw slice with the released code. They give 58/200 and 6/200 successes (reported: 59 and 7), agree with the reported run on 189 and 199 of 200 rows, and reproduce the paired result exactly (54 fixed, 2 broken, p < 10^-13).
+**5.5. Statistical analysis: McNemar interpretation, CIs, sample sizes.**
+The "Statistics" paragraph (Sec. IV) explains:
 
-The earlier-code arms are kept and clearly labeled (Sec. V-F). We retract their "refusal is the only significant single layer" result, which the current-code ablation contradicts.
+* McNemar's test uses only discordant pairs. We use the exact test and print the discordant counts next
+  to every p.
+* A large p means no detectable difference at that n, not equivalence. This is why we call the
+  three-layer subset "statistically indistinguishable", not "equivalent".
+* Proportions carry 95% Wilson intervals.
+* Leave-one-out and subset families use Bonferroni correction.
 
-**5.6 — Computational overhead, memory, latency, scalability.**
-See 4.2. We also added a "Scalability" paragraph covering sequential throughput (≈ 240 queries/hour/laptop), what scales it, and the untested effect of the HNSW index at larger corpus sizes.
+Every table states its n. Run-to-run variance is addressed with three generation seeds and a fresh rerun
+from the raw slice (Sec. V-B). Ollama GPU generation is not bit-reproducible, which the threats to
+validity state (Sec. V-G). The extended version adds:
+* the formal definition of the test;
+* per-family Bonferroni thresholds;
+* the power analysis;
+* AUC and percentile-gap definitions.
 
-**5.7 — Equations, figures, tables, proofreading.**
+**5.6. Computational overhead, memory consumption, inference latency, scalability.**
+See 4.2. The extended version adds a scalability paragraph: sequential throughput, what scales it, and
+the untested effect of a larger corpus and index.
 
-* **Equations:** Eqs. (1)–(3) now define every symbol (x_q, x_c, f_i, k, τ_J), and the firing rule is stated as an equation rather than in prose.
-* **Proofreading:** the full text was proofread. Typographical errors fixed include "classifier,r", "breaks,k s", "queries,s", "q-0.7", "p ¡ .001", and the capitalized "Is at or above".
-* **Abstract:** the inaccurate "on-directional, off-directional, and multimodal" description was removed; no multimodal attacks were evaluated.
-* **Figures:** all four are redrawn as vector graphics.
-* **Tables:** tables now state n and CIs consistently.
+**5.7. Equations, figures, tables, proofreading.**
 
----
-
-### Notes for the authors (remove before submission)
-* Bibliographic details of ControlNET, BIPIA (KDD 2025), PoisonedRAG (USENIX Security 2025), ADO (first author Pallerla) and Saleem et al. (arXiv:2606.19660) were checked against their arXiv pages. The Saleem et al. related-work text and positioning-table row were corrected after reading their full paper: they do evaluate all seven layer subsets, but without significance tests or CIs, and their target model is GPT-4o via API.
-* The original raster figures were not available as source. Figs. 1–4 are rebuilt from the data and need a visual check after compiling (e.g., on Overleaf).
+* **Proofreading.** The full text was proofread. Typographical errors fixed include "classifier,r",
+  "breaks,k s", "queries,s", "q-0.7", "p ¡ .001" and the capitalized "Is at or above".
+* **Abstract.** The inaccurate "on-directional, off-directional, and multimodal" description was
+  removed; no multimodal attacks were evaluated.
+* **Equations.** To fit six pages, the detector's firing rule is stated in prose (Sec. V-D). The
+  equations, with every symbol defined, are in the extended version.
+* **Figures.** They are redrawn as vector graphics (see 4.3).
+* **Tables.** They now state n and CIs consistently.
