@@ -4,7 +4,7 @@
 
 We thank the reviewers for their careful and constructive comments. Several of them changed our
 conclusions, not just the wording. Section, table and figure numbers below refer to the revised
-6-page manuscript. Material that did not fit in six pages is in the extended version, released with
+conference manuscript (IEEE, A4). Material that did not fit the page limit is in the extended version, released with
 the code, data and per-row outputs at https://github.com/nahinafrin/multivector-thesis
 (`paper_revision/main.tex`); we mark it "extended version" below.
 
@@ -17,7 +17,8 @@ The main changes are:
   * A three-layer subset (sanitization, grounding, refusal on detection) is statistically
     indistinguishable from the seven-layer stack, and we now recommend it.
   * On the same 200 attacks, the seven-layer stack outperforms an LLM-Guard firewall, Spotlighting and
-    the ADO orchestrator, and matches the ControlNET detector used as a firewall (Table VI).
+    an adapted implementation of the ADO orchestrator, and matches the ControlNET detector used as a
+    firewall (Table VI).
 * **Narrower neutralization claim.** "100% neutralization" is gone. We separate canary integrity (no
   leak in any of the 132 delivered answers) from attacker content in delivered outputs. In delivered
   outputs, attack success is 3.5%, not 0%.
@@ -82,7 +83,8 @@ and 200 benign questions, with the same generator and scoring, paired by row.
   received.
 
 We therefore claim a clear improvement over an input firewall, prompt-level spotlighting and an
-adaptive orchestrator, and parity with ControlNET on attack success. We do not claim general
+adaptive orchestrator (in our adapted implementation and under Protocol B's scoring; not every faithful
+ADO deployment), and parity with ControlNET on attack success. We do not claim general
 superiority.
 
 **3.2. Small, artificial 220-row dataset.**
@@ -126,7 +128,7 @@ The abstract and conclusion were rewritten to match.
 *Detector* (Sec. V-D).
 * **Why it failed.** The failure depends on one premise: the scanner's outputs are saturated
   (near-binary). A valid fire requires both channels to be below threshold, so a signal built from
-  saturated scores is low on exactly the rows it targets. The 6-page version gives this argument in
+  saturated scores is low on exactly the rows it targets. The conference version gives this argument in
   prose; the closed-form statement is in the extended version.
 * **Repair.** With graded DeBERTa logit margins as channels, the detector fires validly on 24/30 rows,
   at 1/80 benign false fires.
@@ -198,7 +200,7 @@ every reported number reproduces unchanged. The fp32 result, which is slower on 
 throughput estimate are in the extended version.
 
 **4.3. Readability of Figs. 1 and 4.**
-* **Old Fig. 1 (workflow).** In the 6-page version it is replaced by Table II, which lists each stage
+* **Old Fig. 1 (workflow).** In the conference version it is replaced by Table II, which lists each stage
   and its implementation. A redrawn full-width vector workflow figure is in the extended version.
 * **Old Fig. 4.** It is now Fig. 1: a single labeled bar chart with 95% Wilson CIs, n given in the
   caption, and small-font axis and tick labels.
@@ -274,7 +276,9 @@ validity state (Sec. V-G). The extended version adds:
 * AUC and percentile-gap definitions.
 
 **5.6. Computational overhead, memory consumption, inference latency, scalability.**
-See 4.2. The extended version adds a scalability paragraph: sequential throughput, what scales it, and
+See 4.2. Latency and memory are measured; scaling to larger corpora and concurrent load is not tested,
+and we do not claim it. The extended version adds a scalability paragraph: sequential throughput, what
+should scale it, and
 the untested effect of a larger corpus and index.
 
 **5.7. Equations, figures, tables, proofreading.**
@@ -283,7 +287,7 @@ the untested effect of a larger corpus and index.
   "breaks,k s", "queries,s", "q-0.7", "p ¡ .001" and the capitalized "Is at or above".
 * **Abstract.** The inaccurate "on-directional, off-directional, and multimodal" description was
   removed; no multimodal attacks were evaluated.
-* **Equations.** To fit six pages, the detector's firing rule is stated in prose (Sec. V-D). The
+* **Equations.** To fit the page limit, the detector's firing rule is stated in prose (Sec. V-D). The
   equations, with every symbol defined, are in the extended version.
 * **Figures.** They are redrawn as vector graphics (see 4.3).
 * **Tables.** They now state n and CIs consistently.
