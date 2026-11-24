@@ -1,6 +1,6 @@
 {
-  "git_revision_at_check": "d299cfe",
-  "n_claims": 79,
+  "git_revision_at_check": "48b8e8c",
+  "n_claims": 86,
   "n_fail": 0,
   "claims": [
     {
@@ -1374,6 +1374,237 @@
         }
       ],
       "scorer": "score_baselines_protocolB.py",
+      "status": "PASS"
+    },
+    {
+      "id": "X.ado_rates",
+      "section": "V-E",
+      "statement": "ADO ASR / benign correct (n=200+200)",
+      "expected": "28.5/35.5",
+      "computed": "28.5/35.5",
+      "tex_snippet": "ADO lets 28.5\\% of attacks succeed",
+      "in_tex": true,
+      "inputs": [
+        {
+          "path": "../external_baselines/ado_protocolB/full_attack_results.jsonl",
+          "sha256": "fa909399d0b633e9dcf4712f910db1c6519580f704ae6518e79f517920b9ccb7",
+          "n_files": 1
+        },
+        {
+          "path": "../external_baselines/ado_protocolB/full_benign_results.jsonl",
+          "sha256": "2eb68aaff7cd171bb86ff4208d1bdf75ed119b56b294dc1328df91247c8fb03f",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/ablation200/on_full.jsonl",
+          "sha256": "549408923f3f7342f978ae4a92c8d809617528ce193b5fd2349d73c24824f0ee",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/ablation200/benign_on.jsonl",
+          "sha256": "269d12515333b9da3ffd5f0fb29338683b520bccfdfe2b86e93bb57e38ce3215",
+          "n_files": 1
+        }
+      ],
+      "scorer": "external_baselines/ado_protocolB/score_ado_protocolB.py",
+      "status": "PASS"
+    },
+    {
+      "id": "X.ado_paired",
+      "section": "V-E",
+      "statement": "ADO vs full stack: ADO-only / ours-only, exact p",
+      "expected": "54/4, p=3e-12",
+      "computed": "54/4, p=3e-12",
+      "tex_snippet": "(54 vs.\\ 4 discordant rows, $p=3\\times10^{-12}$)",
+      "in_tex": true,
+      "inputs": [
+        {
+          "path": "../external_baselines/ado_protocolB/full_attack_results.jsonl",
+          "sha256": "fa909399d0b633e9dcf4712f910db1c6519580f704ae6518e79f517920b9ccb7",
+          "n_files": 1
+        },
+        {
+          "path": "../external_baselines/ado_protocolB/full_benign_results.jsonl",
+          "sha256": "2eb68aaff7cd171bb86ff4208d1bdf75ed119b56b294dc1328df91247c8fb03f",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/ablation200/on_full.jsonl",
+          "sha256": "549408923f3f7342f978ae4a92c8d809617528ce193b5fd2349d73c24824f0ee",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/ablation200/benign_on.jsonl",
+          "sha256": "269d12515333b9da3ffd5f0fb29338683b520bccfdfe2b86e93bb57e38ce3215",
+          "n_files": 1
+        }
+      ],
+      "scorer": "external_baselines/ado_protocolB/score_ado_protocolB.py",
+      "status": "PASS"
+    },
+    {
+      "id": "X.ado_benign",
+      "section": "V-E",
+      "statement": "benign correct ADO vs full stack, exact p",
+      "expected": "35.5/52.0, p=6e-06",
+      "computed": "35.5/52.0, p=6e-06",
+      "tex_snippet": "(35.5\\% vs.\\ 52.0\\%, $p=6\\times10^{-6}$)",
+      "in_tex": true,
+      "inputs": [
+        {
+          "path": "../external_baselines/ado_protocolB/full_attack_results.jsonl",
+          "sha256": "fa909399d0b633e9dcf4712f910db1c6519580f704ae6518e79f517920b9ccb7",
+          "n_files": 1
+        },
+        {
+          "path": "../external_baselines/ado_protocolB/full_benign_results.jsonl",
+          "sha256": "2eb68aaff7cd171bb86ff4208d1bdf75ed119b56b294dc1328df91247c8fb03f",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/ablation200/on_full.jsonl",
+          "sha256": "549408923f3f7342f978ae4a92c8d809617528ce193b5fd2349d73c24824f0ee",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/ablation200/benign_on.jsonl",
+          "sha256": "269d12515333b9da3ffd5f0fb29338683b520bccfdfe2b86e93bb57e38ce3215",
+          "n_files": 1
+        }
+      ],
+      "scorer": "external_baselines/ado_protocolB/score_ado_protocolB.py",
+      "status": "PASS"
+    },
+    {
+      "id": "X.ado_s1",
+      "section": "V-E",
+      "statement": "ADO ASR with refusals not counted; ADO-only / ours-only, exact p",
+      "expected": "13.5, 24/4, p=2e-04",
+      "computed": "13.5, 24/4, p=2e-04",
+      "tex_snippet": "ADO's ASR is 13.5\\% against 3.5\\% (24 vs.\\ 4 discordant rows, $p=2\\times10^{-4}$)",
+      "in_tex": true,
+      "inputs": [
+        {
+          "path": "../external_baselines/ado_protocolB/full_attack_results.jsonl",
+          "sha256": "fa909399d0b633e9dcf4712f910db1c6519580f704ae6518e79f517920b9ccb7",
+          "n_files": 1
+        },
+        {
+          "path": "../external_baselines/ado_protocolB/full_benign_results.jsonl",
+          "sha256": "2eb68aaff7cd171bb86ff4208d1bdf75ed119b56b294dc1328df91247c8fb03f",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/ablation200/on_full.jsonl",
+          "sha256": "549408923f3f7342f978ae4a92c8d809617528ce193b5fd2349d73c24824f0ee",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/ablation200/benign_on.jsonl",
+          "sha256": "269d12515333b9da3ffd5f0fb29338683b520bccfdfe2b86e93bb57e38ce3215",
+          "n_files": 1
+        }
+      ],
+      "scorer": "external_baselines/ado_protocolB/score_sensitivity_refusal.py",
+      "status": "PASS"
+    },
+    {
+      "id": "X.ado_refusals",
+      "section": "V-E",
+      "statement": "ADO primary successes that are refusals",
+      "expected": "30/57",
+      "computed": "30/57",
+      "tex_snippet": "(30 of ADO's 57 successes)",
+      "in_tex": true,
+      "inputs": [
+        {
+          "path": "../external_baselines/ado_protocolB/full_attack_results.jsonl",
+          "sha256": "fa909399d0b633e9dcf4712f910db1c6519580f704ae6518e79f517920b9ccb7",
+          "n_files": 1
+        },
+        {
+          "path": "../external_baselines/ado_protocolB/full_benign_results.jsonl",
+          "sha256": "2eb68aaff7cd171bb86ff4208d1bdf75ed119b56b294dc1328df91247c8fb03f",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/ablation200/on_full.jsonl",
+          "sha256": "549408923f3f7342f978ae4a92c8d809617528ce193b5fd2349d73c24824f0ee",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/ablation200/benign_on.jsonl",
+          "sha256": "269d12515333b9da3ffd5f0fb29338683b520bccfdfe2b86e93bb57e38ce3215",
+          "n_files": 1
+        }
+      ],
+      "scorer": "external_baselines/ado_protocolB/score_sensitivity_refusal.py",
+      "status": "PASS"
+    },
+    {
+      "id": "X.ado_empty",
+      "section": "V-E",
+      "statement": "rows where ADO left no passages: attack / benign",
+      "expected": "64/58",
+      "computed": "64/58",
+      "tex_snippet": "64 of the 200 attacks and 58 of the 200 benign questions",
+      "in_tex": true,
+      "inputs": [
+        {
+          "path": "../external_baselines/ado_protocolB/full_attack_results.jsonl",
+          "sha256": "fa909399d0b633e9dcf4712f910db1c6519580f704ae6518e79f517920b9ccb7",
+          "n_files": 1
+        },
+        {
+          "path": "../external_baselines/ado_protocolB/full_benign_results.jsonl",
+          "sha256": "2eb68aaff7cd171bb86ff4208d1bdf75ed119b56b294dc1328df91247c8fb03f",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/ablation200/on_full.jsonl",
+          "sha256": "549408923f3f7342f978ae4a92c8d809617528ce193b5fd2349d73c24824f0ee",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/ablation200/benign_on.jsonl",
+          "sha256": "269d12515333b9da3ffd5f0fb29338683b520bccfdfe2b86e93bb57e38ce3215",
+          "n_files": 1
+        }
+      ],
+      "scorer": "verify_claims.py",
+      "status": "PASS"
+    },
+    {
+      "id": "X.ado_row",
+      "section": "Table tab:existing",
+      "statement": "ADO row: Wilson CI, blocked, correct, exact p",
+      "expected": "[22.7, 35.1], blk 0.0, correct 35.5, p=3.2e-12",
+      "computed": "[22.7, 35.1], blk 0.0, correct 35.5, p=3.2e-12",
+      "tex_snippet": "ADO orchestrator$^{\\dagger}$ & 28.5 [22.7, 35.1] & 0.0 & 35.5 & $3\\!\\times\\!10^{-12}$ \\\\",
+      "in_tex": true,
+      "inputs": [
+        {
+          "path": "../external_baselines/ado_protocolB/full_attack_results.jsonl",
+          "sha256": "fa909399d0b633e9dcf4712f910db1c6519580f704ae6518e79f517920b9ccb7",
+          "n_files": 1
+        },
+        {
+          "path": "../external_baselines/ado_protocolB/full_benign_results.jsonl",
+          "sha256": "2eb68aaff7cd171bb86ff4208d1bdf75ed119b56b294dc1328df91247c8fb03f",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/ablation200/on_full.jsonl",
+          "sha256": "549408923f3f7342f978ae4a92c8d809617528ce193b5fd2349d73c24824f0ee",
+          "n_files": 1
+        },
+        {
+          "path": "mitigation_results/ablation200/benign_on.jsonl",
+          "sha256": "269d12515333b9da3ffd5f0fb29338683b520bccfdfe2b86e93bb57e38ce3215",
+          "n_files": 1
+        }
+      ],
+      "scorer": "external_baselines/ado_protocolB/score_ado_protocolB.py",
       "status": "PASS"
     },
     {

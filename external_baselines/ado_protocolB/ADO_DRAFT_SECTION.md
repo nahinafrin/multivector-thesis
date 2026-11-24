@@ -1,4 +1,6 @@
-# Draft text for the paper: ADO comparison (NOT inserted into main.tex or main_iccit.tex)
+# Draft text for the paper: ADO comparison
+
+**Now inserted** (with approval) into main.tex (Sec. V-E, Table tab:existing, latency table, abstract, summary table, conclusion) and main_iccit.tex (abstract, existing-defense paragraph, Table tab:existing, latency table, limitations, conclusion). The numbers there are checked by `step4 dataset/verify_claims.py` (claims X.ado_*).
 
 Status: draft for the authors, using the **full Protocol B set (200 attacks + 200 benign)**. All
 numbers can be traced to `full_comparison.json`, `full_sensitivity_refusal.json` and

@@ -20,6 +20,7 @@ establishes that these follow from the committed outputs; each input is recorded
 from __future__ import annotations
 
 import json
+import os
 import re
 import subprocess
 import sys
@@ -53,7 +54,7 @@ def _sha256(rel: str) -> dict:
     files = sorted(x for x in p.rglob("*") if x.is_file()) if p.is_dir() else [p]
     h = hashlib.sha256()
     for f in files:
-        h.update(f.relative_to(HERE).as_posix().encode())
+        h.update(Path(os.path.relpath(f, HERE)).as_posix().encode())  # == relative_to(HERE) inside HERE
         h.update(f.read_bytes().replace(b"\r\n", b"\n"))
     return {"path": rel, "sha256": h.hexdigest(), "n_files": len(files)}
 
@@ -220,6 +221,48 @@ def main() -> None:
           f"{100 * arm['ControlNET']['correct']['k'] / arm['ControlNET']['correct']['n']:.1f}/"
           f"{100 * arm['This work, full stack']['correct']['k'] / arm['This work, full stack']['correct']['n']:.1f}",
           "(46.0" + B + "% vs." + B + " 52.0" + B + "%;", sxb, "score_baselines_protocolB.py")
+
+    # ---- ADO on Protocol B (adapted implementation; external_baselines/ado_protocolB) ----
+    ADO = ROOT / "external_baselines" / "ado_protocolB"
+    for s in ("score_ado_protocolB.py", "score_sensitivity_refusal.py"):
+        run(str(ADO / s), "--prefix", "full", "--selection", "full_selection.json")
+    ac, asn = J(ADO / "full_comparison.json"), J(ADO / "full_sensitivity_refusal.json")
+    sado = ["../external_baselines/ado_protocolB/full_attack_results.jsonl",
+            "../external_baselines/ado_protocolB/full_benign_results.jsonl",
+            "mitigation_results/ablation200/on_full.jsonl", "mitigation_results/ablation200/benign_on.jsonl"]
+    scd = "external_baselines/ado_protocolB/score_ado_protocolB.py"
+    a_ = ac["arms"]["ADO"]
+    claim("X.ado_rates", "V-E", "ADO ASR / benign correct (n=200+200)", "28.5/35.5",
+          f"{pct(a_['attack_success_k'], 200)}/{pct(a_['benign_correct_k'], 200)}",
+          "ADO lets 28.5" + B + "% of attacks succeed", sado, scd)
+    pa_, pb_ = ac["attack_success_ado_vs_seven_layer"], ac["benign_correct_ado_vs_seven_layer"]
+    claim("X.ado_paired", "V-E", "ADO vs full stack: ADO-only / ours-only, exact p", "54/4, p=3e-12",
+          f"{pa_['only_ado']}/{pa_['only_seven_layer']}, p={pa_['exact_mcnemar_p']:.0e}".replace("e-0", "e-"),
+          "(54 vs." + B + " 4 discordant rows, $p=3" + B + "times10^{-12}$)", sado, scd)
+    claim("X.ado_benign", "V-E", "benign correct ADO vs full stack, exact p", "35.5/52.0, p=6e-06",
+          f"{pct(a_['benign_correct_k'], 200)}/{pct(ac['arms']['Seven-layer']['benign_correct_k'], 200)}, "
+          f"p={pb_['exact_mcnemar_p']:.0e}",
+          "(35.5" + B + "% vs." + B + " 52.0" + B + "%, $p=6" + B + "times10^{-6}$)", sado, scd)
+    s1a, s1p = asn["arms"]["ADO"], asn["paired"]["s1"]
+    claim("X.ado_s1", "V-E", "ADO ASR with refusals not counted; ADO-only / ours-only, exact p", "13.5, 24/4, p=2e-04",
+          f"{pct(s1a['s1_success'], 200)}, {s1p['only_ado']}/{s1p['only_seven_layer']}, p={s1p['exact_mcnemar_p']:.0e}",
+          "ADO's ASR is 13.5" + B + "% against 3.5" + B + "% (24 vs." + B + " 4 discordant rows, $p=2" + B + "times10^{-4}$)",
+          sado, "external_baselines/ado_protocolB/score_sensitivity_refusal.py")
+    claim("X.ado_refusals", "V-E", "ADO primary successes that are refusals", "30/57",
+          f"{s1a['successes_that_are_refusals']}/{s1a['primary_success']}", "(30 of ADO's 57 successes)",
+          sado, "external_baselines/ado_protocolB/score_sensitivity_refusal.py")
+    emp = [sum(not r["final_context"] for r in L(ADO / f"full_{s}_results.jsonl")) for s in ("attack", "benign")]
+    claim("X.ado_empty", "V-E", "rows where ADO left no passages: attack / benign", "64/58", f"{emp[0]}/{emp[1]}",
+          "64 of the 200 attacks and 58 of the 200 benign questions", sado, "verify_claims.py")
+    line = next((l for l in TEX[TEX.index(B + "label{tab:existing}"):].splitlines() if l.startswith("ADO orchestrator")), "")
+    cells = [x.strip() for x in line.split("&")]
+    lo, hi = wilson(a_["attack_success_k"], 200)[1:]
+    shown = [float(x) for x in re.findall(r"\[([\d.]+),\s*([\d.]+)\]", cells[1])[0]] if len(cells) > 4 else []
+    ok = (shown == [round(lo, 1), round(hi, 1)] and cells[2] == "0.0" and cells[3] == "35.5"
+          and p_matches(cells[4].rstrip(B).strip(), pa_["exact_mcnemar_p"]))
+    exp = f"[{round(lo, 1)}, {round(hi, 1)}], blk 0.0, correct 35.5, p={pa_['exact_mcnemar_p']:.2g}"
+    claim("X.ado_row", "Table tab:existing", "ADO row: Wilson CI, blocked, correct, exact p", exp,
+          exp if ok else f"row mismatch: {line.strip()}", line.strip() or "ADO orchestrator", sado, scd)
 
     # ---- n = 424 (Sec. V-E) ------------------------------------------------------------
     imp = J(EE / "improvements_report.json")

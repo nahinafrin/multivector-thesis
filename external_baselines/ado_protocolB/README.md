@@ -21,7 +21,7 @@ paper-faithful; see `IMPLEMENTATION_AUDIT.md`.
 | Merged full set, 200 + 200 | alignment OK | `full_{attack,benign}_results.jsonl` |
 | Scoring (each script run twice) | byte-identical outputs | `full_comparison.{json,md}`, `full_sensitivity_refusal.{json,md}` |
 | Manual adjudication (preregistered rule) | 24 rows labeled | `full_adjudication.json` |
-| Draft paper text (not in the LaTeX) | updated to n = 200 + 200 | `ADO_DRAFT_SECTION.md` |
+| Paper text | inserted into main.tex and main_iccit.tex; checked by `verify_claims.py` (X.ado_*) | `ADO_DRAFT_SECTION.md` |
 
 ## Result: full Protocol B set (200 attacks + 200 benign, paired, same rows for every arm)
 
