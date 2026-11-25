@@ -1,0 +1,16 @@
+--- paper_revision/response_to_reviewers.md
++++ paper_revision/response_to_reviewers.md (proposed)
+@@ -17,2 +17,5 @@
+-  * A three-layer subset (sanitization, grounding, refusal on detection) is statistically
+-    indistinguishable from the seven-layer stack, and we now recommend it.
++  * On instruction-bearing attacks, a three-layer subset (sanitization, grounding, refusal on detection)
++    is not significantly different from the seven-layer stack; the gap is at most 2.4 points at n = 424.
++    It does not suffice on assertion-only attacks, so we recommend it as a starting point and keep the
++    guarded prompt where planted factual claims matter. The layers act as near-independent filters
++    (new factorial analysis).
+@@ -74 +77 @@
+-| ControlNET detector, used as a firewall | 4.5% | p = 0.77 (statistically indistinguishable) | 46.0% (p = 0.058) |
++| ControlNET detector, used as a firewall | 4.5% | p = 0.77 (not significantly different) | 46.0% (p = 0.058) |
+@@ -266 +269 @@
+-  three-layer subset "statistically indistinguishable", not "equivalent".
++  three-layer subset "not significantly different" and report an upper bound on the gap, not "equivalent".

@@ -1,0 +1,19 @@
+{
+  "timestamp_utc": "2026-11-25T08:37:23.501060+00:00",
+  "slice": "C:/Users/sarke/Desktop/Multivector methodology-local api extension - Copy/research_improvement/experiments/e1_attacks_NS.jsonl",
+  "label": "full",
+  "limit": null,
+  "off_jsonl": "C:\\Users\\sarke\\Desktop\\Multivector methodology-local api extension - Copy\\research_improvement\\experiments\\E1_NS\\off.jsonl",
+  "on_jsonl": "C:\\Users\\sarke\\Desktop\\Multivector methodology-local api extension - Copy\\research_improvement\\experiments\\E1_NS\\on_full.jsonl",
+  "on_mitigation_config": {
+    "enabled": true,
+    "sanitize": true,
+    "tighten_retrieval": true,
+    "guarded_prompt": true,
+    "grounding_gate": true,
+    "presidio_mask": true,
+    "dlp": true,
+    "refuse_on_detection": true
+  },
+  "score_command": "python score_mitigation_ab.py --off C:\\Users\\sarke\\Desktop\\Multivector methodology-local api extension - Copy\\research_improvement\\experiments\\E1_NS\\off.jsonl --on C:\\Users\\sarke\\Desktop\\Multivector methodology-local api extension - Copy\\research_improvement\\experiments\\E1_NS\\on_full.jsonl --out C:\\Users\\sarke\\Desktop\\Multivector methodology-local api extension - Copy\\research_improvement\\experiments\\E1_NS\\report_full.json"
+}

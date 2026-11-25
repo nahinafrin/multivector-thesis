@@ -1,0 +1,3 @@
+done llama3.2:3b
+done mistral:7b
+done qwen2.5:3b

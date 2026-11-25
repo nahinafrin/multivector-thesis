@@ -1,0 +1,259 @@
+{
+ "two-layer subset combo_grounding_refuse vs full": {
+  "n": 200,
+  "only_x": 18,
+  "only_y": 4,
+  "p_exact": 0.004343509674072266,
+  "diff_pts": 7.0,
+  "ci95": [
+   2.5,
+   11.5
+  ],
+  "ci90": [
+   3.2,
+   10.8
+  ]
+ },
+ "two-layer subset combo_sanitize_refuse vs full": {
+  "n": 200,
+  "only_x": 15,
+  "only_y": 3,
+  "p_exact": 0.007537841796875,
+  "diff_pts": 6.0,
+  "ci95": [
+   1.9,
+   10.1
+  ],
+  "ci90": [
+   2.6,
+   9.4
+  ]
+ },
+ "two-layer subset combo_sanitize_grounding vs full": {
+  "n": 200,
+  "only_x": 13,
+  "only_y": 3,
+  "p_exact": 0.021270751953125,
+  "diff_pts": 5.0,
+  "ci95": [
+   1.1,
+   8.9
+  ],
+  "ci90": [
+   1.8,
+   8.2
+  ]
+ },
+ "semantic40_asr": {
+  "off": [
+   75.0,
+   59.8,
+   85.8,
+   30
+  ],
+  "on_combo_sanitize_grounding_refuse": [
+   62.5,
+   47.0,
+   75.8,
+   25
+  ],
+  "on_full": [
+   35.0,
+   22.1,
+   50.5,
+   14
+  ],
+  "on_nogrounding": [
+   35.0,
+   22.1,
+   50.5,
+   14
+  ],
+  "on_noprompt": [
+   55.0,
+   39.8,
+   69.3,
+   22
+  ],
+  "on_norefuse": [
+   50.0,
+   35.2,
+   64.8,
+   20
+  ],
+  "on_only_grounding": [
+   75.0,
+   59.8,
+   85.8,
+   30
+  ],
+  "on_only_prompt": [
+   52.5,
+   37.5,
+   67.1,
+   21
+  ],
+  "on_only_refuse": [
+   62.5,
+   47.0,
+   75.8,
+   25
+  ],
+  "on_only_sanitize": [
+   77.5,
+   62.5,
+   87.7,
+   31
+  ]
+ },
+ "semantic40_full_vs_off": {
+  "n": 40,
+  "only_x": 18,
+  "only_y": 2,
+  "p_exact": 0.0004024505615234375,
+  "diff_pts": 40.0,
+  "ci95": [
+   21.9,
+   58.1
+  ],
+  "ci90": [
+   24.8,
+   55.2
+  ]
+ },
+ "semantic40_subset3_vs_full": {
+  "n": 40,
+  "only_x": 12,
+  "only_y": 1,
+  "p_exact": 0.00341796875,
+  "diff_pts": 27.5,
+  "ci95": [
+   12.0,
+   43.0
+  ],
+  "ci90": [
+   14.5,
+   40.5
+  ]
+ },
+ "semantic40_subset3_vs_off": {
+  "n": 40,
+  "only_x": 6,
+  "only_y": 1,
+  "p_exact": 0.125,
+  "diff_pts": 12.5,
+  "ci95": [
+   0.1,
+   24.9
+  ],
+  "ci90": [
+   2.1,
+   22.9
+  ]
+ },
+ "semantic40_off_vs_on_only_prompt": {
+  "n": 40,
+  "only_x": 12,
+  "only_y": 3,
+  "p_exact": 0.03515625,
+  "diff_pts": 22.5,
+  "ci95": [
+   4.8,
+   40.2
+  ],
+  "ci90": [
+   7.7,
+   37.3
+  ]
+ },
+ "semantic40_off_vs_on_only_refuse": {
+  "n": 40,
+  "only_x": 6,
+  "only_y": 1,
+  "p_exact": 0.125,
+  "diff_pts": 12.5,
+  "ci95": [
+   0.1,
+   24.9
+  ],
+  "ci90": [
+   2.1,
+   22.9
+  ]
+ },
+ "semantic40_off_vs_on_only_sanitize": {
+  "n": 40,
+  "only_x": 0,
+  "only_y": 1,
+  "p_exact": 1.0,
+  "diff_pts": -2.5,
+  "ci95": [
+   -7.3,
+   2.3
+  ],
+  "ci90": [
+   -6.6,
+   1.6
+  ]
+ },
+ "semantic40_off_vs_on_only_grounding": {
+  "n": 40,
+  "only_x": 1,
+  "only_y": 1,
+  "p_exact": 1.0,
+  "diff_pts": 0.0,
+  "ci95": [
+   -6.9,
+   6.9
+  ],
+  "ci90": [
+   -5.8,
+   5.8
+  ]
+ },
+ "semantic40_on_noprompt_vs_full": {
+  "n": 40,
+  "only_x": 9,
+  "only_y": 1,
+  "p_exact": 0.021484375,
+  "diff_pts": 20.0,
+  "ci95": [
+   5.8,
+   34.2
+  ],
+  "ci90": [
+   8.1,
+   31.9
+  ]
+ },
+ "semantic40_on_norefuse_vs_full": {
+  "n": 40,
+  "only_x": 6,
+  "only_y": 0,
+  "p_exact": 0.03125,
+  "diff_pts": 15.0,
+  "ci95": [
+   3.9,
+   26.1
+  ],
+  "ci90": [
+   5.7,
+   24.3
+  ]
+ },
+ "semantic40_on_nogrounding_vs_full": {
+  "n": 40,
+  "only_x": 0,
+  "only_y": 0,
+  "p_exact": 1.0,
+  "diff_pts": 0.0,
+  "ci95": [
+   0.0,
+   0.0
+  ],
+  "ci90": [
+   0.0,
+   0.0
+  ]
+ }
+}

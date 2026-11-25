@@ -1,0 +1,47 @@
+
+@misc{xiang2024robustrag,
+  author = {Chong Xiang and Tong Wu and Zexuan Zhong and David Wagner and Danqi Chen and Prateek Mittal},
+  title = {Certifiably Robust {RAG} against Retrieval Corruption},
+  howpublished = {arXiv:2405.15556},
+  year = {2024}
+}
+@misc{trishield2026,
+  author = {Mohanty and Patel and Yuvaraj and Chaudhary and Singhania},
+  title = {{TriShieldRAG}: A Three-Ring Defense-in-Depth Framework Against Knowledge Corruption in Retrieval-Augmented Generation},
+  howpublished = {arXiv:2607.23838},
+  year = {2026}
+}
+@misc{nasr2025attacker,
+  author = {Milad Nasr and Nicholas Carlini and others},
+  title = {The Attacker Moves Second: Stronger Adaptive Attacks Bypass Defenses Against {LLM} Jailbreaks and Prompt Injections},
+  howpublished = {arXiv:2510.09023 (USENIX Security 2026)},
+  year = {2025}
+}
+@article{fawcett2016ablation,
+  author = {Chris Fawcett and Holger H. Hoos},
+  title = {Analysing Differences Between Algorithm Configurations Through Ablation},
+  journal = {Journal of Heuristics},
+  volume = {22},
+  number = {4},
+  pages = {431--458},
+  year = {2016}
+}
+@inproceedings{hutter2014fanova,
+  author = {Frank Hutter and Holger Hoos and Kevin Leyton-Brown},
+  title = {An Efficient Approach for Assessing Hyperparameter Importance},
+  booktitle = {Proc. International Conference on Machine Learning (ICML), PMLR 32},
+  pages = {754--762},
+  year = {2014}
+}
+@misc{ramakrishnan2025securing,
+  author = {Badrinath Ramakrishnan and Akshaya Balaji},
+  title = {Securing {AI} Agents Against Prompt Injection Attacks},
+  howpublished = {arXiv:2511.15759},
+  year = {2025}
+}
+@misc{chennabasappa2025llamafirewall,
+  author = {Sahana Chennabasappa and others},
+  title = {{LlamaFirewall}: An Open Source Guardrail System for Building Secure {AI} Agents},
+  howpublished = {arXiv:2505.03574},
+  year = {2025}
+}

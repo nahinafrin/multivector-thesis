@@ -1,0 +1,16 @@
+{
+ "written_before_inference": "2026-11-25T01:00:16",
+ "git_head": "7c7956f87716215e8f13aa3f38eebac5e22f40e6",
+ "sha256": {
+  "research_improvement\\experiments\\PREREGISTRATION_E1_E2.md": "0a36259c17df28753d2dda17d04fe7b8fdaadbdee673c4a8f807611cb7386646",
+  "research_improvement\\experiments\\e1_attacks_NS.jsonl": "7457c61d733c0c6226f3de58714fdf694440f2f0369c505c5bcb143077efc6d2",
+  "research_improvement\\experiments\\e1_attacks_HO.jsonl": "4e02a0e4e7ac259b5691d359895b735cc5e2fa7edb67675f01f28ed024fcdbec",
+  "research_improvement\\experiments\\e1_build_variants.py": "15fd0e24e42872e0bb18cdb3d27514745755dbd3dfad157a9f20147d546a0b70",
+  "research_improvement\\experiments\\e2_closed_book.py": "2d35cf0d571cef26a3ec3c19e88c4ff12b9ecb95f4178b3696ee04ab332ad24c",
+  "research_improvement\\experiments\\run_e1_e2.sh": "dc3cd1c9a35d8e63aae0b518576a6b1e96fd1398e4c203558d8743873a9cabf7",
+  "step4 dataset\\run_mitigation_ab.py": "fd83f49279df8bf766a8ac5ca0b63ee8377f94cc66f1069d2c1f1c01e6537143",
+  "step4 dataset\\mitigation_pipeline.py": "423d1da60737a3d3381f58b451b13f10dde930ef503672bb296cf1ebf251f7e9",
+  "step4 dataset\\step_09_generator_llm.py": "15bf8b3828391547d44f40c19665be04309ccf77b88cef6632458999aabf1e0b",
+  "step4 dataset\\planted_attacks_200.jsonl": "128d3d6d10f61c494187eabf2ec48cac75fa3f7c2cfd6f74578889bed9b2bf9b"
+ }
+}
