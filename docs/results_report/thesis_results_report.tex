@@ -37,7 +37,7 @@
 \begin{keybox}{How to read this report}
 This report collects every result of the thesis so far in one place: the original evaluation, the revision for
 the reviewers, the comparison with existing defenses, the audit of the evidence, and the two preregistered
-experiments run on 25 November 2026 (E1, E2). Every number is taken from the revised papers
+experiments run on 25 November 2026 (E1, E2). Section~\ref{sec:archive} adds the findings from the remaining output files of the repository (earlier runs, gate calibration, PII tests). Every number is taken from the revised papers
 (\texttt{paper\_revision/main.tex}, \texttt{main\_iccit.tex}) or from \texttt{research\_improvement/}, which hold the
 per-row outputs and scripts that produce them. Where an older working document in \texttt{docs/} disagrees, the
 papers are authoritative. No new numbers were computed for this report.
@@ -83,6 +83,10 @@ third-party datasets (PoisonedRAG, BIPIA, deepset), with paired tests on identic
   of the successes (54.4\%) the poisoned passage overrode an answer the model already knew.
 \item \textbf{It runs on a laptop.} Median 15.3\,s per query on an 8\,GB RTX 4060 laptop GPU, 8.6\,s with the
   encoders in fp16 on the GPU.
+\item \textbf{The earlier runs explain the design choices} (Section~\ref{sec:archive}). The canary protocol could not
+  separate defenses (single baselines also scored 130/130), which motivated scoring delivered answers; the input gate's
+  fused score was largely dormant (10 of its blocks came from it; the rest from override rules); and the PII tests
+  were uninformative (0/30 leaks even undefended).
 \end{enumerate}
 
 \begin{figure}[h]
@@ -259,7 +263,7 @@ Level & Result \\
 so it can stay intact while an answer is wrong.}
 \end{table}
 
-\subsection{Conjunctive (multivector) detection: a structural negative result}
+\subsection{Conjunctive (multivector) detection: a structural negative result}\label{sec:conj}
 
 \begin{itemize}
 \item \textbf{Measured.} Of 40 multivector rows, 6 were blocked at the gate; on the other 34 the detector fired once,
@@ -439,7 +443,7 @@ Detector fires (full arm) & 80/200 & 111/200 & & 6/200 & \\
   again not evidence of equivalence.
 \end{itemize}
 
-\subsection{Comparison with existing defenses}
+\subsection{Comparison with existing defenses}\label{sec:existing}
 
 \begin{figure}[h]
 \centering
@@ -563,7 +567,7 @@ knowledge corruption as an open problem for this defense class, not a solved one
   cost. A routed variant keeps utility (36/40 answered) but only reduces ASR from 18/40 to 15/40 ($p=0.45$).
 \end{itemize}
 
-\subsection{Cost: latency and memory}
+\subsection{Cost: latency and memory}\label{sec:cost}
 
 \begin{table}[h]
 \centering\small
@@ -588,6 +592,153 @@ The grounding judge is the dominant cost (about 7--8\,s, on CPU). With fp16 enco
 at about the undefended latency, with identical decisions on 50 benign questions. Memory: generator GPU memory
 peaks at 6.3\,GB of 8\,GB; the Python process needs about 8\,GB of host RAM. One laptop serves roughly 240 queries
 per hour (about 400 with fp16 encoders) --- suited to a single user or small team.
+
+%=====================================================================
+\section{Findings from the full output archive}\label{sec:archive}
+
+The repository holds about 800 committed output files. Most feed the results above. This section adds the findings
+from the remaining outputs: the input-gate calibration, an earlier 918-row benign run, the older-code mitigation
+arms, the controller and detector stress runs, an earlier baseline comparison under the canary protocol, and the
+PII-leak tests. Several of these predate the current code and are \emph{not} pooled with the current results; they
+are reported because they shaped the design and the evaluation protocol.
+
+\subsection{Input-gate calibration data and the C3RF gate}
+
+\textbf{Calibration corpus} (\texttt{dataset/merged\_output/}). Public prompt-injection, jailbreak, toxicity and PII
+datasets were merged into 7,938 rows after de-duplication (target 8,000), split 5,555 / 1,190 / 1,193. The build's
+quota audit reports \textbf{FAIL} on two checks: benign hard negatives reach 366 of 7,938 rows (4.61\%, below the 5\%
+minimum), and the social-engineering category is absent, because gated sources were unavailable locally. The four
+risk tiers meet their target shares within 2 points, but eleven categories are data-limited (e.g.\ only 7 CBRN, 5
+self-harm and 5 misinformation rows in the source pool; obfuscation and indirect injection are covered by 8
+synthetic rows each).
+
+\textbf{Frozen gate on the held-out test split} (\texttt{dataset/c3rf\_test\_results.json}, $n=1{,}195$, measured once after
+freezing thresholds on the validation split):
+
+\begin{table}[h]
+\centering\small
+\begin{tabular}{@{}l r r r r r@{}}
+\toprule
+Input gate & Precision & Recall & F1 & False pos. & False neg. \\
+\midrule
+DeBERTa injection classifier only & 0.966 & 0.537 & 0.691 & 20 & 483 \\
+OR-gate (injection or Llama Guard) & 0.935 & 0.860 & 0.896 & 62 & 146 \\
+C3RF fusion, block decisions only & 0.967 & 0.638 & 0.769 & 23 & 378 \\
+\textbf{C3RF fusion, frozen (review = flagged)} & 0.937 & 0.771 & 0.846 & 54 & 239 \\
+\bottomrule
+\end{tabular}
+\caption{Input-gate operating points on the calibration test split (1,044 harmful, 151 benign rows).}
+\end{table}
+
+\begin{itemize}
+\item Fusing the two classifiers raises recall from 0.54 (injection classifier alone) to 0.77 at similar precision.
+  The simple OR-gate has the highest F1 but 62 false positives against 54.
+\item \textbf{The continuous fusion score is largely dormant.} Of the gate's blocks on the test split, only 10 came from
+  the fused risk threshold; the rest came from override rules (493 injection hard blocks, 165 Llama Guard hard
+  blocks, 21 severe-category blocks; 236 rows took the fast-path allow).
+\item Recall is weakest on categories without injection syntax: PII-leakage requests 0.62, direct-harm instructions
+  0.67, financial/cyber risk 0.68, misinformation 0.50 ($n=6$); it is highest on prompt injection (0.89) and toxicity
+  (0.84). On benign hard negatives the fused gate is correct on only 42\% of 48 rows.
+\item Which recall to quote depends on whether ``review'' counts as a detection: 0.636 (block only), 0.753 or 0.771
+  (review counted), as reconciled in \texttt{docs/RECONCILIATION\_NOTE.md}.
+\end{itemize}
+
+\subsection{An earlier 918-row benign run on rag-mini-wikipedia}
+
+The locked summary \texttt{step4 dataset/frozen/thesis\_results\_locked.json} records a full benign run of the earlier
+pipeline over 918 questions:
+\begin{itemize}
+\item \textbf{Gate false positives on ordinary questions:} 6/918 were red-flagged, all triggered by toxicity words in
+  harmless questions (``Damn'', ``Garbage'', ``bitches'' in the zoological sense). Five of the six were absorbed
+  downstream without effect; only 1 of 918 answers flipped from pass to fail (0.1\%).
+\item \textbf{The hybrid grounding judge needs both components:} pass rate 40.3\% with the lexical scorer alone, 68.9\%
+  with the model scorer alone, 78.4\% with the hybrid maximum; 438 of 918 rows needed both.
+\item \textbf{A saturated disagreement signal was fixed.} The original ensemble-disagreement score put 786 of 918 benign
+  rows in the top band (mean 0.94), so it carried no information; rescoring with sentence-embedding distance moved the
+  mean to 0.21, with 2 rows in the top band.
+\item \textbf{Risk propagation works on real rows:} high-risk rows reached the 0.90 grounding ceiling with tightened
+  sanitisation (0.30) and reranking (0.40) thresholds.
+\end{itemize}
+These files are historical snapshots; no number in the current papers comes from them.
+
+\subsection{Older-code mitigation arms (Protocol B, first version)}
+
+Before the current seven-layer code, five mitigation configurations were run on the same 200 planted attacks
+(\texttt{mitigation\_results/planted200/}). They are not comparable with Table~\ref{tab:ablation} (different code and
+undefended run), but show how the design evolved:
+
+\begin{table}[h]
+\centering\small
+\begin{tabular}{@{}l c c c c@{}}
+\toprule
+Configuration (older code) & ASR (undefended 30.5\%) & fix/brk & $p$ & Benign blocked \\
+\midrule
+Grounding only & 26.5\% & 12/4 & 0.08 & -- \\
+Refusal on detection only & 19.0\% & 28/5 & $10^{-4}$ & -- \\
+Everything except refusal & 20.5\% & 37/17 & 0.01 & 43.0\% \\
+Ground-plus (grounding + refusal) & 16.5\% & 30/2 & $2.5\times10^{-7}$ & 9.0\% \\
+Full (older prompt shaping) & 13.5\% & 48/14 & $<10^{-4}$ & 45.5\% \\
+\bottomrule
+\end{tabular}
+\caption{Older-code arms. The 45.5\% benign cost of the older ``full'' arm was traced to a grounding-judge blind spot
+for terse yes/no answers, not to over-blocking by design.}
+\end{table}
+
+Two lessons carried into the final design: refusal on detection was then the only standalone layer to clear
+$p<0.05$, and aggressive pre-generation filtering raised benign blocking (43--46\%) without reducing ASR further. The
+current code removed the terse-answer blind spot (benign blocking 8.5\% for the full stack).
+
+\subsection{Controller and multivector signal: stress runs}
+
+Three earlier runs (\texttt{mitigation\_run/}, \texttt{stress\_run/}, \texttt{stress\_run\_v2/}) ablated the controller and the
+multivector signal on 30--40 multivector attacks each:
+
+\begin{table}[h]
+\centering\small
+\begin{tabular}{@{}l c c c@{}}
+\toprule
+Run ($n$) & No controller & No multivector signal & Full \\
+\midrule
+mitigation run (30) & 29/30 neutralised, 10 blocked & 28/30, 6 blocked & 29/30, 19 blocked \\
+stress run (40) & 40/40, 23 blocked & 40/40, 20 blocked & 40/40, 31 blocked \\
+stress run v2 (40) & 38/40, 19 blocked & 38/40, 15 blocked & 38/40, 34 blocked \\
+\bottomrule
+\end{tabular}
+\caption{Neutralisation with and without the controller and the multivector signal. No canary leaked in any arm.}
+\end{table}
+
+Removing the multivector signal never changed neutralisation (exact McNemar $p=1.0$ in all three runs). The full
+configuration mainly converted clean answers into blocks (e.g.\ 4 clean answers instead of 23 in stress run v2).
+This is the earliest evidence for the paper's finding that the extensions add no measured security. The detector fired often in these runs (24--37 rows),
+but they did not check whether a fire was a valid sub-threshold conjunctive fire; the later analysis that did found
+none (Section~\ref{sec:conj}).
+
+\subsection{Why the canary protocol could not rank defenses}
+
+An earlier comparison under the canary protocol (\texttt{baseline\_comparison/}, 130 attack rows) found the full pipeline
+neutralising 129/130 and both single baselines --- LLM-Guard only and Spotlighting only --- neutralising 130/130.
+The canary protocol therefore cannot tell defenses apart: it shows that the poisoned instruction was not followed,
+not that the delivered answer was correct. This motivated Protocol B, which scores the planted answer in the
+delivered response, and under which the same baselines differ sharply (Section~\ref{sec:existing}). The detector-only LLM-Guard
+baseline flags 65/130 attacks at 0/80 benign false positives (recall 50\%).
+
+\subsection{PII leakage tests}
+
+Two 30-row PII slices built from public PII datasets (\texttt{row8\_mitigation\_results/}) test extraction attempts and
+incidental leakage. No PII leaked in either arm: 0/30 undefended and 0/30 defended in both slices (95\% upper bound
+11.4\%). The test is therefore uninformative about the PII layers: the generator did not leak this PII even without
+defenses, so Presidio and DLP could not show an effect. This is consistent with the ablation, where Presidio and DLP
+have no effect on injection ASR; their value for PII protection is untested here.
+
+\subsection{Other supporting outputs}
+\begin{itemize}
+\item \textbf{Reproduction check} (\texttt{mitigation\_results/rerun200/}): a fresh run from the raw slice reproduced the
+  headline within one row (undefended 58 vs.\ 59, full 6 vs.\ 7 successes; 189/200 and 199/200 rows identical).
+\item \textbf{Resource profile} (\texttt{resource\_profile/}): the latency and memory figures of Section~\ref{sec:cost}.
+\item \textbf{ADO baseline} (\texttt{external\_baselines/ado\_protocolB/}): implementation audit, functional test (10/10
+  rows), preregistered 50+50 pilot and 150+150 full run with 0 generation errors, byte-identical scoring on two runs,
+  and 24 manually adjudicated rows.
+\end{itemize}
 
 %=====================================================================
 \section{Audit of the evidence and corrections}\label{sec:audit}
