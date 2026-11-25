@@ -111,10 +111,49 @@ edit2(README, "B-readme",
       "| PoisonedRAG and BIPIA, adaptive-tier variant (main Table X; ICCIT Table VII) | `convert_external_datasets.py`, `adaptive_external/run_adaptive_external.py` (recovered `run_full_pipeline_adaptive.py`; see `docs/ADAPTIVE_EXTERNAL_REPRODUCIBILITY.md`) | `final_n200_summary.py`, `verify_adaptive_external.py` | `external_validation_n200.jsonl`, `ext_n200_results.jsonl` |")
 
 
+# --------------------------------------------------------------------------- third set (final reviewer audit, 2026-11-25)
+# A: qualify the three-layer recommendation; B: report the n=424 difference as estimate + 95% CI, not "at most";
+# C: make the harness BIPIA footnote unambiguous.
+E3 = []
+
+
+def edit3(f, i, old, new):
+    E3.append({"file": f, "id": i, "old": old, "new": new})
+
+
+edit3(LETTER, "A-letter",
+      "  p = 0.34), with 9.5% vs. 8.5% benign blocking. The paper therefore recommends this simpler\n  configuration.",
+      "  p = 0.34), with 9.5% vs. 8.5% benign blocking. The three-layer configuration is a reasonable starting\n"
+      "  point for the tested instruction-bearing attacks, but it is not a universal replacement for the\n"
+      "  seven-layer configuration: on assertion-only attacks, retaining the guarded prompt provides\n"
+      "  significantly better protection (62.5% vs. 35.0% ASR, p = 0.003).")
+edit3(LETTER, "B-letter-summary",
+      "is not significantly different from the seven-layer stack; the gap is at most 2.4 points at n = 424.",
+      "is not significantly different from the seven-layer stack; at n = 424 the estimated difference is\n"
+      "    +0.5 points, with a 95% confidence interval of −1.5 to +2.4 points.")
+edit3(LETTER, "B-letter-n424",
+      "  full stack and 4.7% for the subset. The paired difference is +0.5 points (95% CI [−1.5, +2.4]), so\n"
+      "  dropping the other four layers costs at most about 2.4 points.",
+      "  full stack and 4.7% for the subset. The estimated paired difference is +0.5 percentage points, with a\n"
+      "  95% confidence interval of −1.5 to +2.4 percentage points.")
+edit3(ICCIT, "B-iccit",
+      r"three layers therefore give up at most about 2.4 points against seven (Fig.~\ref{fig:asr})",
+      r"three layers therefore differ from seven by an estimated $+0.5$ points (95\% CI $-1.5$ to $+2.4$; Fig.~\ref{fig:asr})")
+edit3(MAIN, "B-main-conclusion",
+      r"on an enlarged 424-row set the cost of dropping the other four layers is at most about 2.4 points (95\% bound)",
+      r"on an enlarged 424-row set the estimated cost of dropping the other four layers is $+0.5$ points (95\% CI $-1.5$ to $+2.4$)")
+for f, i in ((MAIN, "C-main"), (ICCIT, "C-iccit")):
+    edit3(f, i,
+          r"$^\ddagger$Seven-layer harness, \texttt{llama3.2:3b} in both arms; BIPIA 44/50 blocked.",
+          r"$^\ddagger$Separate run of the seven-layer single-generator harness (Protocol~B configuration), \texttt{llama3.2:3b} in both arms; in that run BIPIA is 44/50 blocked, against 45/50 for the adaptive-tier variant above.")
+
+
 def main():
     global E
     if "--set2" in sys.argv:
         E = E2
+    if "--set3" in sys.argv:
+        E = E3
     apply = "--apply" in sys.argv
     new = {}
     for f in sorted({e["file"] for e in E}):

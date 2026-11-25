@@ -15,7 +15,8 @@ The main changes are:
   constructed.
 * **Comparison with simpler and existing defenses.**
   * On instruction-bearing attacks, a three-layer subset (sanitization, grounding, refusal on detection)
-    is not significantly different from the seven-layer stack; the gap is at most 2.4 points at n = 424.
+    is not significantly different from the seven-layer stack; at n = 424 the estimated difference is
+    +0.5 points, with a 95% confidence interval of −1.5 to +2.4 points.
     It does not suffice on assertion-only attacks, so we recommend it as a starting point and keep the
     guarded prompt where planted factual claims matter. The layers act as near-independent filters
     (new factorial analysis).
@@ -56,13 +57,15 @@ with the same undefended arm.
 * No single layer comes close to the full stack. The best single layers leave 15–18% attack success
   (ASR), against 3.5% for the full stack.
 * The subset sanitize + grounding + refuse reaches 5.5% ASR (7 vs. 3 discordant rows, exact McNemar
-  p = 0.34), with 9.5% vs. 8.5% benign blocking. The paper therefore recommends this simpler
-  configuration.
+  p = 0.34), with 9.5% vs. 8.5% benign blocking. The three-layer configuration is a reasonable starting
+  point for the tested instruction-bearing attacks, but it is not a universal replacement for the
+  seven-layer configuration: on assertion-only attacks, retaining the guarded prompt provides
+  significantly better protection (62.5% vs. 35.0% ASR, p = 0.003).
 * **Seed replicates.** Across three generation seeds, the subset is worse by 1.8 ± 0.8 points but never
   significantly (p ≥ 0.27).
 * **Enlarged set.** On an enlarged set of 424 planted attacks, ASR is 29.7% undefended, 4.2% for the
-  full stack and 4.7% for the subset. The paired difference is +0.5 points (95% CI [−1.5, +2.4]), so
-  dropping the other four layers costs at most about 2.4 points.
+  full stack and 4.7% for the subset. The estimated paired difference is +0.5 percentage points, with a
+  95% confidence interval of −1.5 to +2.4 percentage points.
 * **Fresh rerun.** A rerun from the raw slice gives 29.0% and 3.0%, and agrees with the reported run on
   189 and 199 of 200 rows.
 

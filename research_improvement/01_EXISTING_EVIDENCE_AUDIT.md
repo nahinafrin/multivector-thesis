@@ -115,8 +115,10 @@ the semantic-slice defense. *Action:* scope the claim (06).
 
 **F6. Missing prior art.** Four omissions:
 - RobustRAG, for isolate-and-aggregate generation.
-- TriShieldRAG, a defense-in-depth system for knowledge corruption. It reports PoisonedRAG ≈91% → ≈13% against a
-  non-adaptive attacker, and its own failure under an adaptive one.
+- TriShieldRAG, a defense-in-depth system for knowledge corruption. Its v2 (26 Aug 2026) reports PoisonedRAG
+  79% → 1% against a non-adaptive attacker on the full NQ corpus, and its own failure under an adaptive one
+  (62% vs 56% undefended). *Corrected 2026-11-25:* an earlier version of this note quoted v1's ≈91% → ≈13%,
+  which v2 withdraws.
 - Ablation analysis and fANOVA, for the attribution method.
 - "The Attacker Moves Second" (Nasr et al., USENIX Sec. 2026), for the static-dataset threat to validity.
 

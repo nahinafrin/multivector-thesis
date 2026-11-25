@@ -124,8 +124,9 @@ cannot be excluded.
 The taxonomy explains the result more precisely than "PoisonedRAG has no instruction signature". It also says what
 a successful defense would need to change: rank or provenance, and evidence availability. Grounding and signature
 detection do not touch these. Whether model consensus could is untested here. This matches the published landscape:
-- TriShieldRAG (2026) uses ingest screening, trust-weighted re-ranking and cross-model consensus. It reports
-  PoisonedRAG ≈91% → ≈13% against a non-adaptive attacker. Its consensus uses heterogeneous models (including an API
+- TriShieldRAG (2026) uses ingest screening, trust-weighted re-ranking and cross-model consensus. Its v2
+  (26 Aug 2026) reports PoisonedRAG 79% → 1% against a non-adaptive attacker on the full NQ corpus.
+  *Corrected 2026-11-25:* an earlier version of this note quoted v1's ≈91% → ≈13%, which v2 withdraws. Its consensus uses heterogeneous models (including an API
   model) and adds re-retrieval on disagreement.
 - It loses most of that against an adaptive attacker (62% vs 56% undefended).
 - Our result is consistent with this: our stack has neither trust weighting nor ingest screening for factual text.
