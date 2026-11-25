@@ -1,0 +1,359 @@
+{
+ "purpose": "Provenance of the adaptive-tier pipeline that produced step4 dataset/ext_n200_results.jsonl (150 PoisonedRAG + 50 BIPIA rows).",
+ "run": {
+  "log": "step4 dataset/run_n200_log.txt (UTF-16)",
+  "started": "2026-08-11 10:51:13 (local)",
+  "finished": "2026-08-11 ~12:10 (elapsed 4764.2 s)",
+  "rows": "200 ok, 0 errors",
+  "results_commit": "1d99b23 2026-08-11 12:44:38 -0500",
+  "scripts_last_modified_before_run": "1d87f26 2026-08-10 10:54:05 -0500",
+  "semantic_gate": "disabled (--disable-semantic-gate): every row that passed the gate records meta.semantic_intent_decision = 'SKIPPED'",
+  "mode": "adaptive (default of --mode)",
+  "classifier_revision": "protectai/deberta-v3-base-prompt-injection-v2 @ 89b085cd330414d3e7d9dd787870f315957e1e9f (llm-guard, from the run log)"
+ },
+ "authentication": "Exact by git history: the four scripts are byte-identical from 1d87f26 (before the run) to their removal, the results were committed 34 min after the logged run finished, and the run-time module versions are those of 1d99b23. No commit modified the scripts between the run and the results commit.",
+ "sha256_note": "sha256 is of the git blob bytes (LF line endings); verify_adaptive_external.py normalises CRLF->LF before hashing.",
+ "files": {
+  "original/run_full_pipeline_adaptive.py": {
+   "original_location": "step4 dataset/run_full_pipeline_adaptive.py",
+   "role": "Orchestrator: process_adaptive() threads AdaptivePolicy through Stages 1-10 and 13; CLI that wrote ext_n200_results.jsonl",
+   "first_added_commit": "2bd8841",
+   "last_modified_commit": "1d87f26",
+   "removed_in_commit": "fe71c56 (2026-11-23, 'Trim repository to what the paper and thesis need'; moved to the private backup repository nahinafrin/multivector-thesis-backup, same path)",
+   "git_blob": "5706c5d6aff80c991b3ac7a79c7994cb4a792801",
+   "identical_at_commits": [
+    "1d87f26",
+    "1d99b23",
+    "c73170b",
+    "8299dc7",
+    "8c6b245",
+    "98aedaa",
+    "fe71c56^"
+   ],
+   "backup_repository_copy_identical": true,
+   "sha256": "af0e5031791afaadd39cfb323fedb6b33d44e044ab84681a0c1b2fcbde14494e",
+   "bytes": 13910
+  },
+  "original/adaptive_risk.py": {
+   "original_location": "step4 dataset/adaptive_risk.py",
+   "role": "Noisy-OR cumulative risk, LOW/MEDIUM/HIGH tier table (top-k, thresholds, prompt profile, ensemble/policy flags), monotone AdaptivePolicy",
+   "first_added_commit": "2bd8841",
+   "last_modified_commit": "111f92c",
+   "removed_in_commit": "fe71c56 (2026-11-23, 'Trim repository to what the paper and thesis need'; moved to the private backup repository nahinafrin/multivector-thesis-backup, same path)",
+   "git_blob": "2a9448b36641e585126edcbfbbee89015aee580b",
+   "identical_at_commits": [
+    "1d87f26",
+    "1d99b23",
+    "c73170b",
+    "8299dc7",
+    "8c6b245",
+    "98aedaa",
+    "fe71c56^"
+   ],
+   "backup_repository_copy_identical": true,
+   "sha256": "d95bd6114a160c833bb386adadcce5740058a2492d7a49166d134f2a59d0f5cf",
+   "bytes": 12072
+  },
+  "original/adaptive_verification.py": {
+   "original_location": "step4 dataset/adaptive_verification.py",
+   "role": "verified_generate(): single llama3.2:3b at LOW/MEDIUM, 3-model ensemble + LLM policy check at HIGH, grounding always",
+   "first_added_commit": "2bd8841",
+   "last_modified_commit": "1573234",
+   "removed_in_commit": "fe71c56 (2026-11-23, 'Trim repository to what the paper and thesis need'; moved to the private backup repository nahinafrin/multivector-thesis-backup, same path)",
+   "git_blob": "666bab26ff3b90b5993650a72d1594ad6a0e3015",
+   "identical_at_commits": [
+    "1d87f26",
+    "1d99b23",
+    "c73170b",
+    "8299dc7",
+    "8c6b245",
+    "98aedaa",
+    "fe71c56^"
+   ],
+   "backup_repository_copy_identical": true,
+   "sha256": "abf236a0a584d63b44b713bea8ed35f8ea751af34d428ddb9dc19ccbfa16bc51",
+   "bytes": 6781
+  },
+  "original/adaptive_prompt.py": {
+   "original_location": "step4 dataset/adaptive_prompt.py",
+   "role": "Tier-specific Stage 8 system preambles (standard / guarded / strict)",
+   "first_added_commit": "2bd8841",
+   "last_modified_commit": "111f92c",
+   "removed_in_commit": "fe71c56 (2026-11-23, 'Trim repository to what the paper and thesis need'; moved to the private backup repository nahinafrin/multivector-thesis-backup, same path)",
+   "git_blob": "fa962bf49c099cc0e0a14cc21536200194df1e20",
+   "identical_at_commits": [
+    "1d87f26",
+    "1d99b23",
+    "c73170b",
+    "8299dc7",
+    "8c6b245",
+    "98aedaa",
+    "fe71c56^"
+   ],
+   "backup_repository_copy_identical": true,
+   "sha256": "e1e2f7acfb9605d8b5bcf275f8d2feb22be3a467cc5cdf105abeb846f4ff079d",
+   "bytes": 1692
+  },
+  "runtime_snapshot_1d99b23/preprocess_dataset.py": {
+   "original_location": "dataset/preprocess_dataset.py",
+   "source_commit": "1d99b23",
+   "git_blob": "dff704c9ab5b1f60aec212f85f392bc4dfc30a54",
+   "same_as_HEAD": false,
+   "sha256": "fcc61710e76068f19d0b7d8449a7a8fe59c08840c6724435212f3e844d0586f9",
+   "bytes": 14899
+  },
+  "runtime_snapshot_1d99b23/step_01_user_input.py": {
+   "original_location": "dataset/step_01_user_input.py",
+   "source_commit": "1d99b23",
+   "git_blob": "bed9f3bcaf08681749d2680f927f5a74722e3805",
+   "same_as_HEAD": true,
+   "sha256": "6422af58cf0898284e2327522f9deb04e092c23f0bef7d74859d15f3ecd329a9",
+   "bytes": 3204
+  },
+  "runtime_snapshot_1d99b23/step_02_normalization.py": {
+   "original_location": "dataset/step_02_normalization.py",
+   "source_commit": "1d99b23",
+   "git_blob": "297f4623bce52781a2c7217381b018a883d086a8",
+   "same_as_HEAD": true,
+   "sha256": "c234f8d8e529462a9add890db4f13887d9716797033b5db56728243aabac33b2",
+   "bytes": 3650
+  },
+  "runtime_snapshot_1d99b23/step_03_injection_detection.py": {
+   "original_location": "dataset/step_03_injection_detection.py",
+   "source_commit": "1d99b23",
+   "git_blob": "e003dc409b3bd6c9b9072ca413741bcbf1d8ce93",
+   "same_as_HEAD": true,
+   "sha256": "d9853df9a712430a02233113910738cf5e56566836f31a08606ad9e1feedb982",
+   "bytes": 8061
+  },
+  "runtime_snapshot_1d99b23/step_03c_fusion_gate.py": {
+   "original_location": "dataset/step_03c_fusion_gate.py",
+   "source_commit": "1d99b23",
+   "git_blob": "d5dc21e153bb811b7a82df68fb431b53858ec76d",
+   "same_as_HEAD": false,
+   "sha256": "0ac40dfc0a442911979d63c4e9a4704f0d02a00443aec15a8dcbca145375b8ab",
+   "bytes": 25202
+  },
+  "runtime_snapshot_1d99b23/calibration.py": {
+   "original_location": "step4 dataset/calibration.py",
+   "source_commit": "1d99b23",
+   "git_blob": "30b7d1dd212f72a919c34d30603fa9d0f2054693",
+   "same_as_HEAD": true,
+   "sha256": "d18dbd85d574e4a7a30620f9db9e5276eb7f1fa69d161647100dbcb3697015a9",
+   "bytes": 24459
+  },
+  "runtime_snapshot_1d99b23/graded_channels.py": {
+   "original_location": "step4 dataset/graded_channels.py",
+   "source_commit": "1d99b23",
+   "git_blob": "3eb833cf788e5eead241ab705b6a49a6d0f013c0",
+   "same_as_HEAD": true,
+   "sha256": "e994c7efd1573d9ed810ea29a2ed225adf5af28ad3c8be79469797a2c4dfa5bb",
+   "bytes": 6812
+  },
+  "runtime_snapshot_1d99b23/kb_rag_mini_wikipedia.py": {
+   "original_location": "step4 dataset/kb_rag_mini_wikipedia.py",
+   "source_commit": "1d99b23",
+   "git_blob": "02880164ef7cd72068480eedc33ded3dd8757e88",
+   "same_as_HEAD": true,
+   "sha256": "7ed60213ddafe695156f1cadb804bb6401b4c36781d017347912f646aa65228a",
+   "bytes": 9613
+  },
+  "runtime_snapshot_1d99b23/multivector.py": {
+   "original_location": "step4 dataset/multivector.py",
+   "source_commit": "1d99b23",
+   "git_blob": "c7384761fcc8b4a95c00768b7576c65b94d46f6a",
+   "same_as_HEAD": true,
+   "sha256": "ee01d5bc7c40d7447e5bd4012228c7ebcec5cc21b69c0954c535e7730ba16d73",
+   "bytes": 6536
+  },
+  "runtime_snapshot_1d99b23/pipeline_common.py": {
+   "original_location": "step4 dataset/pipeline_common.py",
+   "source_commit": "1d99b23",
+   "git_blob": "ddeb6b74c0a820caacbdb44ccba4ea2436d62e44",
+   "same_as_HEAD": true,
+   "sha256": "743ac65aadc5a6cd95d020df19a2e6fac4ffca0170fabbcac37af16c08599834",
+   "bytes": 9178
+  },
+  "runtime_snapshot_1d99b23/risk_feedback_controller.py": {
+   "original_location": "step4 dataset/risk_feedback_controller.py",
+   "source_commit": "1d99b23",
+   "git_blob": "8be3ece4ff5a942fa0121227736549b96d6f40e7",
+   "same_as_HEAD": false,
+   "sha256": "9d0f66137e18a843b5300bd0a24e2611c7a62fddb9cc87674592cd2365457657",
+   "bytes": 17943
+  },
+  "runtime_snapshot_1d99b23/run_full_pipeline.py": {
+   "original_location": "step4 dataset/run_full_pipeline.py",
+   "source_commit": "1d99b23",
+   "git_blob": "589dac026deee5654d96b481c7bf6a7ebf224e84",
+   "same_as_HEAD": false,
+   "sha256": "08349aacd71887c6b3aa6d3ca4d9e0939e62e7ab1fd70585720fc0d0f7ae29a1",
+   "bytes": 22686
+  },
+  "runtime_snapshot_1d99b23/step_03d_semantic_intent_gate.py": {
+   "original_location": "step4 dataset/step_03d_semantic_intent_gate.py",
+   "source_commit": "1d99b23",
+   "git_blob": "1cbb6d8ebfd432ff569bd03cf96f1f987467ed78",
+   "same_as_HEAD": true,
+   "sha256": "983cdba2c08f0c97338199ff5db7aa79364c2fdf95ca9cb34ef2d13202fdafe8",
+   "bytes": 7890
+  },
+  "runtime_snapshot_1d99b23/step_04_query_embedding.py": {
+   "original_location": "step4 dataset/step_04_query_embedding.py",
+   "source_commit": "1d99b23",
+   "git_blob": "a6cfb8e83b1bda3320b7e43094ea98383a99c327",
+   "same_as_HEAD": false,
+   "sha256": "df8f051d2a7b1ca1aba44b015ec46cd670be229fce5a3e444f048d38bbf691fd",
+   "bytes": 3546
+  },
+  "runtime_snapshot_1d99b23/step_05_vector_search.py": {
+   "original_location": "step4 dataset/step_05_vector_search.py",
+   "source_commit": "1d99b23",
+   "git_blob": "68b72934ebe5279f84af458ea610ceebb1c3bbe5",
+   "same_as_HEAD": true,
+   "sha256": "e1707d539b40604e96522e38bda19bbc5344e68931ec5164e8d3be0495739924",
+   "bytes": 4673
+  },
+  "runtime_snapshot_1d99b23/step_06_context_sanitization.py": {
+   "original_location": "step4 dataset/step_06_context_sanitization.py",
+   "source_commit": "1d99b23",
+   "git_blob": "c279da721d2f7b9b5539f2dfd2f9140b5f845466",
+   "same_as_HEAD": false,
+   "sha256": "15561e3bd0e3eb215172eb1071970b7f728711480c795b0160a5c6e35b8180ed",
+   "bytes": 6292
+  },
+  "runtime_snapshot_1d99b23/step_07_context_ranking.py": {
+   "original_location": "step4 dataset/step_07_context_ranking.py",
+   "source_commit": "1d99b23",
+   "git_blob": "62f20d2ae6db98c6fc80f2f1fe1eccd8c9db31bd",
+   "same_as_HEAD": false,
+   "sha256": "07175ca8dd6370417b960418bae6c8081d79cd4ae6a6e73777631b1f784ce29d",
+   "bytes": 3753
+  },
+  "runtime_snapshot_1d99b23/step_08_augmented_prompt.py": {
+   "original_location": "step4 dataset/step_08_augmented_prompt.py",
+   "source_commit": "1d99b23",
+   "git_blob": "21d1ccf1deb755d4a0db268a82ffe0d588f74d6a",
+   "same_as_HEAD": true,
+   "sha256": "db7a7690ce03e38fc92d5718e92b5e83f555375a376bc106be2ce8f6d6cddbbb",
+   "bytes": 3361
+  },
+  "runtime_snapshot_1d99b23/step_09_generator_llm.py": {
+   "original_location": "step4 dataset/step_09_generator_llm.py",
+   "source_commit": "1d99b23",
+   "git_blob": "9078703e9f9b2d4194665114dad3efc0bfdaa0c4",
+   "same_as_HEAD": false,
+   "sha256": "2479098b87e2cb048a835c6aa5fd11dbe5a262925ad69abd83a05fa0fbf2f557",
+   "bytes": 13377
+  },
+  "runtime_snapshot_1d99b23/step_09a_isolate_aggregate.py": {
+   "original_location": "step4 dataset/step_09a_isolate_aggregate.py",
+   "source_commit": "1d99b23",
+   "git_blob": "99e744559a9ea7bafbf1e092b3a547faecb775ea",
+   "same_as_HEAD": true,
+   "sha256": "43b6c56f4296924d58e5afd07ac8e83fce1493784fa60f4e963561afed4b98a4",
+   "bytes": 13398
+  },
+  "runtime_snapshot_1d99b23/step_09b_knowledge_conflict.py": {
+   "original_location": "step4 dataset/step_09b_knowledge_conflict.py",
+   "source_commit": "1d99b23",
+   "git_blob": "0766dd09d7eaa516c71a4f070e171ce4cb1d4263",
+   "same_as_HEAD": true,
+   "sha256": "f54fa15cb4abaf20df16919e9ffbd542bf1c98ee9681f6b3e344d2e7a50d94e7",
+   "bytes": 11144
+  },
+  "runtime_snapshot_1d99b23/step_10_grounding_judge.py": {
+   "original_location": "step4 dataset/step_10_grounding_judge.py",
+   "source_commit": "1d99b23",
+   "git_blob": "2dca5dbef5e623fc7c9a06a77fa4be1f3bbaf727",
+   "same_as_HEAD": false,
+   "sha256": "a4aebe9d13ae3fc8472624997747d610a794d9ded711b5ec8337aa30e09b874c",
+   "bytes": 9179
+  },
+  "runtime_snapshot_1d99b23/step_11_output_sanitization.py": {
+   "original_location": "step4 dataset/step_11_output_sanitization.py",
+   "source_commit": "1d99b23",
+   "git_blob": "66251602313cf3a270089938c6dc06b2ead49b1b",
+   "same_as_HEAD": false,
+   "sha256": "63faa6b0e6002f1abf2474f8a659e93f863389d4657f6501febe598e204b631a",
+   "bytes": 7001
+  },
+  "runtime_snapshot_1d99b23/step_12_dlp_scanner.py": {
+   "original_location": "step4 dataset/step_12_dlp_scanner.py",
+   "source_commit": "1d99b23",
+   "git_blob": "870a7c4e5fadd54b75dcf86fcd417324d0f8b15e",
+   "same_as_HEAD": true,
+   "sha256": "9d73963d2bc8e213af0eb628bdfa96e65d76ab423f343b2cafb21489c83e1c7b",
+   "bytes": 6935
+  },
+  "runtime_snapshot_1d99b23/step_13_safe_response.py": {
+   "original_location": "step4 dataset/step_13_safe_response.py",
+   "source_commit": "1d99b23",
+   "git_blob": "e76a9584aa4602501cbd54e259ec743b8e1a1756",
+   "same_as_HEAD": true,
+   "sha256": "5c4b14c3d9e9e477659011216ae1e244c2c994cc8256d101818b080b4335600b",
+   "bytes": 4575
+  },
+  "environment_at_run/environment_info.txt": {
+   "original_location": "step4 dataset/environment_info.txt",
+   "source_commit": "92ed249",
+   "note": "committed 2026-08-11 13:10 as 'Pin exact environment behind the n=200 external validation result'",
+   "git_blob": "7269b91757fe417a28fabc4723a96eabb8b3e3fc",
+   "sha256": "53f9f29078477035ddc26c084c6a36a44c1044caa0c24983775d59c2164b012e",
+   "bytes": 568
+  },
+  "environment_at_run/requirements-lock.txt": {
+   "original_location": "step4 dataset/requirements-lock.txt",
+   "source_commit": "92ed249",
+   "note": "committed 2026-08-11 13:10 as 'Pin exact environment behind the n=200 external validation result'",
+   "git_blob": "ff6a9bf30a3a62eff1eca56b0c738c3314252416",
+   "sha256": "d5ad8645aa03567d6ec5d3bf2c0bf2b40d0dd0a3ba1f5819ab2afbdf4f576b9b",
+   "bytes": 2150
+  },
+  "historical_docs/INTEGRATION.md": {
+   "original_location": "step4 dataset/INTEGRATION.md",
+   "source_commit": "1d99b23",
+   "note": "hook documentation for the adaptive orchestrator; identical at 1d99b23 and fe71c56^; removed in fe71c56",
+   "git_blob": "9693edda45df1284b905627468e652bc6d088750",
+   "sha256": "7c5d8cec4e473a5b9c91c1fe833f3d732d94b43e6e4080c111f0de32276803a9",
+   "bytes": 5617
+  }
+ },
+ "data": {
+  "step4 dataset/external_validation_n200.jsonl": {
+   "git_blob_at_run_commit": "35a352a081a2e34e01ab8080c461de4bbbdda6ac",
+   "git_blob_at_HEAD": "35a352a081a2e34e01ab8080c461de4bbbdda6ac",
+   "sha256_of_git_blob": "03d818b42f41a6ebdbab383a8df99890923bd253e52f0c1a95f5187ae54f19fe"
+  },
+  "step4 dataset/ext_n200_results.jsonl": {
+   "git_blob_at_run_commit": "746ca3579e11b831ea597e57b9f4ba7aa301fdc0",
+   "git_blob_at_HEAD": "746ca3579e11b831ea597e57b9f4ba7aa301fdc0",
+   "sha256_of_git_blob": "6a976fa98a99b947c35e0c390d451180733cb4f2773a7ef2fdf1e5d14733a180"
+  },
+  "step4 dataset/run_n200_log.txt": {
+   "git_blob_at_run_commit": "ca907b37f5fa3274580f08d7256079d7342b535e",
+   "git_blob_at_HEAD": "ca907b37f5fa3274580f08d7256079d7342b535e",
+   "sha256_of_git_blob": "3b333c64efdb39ba63e15460880a56856d873867748cbcc4167b560c28d443a4"
+  },
+  "step4 dataset/kb_wiki.faiss": {
+   "git_blob_at_run_commit": "f745d164a45db028fad66aab2fe76529ca3833c2",
+   "git_blob_at_HEAD": "f745d164a45db028fad66aab2fe76529ca3833c2",
+   "sha256_of_git_blob": "cbb2628b3ffaa8c43d5727704fa5742477f0eb4703c2130e78c8f9c1bb1cbd0f"
+  },
+  "step4 dataset/kb_wiki.texts": {
+   "git_blob_at_run_commit": "45ec4ed3ffc3952667f43b461d40a90d501b34c2",
+   "git_blob_at_HEAD": "45ec4ed3ffc3952667f43b461d40a90d501b34c2",
+   "sha256_of_git_blob": "5741d2beaa973ba03519310da27658ef2ac48df6c9e84d4e1c346ed705ca5497"
+  },
+  "step4 dataset/graded_config.json": {
+   "git_blob_at_run_commit": "9a7e9ba70d73850a00b89ca3593e468d5f6cf693",
+   "git_blob_at_HEAD": "9a7e9ba70d73850a00b89ca3593e468d5f6cf693",
+   "sha256_of_git_blob": "8bd51f6c2b3ef08ea792aecb71a7284c1e76202b2f4ef43b3517967cf622511d"
+  },
+  "step4 dataset/final_n200_summary.py": {
+   "git_blob_at_run_commit": "b7010c918430d89c8198315c455324a370aa3317",
+   "git_blob_at_HEAD": "b7010c918430d89c8198315c455324a370aa3317",
+   "sha256_of_git_blob": "092256d9e0ca7fe8b5ab24354eae3cf67ca3e70fe3b38131ec31901f0655fd8e"
+  }
+ }
+}

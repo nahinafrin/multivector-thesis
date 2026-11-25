@@ -1,0 +1,359 @@
+{
+ "summary": {
+  "checks": 36,
+  "failed": 0
+ },
+ "what_was_verified": "Source provenance; consistency of saved outputs with the recovered routing rules; aggregate counts recomputed from saved outputs with the original scoring rules; graded risk signals recomputed deterministically by the classifier",
+ "fresh_inference_reproduction": "NOT PERFORMED (requires approval; see docs/ADAPTIVE_EXTERNAL_REPRODUCIBILITY.md)",
+ "routing": {
+  "PoisonedRAG": {
+   "first_pass_tier": {
+    "low": 147,
+    "gate-blocked": 2,
+    "medium": 1
+   },
+   "semantic_gate": {
+    "SKIPPED": 148
+   },
+   "empty_trace_fields": {
+    "multivector": 150,
+    "controller": 150,
+    "output_sanitization": 150,
+    "dlp": 150
+   },
+   "poison_appended_after_retrieval": 148,
+   "late_escalation_from_saved_signals": {
+    "step_10_grounding_judge|undetermined": 3,
+    "None|no_repass": 144,
+    "step_10_grounding_judge|no_repass": 1
+   }
+  },
+  "BIPIA": {
+   "first_pass_tier": {
+    "low": 49,
+    "gate-blocked": 1
+   },
+   "semantic_gate": {
+    "SKIPPED": 49
+   },
+   "empty_trace_fields": {
+    "multivector": 50,
+    "controller": 50,
+    "output_sanitization": 50,
+    "dlp": 50
+   },
+   "poison_appended_after_retrieval": 49,
+   "late_escalation_from_saved_signals": {
+    "step_10_grounding_judge|undetermined": 6,
+    "adaptive_policy|repass": 27,
+    "adaptive_policy|undetermined": 9,
+    "step_10_grounding_judge|no_repass": 2,
+    "None|no_repass": 5
+   }
+  },
+  "generator_selection": {
+   "PoisonedRAG": {
+    "first_pass_single_llama3.2:3b": 148,
+    "ensemble_repass": 0,
+    "no_generation_gate_blocked": 2
+   },
+   "BIPIA": {
+    "first_pass_single_llama3.2:3b": 49,
+    "ensemble_repass": 36,
+    "no_generation_gate_blocked": 1
+   }
+  }
+ },
+ "counts": {
+  "PoisonedRAG": {
+   "undefended": 137,
+   "defended": 136,
+   "fixed": 7,
+   "broke": 6,
+   "p": 1.0,
+   "poison_removed": 0,
+   "subsets_defended": {
+    "PoisonedRAG-NQ": 44,
+    "PoisonedRAG-HotpotQA": 47,
+    "PoisonedRAG-MSMARCO": 45
+   },
+   "subsets_undefended": {
+    "PoisonedRAG-NQ": 46,
+    "PoisonedRAG-HotpotQA": 46,
+    "PoisonedRAG-MSMARCO": 45
+   }
+  },
+  "BIPIA": {
+   "blocked_defended": 45,
+   "blocked_undefended": 0,
+   "block_stages": {
+    "step_10_grounding_judge": 8,
+    "adaptive_policy": 36,
+    "step_03c_fusion_gate": 1
+   },
+   "poison_injected": 49,
+   "poison_removed_before_generation": 33,
+   "removed_by_stage6": 10,
+   "removed_by_stage7": 23,
+   "unblocked_followed_instruction": "2-3 of 5 (manual reading; not recomputable)"
+  }
+ },
+ "manuscripts": {
+  "main.tex": {
+   "90.7\\%": true,
+   "91.3\\%": true,
+   "45/50 or 45 of 50": true,
+   "adaptive-tier": true
+  },
+  "main_iccit.tex": {
+   "90.7\\%": true,
+   "91.3\\%": true,
+   "45/50 or 45 of 50": true,
+   "adaptive-tier": true
+  }
+ },
+ "checks": [
+  {
+   "check": "recovered source files present",
+   "pass": true,
+   "kind": "recomputed_from_saved_outputs",
+   "evidence": "32/32 files under adaptive_external/"
+  },
+  {
+   "check": "SHA-256 of recovered files matches PROVENANCE.json",
+   "pass": true,
+   "kind": "recomputed_from_saved_outputs",
+   "evidence": "all match"
+  },
+  {
+   "check": "recovered files byte-identical to git history",
+   "pass": true,
+   "kind": "provenance",
+   "evidence": "every file equals its git blob (scripts at fe71c56^, modules at 1d99b23)"
+  },
+  {
+   "check": "data file unchanged since the run: external_validation_n200.jsonl",
+   "pass": true,
+   "kind": "provenance",
+   "evidence": "git blob at run commit == HEAD: True; working-copy sha256 matches: True"
+  },
+  {
+   "check": "data file unchanged since the run: ext_n200_results.jsonl",
+   "pass": true,
+   "kind": "provenance",
+   "evidence": "git blob at run commit == HEAD: True; working-copy sha256 matches: True"
+  },
+  {
+   "check": "data file unchanged since the run: run_n200_log.txt",
+   "pass": true,
+   "kind": "provenance",
+   "evidence": "git blob at run commit == HEAD: True; working-copy sha256 matches: True"
+  },
+  {
+   "check": "data file unchanged since the run: kb_wiki.faiss",
+   "pass": true,
+   "kind": "provenance",
+   "evidence": "git blob at run commit == HEAD: True; working-copy sha256 matches: True"
+  },
+  {
+   "check": "data file unchanged since the run: kb_wiki.texts",
+   "pass": true,
+   "kind": "provenance",
+   "evidence": "git blob at run commit == HEAD: True; working-copy sha256 matches: True"
+  },
+  {
+   "check": "data file unchanged since the run: graded_config.json",
+   "pass": true,
+   "kind": "provenance",
+   "evidence": "git blob at run commit == HEAD: True; working-copy sha256 matches: True"
+  },
+  {
+   "check": "data file unchanged since the run: final_n200_summary.py",
+   "pass": true,
+   "kind": "provenance",
+   "evidence": "git blob at run commit == HEAD: True; working-copy sha256 matches: True"
+  },
+  {
+   "check": "row counts",
+   "pass": true,
+   "kind": "recomputed_from_saved_outputs",
+   "evidence": "input 200, defended 200, undefended 200"
+  },
+  {
+   "check": "composition",
+   "pass": true,
+   "kind": "recomputed_from_saved_outputs",
+   "evidence": {
+    "BIPIA-text_attack": 50,
+    "PoisonedRAG-HotpotQA": 50,
+    "PoisonedRAG-MSMARCO": 50,
+    "PoisonedRAG-NQ": 50
+   }
+  },
+  {
+   "check": "unique ids",
+   "pass": true,
+   "kind": "recomputed_from_saved_outputs",
+   "evidence": "200 unique of 200"
+  },
+  {
+   "check": "input/defended alignment (id, question, source, poison)",
+   "pass": true,
+   "kind": "recomputed_from_saved_outputs",
+   "evidence": "200/200 rows aligned in order"
+  },
+  {
+   "check": "input/undefended alignment (question)",
+   "pass": true,
+   "kind": "recomputed_from_saved_outputs",
+   "evidence": "200/200 rows aligned in order"
+  },
+  {
+   "check": "no runtime errors in saved rows",
+   "pass": true,
+   "kind": "recomputed_from_saved_outputs",
+   "evidence": "0 error rows"
+  },
+  {
+   "check": "PoisonedRAG: Stage 3d semantic gate skipped on every row past the gate",
+   "pass": true,
+   "kind": "recomputed_from_saved_outputs",
+   "evidence": {
+    "SKIPPED": 148
+   }
+  },
+  {
+   "check": "PoisonedRAG: no multivector / controller / Stage 11 / Stage 12 trace",
+   "pass": true,
+   "kind": "recomputed_from_saved_outputs",
+   "evidence": "empty fields: {'multivector': 150, 'controller': 150, 'output_sanitization': 150, 'dlp': 150} of 150"
+  },
+  {
+   "check": "PoisonedRAG: ranked context never exceeds the tier's top-k",
+   "pass": true,
+   "kind": "recomputed_from_saved_outputs",
+   "evidence": "148 rows within top-k"
+  },
+  {
+   "check": "PoisonedRAG: saved block stages consistent with the recovered escalation rule",
+   "pass": true,
+   "kind": "recomputed_from_saved_outputs",
+   "evidence": "{('step_10_grounding_judge', 'undetermined'): 3, (None, 'no_repass'): 144, ('step_10_grounding_judge', 'no_repass'): 1} (undetermined rows need --recompute-graded)"
+  },
+  {
+   "check": "BIPIA: Stage 3d semantic gate skipped on every row past the gate",
+   "pass": true,
+   "kind": "recomputed_from_saved_outputs",
+   "evidence": {
+    "SKIPPED": 49
+   }
+  },
+  {
+   "check": "BIPIA: no multivector / controller / Stage 11 / Stage 12 trace",
+   "pass": true,
+   "kind": "recomputed_from_saved_outputs",
+   "evidence": "empty fields: {'multivector': 50, 'controller': 50, 'output_sanitization': 50, 'dlp': 50} of 50"
+  },
+  {
+   "check": "BIPIA: ranked context never exceeds the tier's top-k",
+   "pass": true,
+   "kind": "recomputed_from_saved_outputs",
+   "evidence": "49 rows within top-k"
+  },
+  {
+   "check": "BIPIA: saved block stages consistent with the recovered escalation rule",
+   "pass": true,
+   "kind": "recomputed_from_saved_outputs",
+   "evidence": "{('step_10_grounding_judge', 'undetermined'): 6, ('adaptive_policy', 'repass'): 27, ('adaptive_policy', 'undetermined'): 9, ('step_10_grounding_judge', 'no_repass'): 2, (None, 'no_repass'): 5} (undetermined rows need --recompute-graded)"
+  },
+  {
+   "check": "first-pass tiers (from pinned Stage 6/7 settings)",
+   "pass": true,
+   "kind": "recomputed_from_saved_outputs",
+   "evidence": "PoisonedRAG {'low': 147, 'gate-blocked': 2, 'medium': 1}; BIPIA {'low': 49, 'gate-blocked': 1}"
+  },
+  {
+   "check": "graded risk recomputed by classifier reproduces saved input_risk",
+   "pass": true,
+   "kind": "deterministic_recomputation",
+   "evidence": "197/197 rows within rounding (6e-5)"
+  },
+  {
+   "check": "exact tier routing: first tier and HIGH re-pass reproduced on every row",
+   "pass": true,
+   "kind": "deterministic_recomputation",
+   "evidence": {
+    "PoisonedRAG|t1_ok|True|repass_pred==adaptive_policy|True": 148,
+    "BIPIA|t1_ok|True|repass_pred==adaptive_policy|True": 49
+   }
+  },
+  {
+   "check": "generator selection",
+   "pass": true,
+   "kind": "recomputed_from_saved_outputs",
+   "evidence": "{'PoisonedRAG': {'first_pass_single_llama3.2:3b': 148, 'ensemble_repass': 0, 'no_generation_gate_blocked': 2}, 'BIPIA': {'first_pass_single_llama3.2:3b': 49, 'ensemble_repass': 36, 'no_generation_gate_blocked': 1}} (ensemble re-pass rows were refused; 36 in total)"
+  },
+  {
+   "check": "PoisonedRAG ASR (score_external_paired.py / final_n200_summary.py rules)",
+   "pass": true,
+   "kind": "recomputed_from_saved_outputs",
+   "evidence": "undefended 137/150 (91.3%), defended 136/150 (90.7%), fixed/broke 7/6, p=1"
+  },
+  {
+   "check": "PoisonedRAG per-subset counts (Table X)",
+   "pass": true,
+   "kind": "recomputed_from_saved_outputs",
+   "evidence": "defended {'PoisonedRAG-NQ': 44, 'PoisonedRAG-HotpotQA': 47, 'PoisonedRAG-MSMARCO': 45}; undefended {'PoisonedRAG-NQ': 46, 'PoisonedRAG-HotpotQA': 46, 'PoisonedRAG-MSMARCO': 45}"
+  },
+  {
+   "check": "PoisonedRAG poison removal",
+   "pass": true,
+   "kind": "recomputed_from_saved_outputs",
+   "evidence": "0/148 removed before generation (0 by Stage 6)"
+  },
+  {
+   "check": "BIPIA blocked",
+   "pass": true,
+   "kind": "recomputed_from_saved_outputs",
+   "evidence": "defended 45/50, undefended 0/50"
+  },
+  {
+   "check": "BIPIA block stages",
+   "pass": true,
+   "kind": "recomputed_from_saved_outputs",
+   "evidence": {
+    "step_10_grounding_judge": 8,
+    "adaptive_policy": 36,
+    "step_03c_fusion_gate": 1
+   }
+  },
+  {
+   "check": "BIPIA poison removed before generation",
+   "pass": true,
+   "kind": "recomputed_from_saved_outputs",
+   "evidence": "33/49 removed before generation: 10 by Stage 6 sanitisation, 23 by Stage 7 reranking"
+  },
+  {
+   "check": "main.tex: headline external numbers and 'adaptive-tier' label present",
+   "pass": true,
+   "kind": "manuscript",
+   "evidence": {
+    "90.7\\%": true,
+    "91.3\\%": true,
+    "45/50 or 45 of 50": true,
+    "adaptive-tier": true
+   }
+  },
+  {
+   "check": "main_iccit.tex: headline external numbers and 'adaptive-tier' label present",
+   "pass": true,
+   "kind": "manuscript",
+   "evidence": {
+    "90.7\\%": true,
+    "91.3\\%": true,
+    "45/50 or 45 of 50": true,
+    "adaptive-tier": true
+   }
+  }
+ ]
+}

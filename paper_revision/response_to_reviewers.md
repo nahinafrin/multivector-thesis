@@ -158,12 +158,13 @@ We now state this as the dominant open risk and discuss its practical implicatio
 
 **4.1. Validate on standardized benchmarks (e.g., BIPIA) or larger RAG benchmarks.**
 We added BIPIA (50 rows), PoisonedRAG on NQ, HotpotQA and MS MARCO (150 rows) and deepset
-prompt-injections (60 rows). Each was run through the complete pipeline and paired row by row with an
+prompt-injections (60 rows). Each was run through an adaptive-tier variant of the pipeline (Sec. IV) and paired row by row with an
 undefended arm on the same rows and poison (Sec. V-E, Table VII).
 
 * **BIPIA:** 45/50 blocked (0/50 undefended). Of the 5 unblocked, 2 followed the injected instruction.
 * **PoisonedRAG:** no measurable protection.
-  * The complete pipeline (three-model ensemble) gives 90.7% ASR, against 91.3% undefended (7 rows fixed,
+  * The adaptive-tier variant, whose delivered answers all come from a single llama3.2:3b, gives 90.7% ASR,
+    against 91.3% undefended (7 rows fixed,
     6 broken, p = 1.0).
   * A same-generator comparison (seven layers) gives 85.3% (16 fixed, 7 broken, p = 0.09).
   * PoisonedRAG passages carry no instruction signature, and Stage 6 redacts none of the 148 injected
@@ -187,7 +188,7 @@ per-row timings on 200 rows per arm. Median latency per benign query:
 | Sanitize + refuse | 10.7 s |
 | Full seven-layer stack | 15.3 s |
 | Three-layer subset (sanitize + ground + refuse) | 19.0 s |
-| Complete 13-stage pipeline, 3-model ensemble | 23.8 s (mean) |
+| Adaptive-tier pipeline variant (external sets) | 23.8 s (mean) |
 | ADO, Protocol A run (without its attention filter) | 31.5 s |
 | ADO, Protocol B (adapted, with attention filter) | 45.3 s |
 
@@ -235,6 +236,8 @@ Every threshold and fusion weight is listed in the extended version. The reposit
 * a README that maps every table and figure to the script that produces it and to the per-row outputs it
   reads;
 * a claim-by-claim checker that recomputes the paper's numbers from those outputs;
+* the recovered adaptive-tier scripts behind the PoisonedRAG and BIPIA results, with their provenance and a
+  verification script (`step4 dataset/adaptive_external/`, `verify_adaptive_external.py`);
 * an MIT licence and a dataset-licence table.
 
 **5.3. Small dataset; justify representativeness; evaluate on independent test sets.**
