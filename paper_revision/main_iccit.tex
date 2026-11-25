@@ -69,7 +69,7 @@ Layered~\cite{saleem2026layered} & partial$^a$ & \checkmark & subsets$^b$ & -- &
 \section{Method}\label{sec:method}
 The pipeline wraps a RAG core in a thirteen-stage cascade. Stage~2 normalizes the prompt (NFKC, \texttt{ftfy}, decoding). The input gate (Stage~3) fuses the DeBERTa-v3 injection score with a Llama Guard~3 verdict into a risk score $r$ and a decision (allow, review, block). The same $r$ is propagated forward and tightens the downstream stages for that request. After embedding (bge-m3) and FAISS retrieval (Stages~4--5), Stage~6 scans each retrieved chunk for embedded instructions, redacts flagged chunks (threshold 0.50, tightened to 0.30 when $r>0.45$), and inserts a canary token. Stage~7 reranks with a cross-encoder; Stage~8 builds a prompt that treats the context as data; Stage~9 generates with three local models (Llama~3.2, Mistral~7B, Qwen2.5), whose disagreement is a risk signal; Stage~10 checks grounding and the canary; Stages~11--12 mask PII (Presidio) and apply DLP; Stage~13 returns the answer or a refusal (Table~\ref{tab:stages}).
 
-\begin{table}[t]
+\begin{table}[!h]
 \centering
 \caption{The cascade. Every model runs locally.}
 \label{tab:stages}
