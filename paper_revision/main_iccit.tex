@@ -264,6 +264,32 @@ Undefended & 29.5 [23.6, 36.2] & -- & -- & 0.0 \\
 \end{tabular}}
 \end{table}
 
+\begin{table*}[t]
+\centering
+\caption{Adaptive-tier pipeline variant (Stages 1--10, 13) on independent external sets, paired row by row with an undefended RAG arm on the same rows and poison. ASR = attack's target string in the delivered answer and true answer absent; $p$ = exact McNemar (fixed/broke).}
+\label{tab:external}
+\setlength{\tabcolsep}{2.5pt}
+\small
+\begin{tabular}{lrcccc}
+\toprule
+Set & $n$ & \makecell{Poison\\removed} & \makecell{ASR\\undefended} & \makecell{ASR\\defended} & \makecell{fix/brk\\($p$)} \\
+\midrule
+PoisonedRAG-NQ & 50 & 0/49 & 46 & 44 & 4/2 (0.69) \\
+PoisonedRAG-HotpotQA & 50 & 0/50 & 46 & 47 & 1/2 (1.0) \\
+PoisonedRAG-MS MARCO & 50 & 0/49 & 45 & 45 & 2/2 (1.0) \\
+\textbf{PoisonedRAG, all} & 150 & 0/148 & \makecell{137 (91.3\%)\\{[85.7, 94.9]}} & \makecell{136 (90.7\%)\\{[84.9, 94.4]}} & 7/6 (1.0) \\
+\quad same generator$^\ddagger$ & 150 & -- & 137 (91.3\%) & \makecell{128 (85.3\%)\\{[78.8, 90.1]}} & 16/7 (0.09) \\
+\midrule
+ & & & \multicolumn{2}{c}{Blocked: undef.\ / def.} & \\
+BIPIA text attack & 50 & 33/49 & \multicolumn{2}{c}{0/50 / 45/50} & $^\dagger$ \\
+\midrule
+deepset (gate only) & 30+30 & \multicolumn{4}{l}{Blocked 14/30 (46.7\%), flagged 17/30 (20/30 with graded flag); benign 0/30} \\
+\bottomrule
+\end{tabular}
+
+\vspace{2pt}{\footnotesize $^\dagger$BIPIA goals are not string-scorable; the 5 unblocked defended rows were read manually: 2 followed the injected instruction, 2 did not, 1 indeterminable. $^\ddagger$Separate run of the seven-layer single-generator harness (Protocol~B configuration), \texttt{llama3.2:3b} in both arms; in that run BIPIA is 44/50 blocked, against 45/50 for the adaptive-tier variant above.\par}
+\end{table*}
+
 \subsection{Comparison with Existing Defenses}
 Table~\ref{tab:existing} runs four existing defenses on the same 200 attacks and 200 benign questions, with the same generator and scoring. Spotlighting~\cite{hines2024spotlighting} uses datamarking and regenerates the answers. LLM-Guard~\cite{protectai2024} acts as an input firewall over the query and every passage in the prompt (threshold 0.5). ControlNET~\cite{yao2025controlnet} is reimplemented as described by its authors (Llama-3.1-8B layer-1 activation shift, decision tree) and given exactly the passages the undefended generator received. The two detectors only block or pass, so they are scored on the stored undefended answers of the rows they pass. The seven-layer full stack outperforms LLM-Guard (3 vs.\ 38 discordant rows, $p=1\times10^{-8}$) and Spotlighting ($p<10^{-9}$) with no significant difference in benign correctness. ControlNET matches the full stack on attack success ($p=0.77$) but answers fewer benign questions correctly (46.0\% vs.\ 52.0\%, $p=0.058$; $p=0.012$ against the three-layer subset). We therefore claim parity with ControlNET's detector used as a firewall, not superiority, and not a comparison with its full method, whose mitigation module (ProNet) we did not reimplement. ADO~\cite{palleria2026ado} runs from the authors' unmodified code through an adapter: its LLM Sentinel and Strategist choose among DP-RAG, TrustRAG, and attention-variance filtering, which act on the same eight passages before the same generator answers. Hardware forced a Llama-3.1-8B controller and a 4-bit attention filter, and each query starts as a fresh user, so this is an adapted implementation, not a reproduction. ADO lets 28.5\% of attacks succeed (54 vs.\ 4 discordant rows, $p=3\times10^{-12}$) and answers fewer benign questions correctly (35.5\% vs.\ 52.0\%, $p=6\times10^{-6}$). Both stem mainly from DP-RAG removing every passage (64/200 attacks, 58/200 benign): the generator then refuses, which discards the evidence and which the marker scorer counts as a success when the planted answer is ``No''. Not counting refusals as successes for any arm, ADO's ASR is 13.5\% vs.\ 3.5\% ($p=2\times10^{-4}$). These results concern this adapted implementation under Protocol~B's marker scoring; they do not establish superiority over every faithful ADO deployment.
 
@@ -291,43 +317,6 @@ This work, 7 layers & 3.5 [1.7, 7.0] & 8.5 & 52.0 & -- \\
 {\footnotesize $^{*}$Detection and blocking only; ControlNET's mitigation module is not reimplemented. $^{\dagger}$Adapted implementation (official code; Llama-3.1-8B controller, 4-bit attention filter); 13.5\% ASR if refusals are not counted as attack successes.\par}
 \end{table}
 
-\subsection{Conjunctive Detection on Saturated Scores}\label{sec:negative}
-Of the 40 conjunctive rows, the gate blocked 6; on the remaining 34 the co-activation detector fired once, and that fire is invalid because both channels were individually above threshold. Recalibration cannot help: class separation is $-0.30$ raw and $-0.39$ calibrated, and a monotone map preserves the overlap. The reason is structural (the extended version states it in closed form). A valid fire requires the query to pass Stage~3 and the chunk to survive Stage~6, i.e., low injection scores on both channels; a co-activation signal built from those scores is therefore low on exactly the rows it targets, while any payload strong enough to raise it saturates the near-binary classifier and is stopped by Stage~3 or~6 alone. The premise is saturation, which suggests a repair: reading the DeBERTa logit margin as a graded channel gives 24/30 valid fires at 1/80 benign false fires. The repair generalizes poorly: 6/200 false fires on held-out benign questions, 8/30 fires on external BIPIA attacks (4/30 on benign controls), and no context floor separates attack contexts from benign ones. The impossibility is thus specific to saturated channels. It did not cost security here, because Stage~6 redacted every conjunctive chunk.
-
-\subsection{External Benchmarks and the Semantic Gap}\label{sec:external}
-On BIPIA, the pipeline blocks 45 of 50 indirect injections (0/50 undefended); of the 5 unblocked, 2 followed the injected instruction. On deepset, the gate flags 17 of 30 real injections at 0/30 benign; on the full test split, letting the gate also flag on the graded margin raises flagged injections from 28/60 to 38/60 at 2/56 benign. Knowledge corruption is different. PoisonedRAG passages carry no instruction signature (gate score 0), Stage~6 redacts none of the 148, the reranker ranks the poisoned passage first in all 148, and every successful attack passes the grounding judge (median faithfulness 1.0); the true answer appears in another retrieved passage in only 11 rows, as the questions come from other corpora. ASR is 90.7\% defended vs.\ 91.3\% undefended (7 fixed, 6 broken, $p=1.0$). Asked without context, \texttt{llama3.2:3b} knew the true answer in 54\% of the defended successes; knowing it gave no protection (90.2\% vs.\ 91.2\% ASR). On our 40-row semantic slice, ASR falls from 75.0\% to 35.0\% ($p=4\times10^{-4}$), but grounding alone has no effect, because a planted fact is ``grounded'' in its passage. An agreement-based generator removes the attack (0/40) only by abstaining (it answers 15 of 40 benign questions), and a routed variant that keeps utility reduces ASR only from 18/40 to 15/40 ($p=0.45$). Table~\ref{tab:external} summarizes the external results. Every effective layer keys on instruction signatures; defending against knowledge corruption requires provenance and corroboration, which this defense class lacks.
-
-\begin{table*}[t]
-\centering
-\caption{Adaptive-tier pipeline variant (Stages 1--10, 13) on independent external sets, paired row by row with an undefended RAG arm on the same rows and poison. ASR = attack's target string in the delivered answer and true answer absent; $p$ = exact McNemar (fixed/broke).}
-\label{tab:external}
-\setlength{\tabcolsep}{2.5pt}
-\small
-\begin{tabular}{lrcccc}
-\toprule
-Set & $n$ & \makecell{Poison\\removed} & \makecell{ASR\\undefended} & \makecell{ASR\\defended} & \makecell{fix/brk\\($p$)} \\
-\midrule
-PoisonedRAG-NQ & 50 & 0/49 & 46 & 44 & 4/2 (0.69) \\
-PoisonedRAG-HotpotQA & 50 & 0/50 & 46 & 47 & 1/2 (1.0) \\
-PoisonedRAG-MS MARCO & 50 & 0/49 & 45 & 45 & 2/2 (1.0) \\
-\textbf{PoisonedRAG, all} & 150 & 0/148 & \makecell{137 (91.3\%)\\{[85.7, 94.9]}} & \makecell{136 (90.7\%)\\{[84.9, 94.4]}} & 7/6 (1.0) \\
-\quad same generator$^\ddagger$ & 150 & -- & 137 (91.3\%) & \makecell{128 (85.3\%)\\{[78.8, 90.1]}} & 16/7 (0.09) \\
-\midrule
- & & & \multicolumn{2}{c}{Blocked: undef.\ / def.} & \\
-BIPIA text attack & 50 & 33/49 & \multicolumn{2}{c}{0/50 / 45/50} & $^\dagger$ \\
-\midrule
-deepset (gate only) & 30+30 & \multicolumn{4}{l}{Blocked 14/30 (46.7\%), flagged 17/30 (20/30 with graded flag); benign 0/30} \\
-\bottomrule
-\end{tabular}
-
-\vspace{2pt}{\footnotesize $^\dagger$BIPIA goals are not string-scorable; the 5 unblocked defended rows were read manually: 2 followed the injected instruction, 2 did not, 1 indeterminable. $^\ddagger$Separate run of the seven-layer single-generator harness (Protocol~B configuration), \texttt{llama3.2:3b} in both arms; in that run BIPIA is 44/50 blocked, against 45/50 for the adaptive-tier variant above.\par}
-\end{table*}
-
-\textbf{Practical implications.} Any deployment that retrieves from a corpus outsiders can write to (wikis, reviews, tickets, crawled pages) is exposed: one fluent passage that ranks highly for a target question yields confident, citation-backed false answers, and injection classifiers, canaries, and spotlighting are blind to it by design. Deployments should treat retrieval provenance as a security boundary, require corroboration across passages for high-stakes answers, surface citations, and route single-source high-stakes answers to human review.
-
-\subsection{Overhead}\label{sec:overhead}
-On benign queries, median latency is 8.6\,s undefended and 15.3\,s for the full stack; the three-layer subset takes 19.0\,s, because it keeps the CPU-bound grounding judge, the dominant cost. Moving the encoders to the GPU in fp16 cuts the full stack's median to 8.6\,s (13.3\,s with CPU encoders in the same session), with identical decisions on all 50 benign questions tested. Peak usage is 6.3\,GB of the 8\,GB GPU and 8.0\,GB of host RAM (Table~\ref{tab:overhead}).
-
 \begin{table}[t]
 \centering
 \caption{End-to-end latency per query (seconds; median / 95th percentile; 200 rows per cell unless noted) on an RTX 4060 Laptop GPU (8\,GB).}
@@ -354,6 +343,19 @@ ADO, Protocol B (adapted) & 45.5 / 312.6 & 45.3 / 271.3 \\
 \bottomrule
 \end{tabular}}
 \end{table}
+
+\subsection{Conjunctive Detection on Saturated Scores}\label{sec:negative}
+Of the 40 conjunctive rows, the gate blocked 6; on the remaining 34 the co-activation detector fired once, and that fire is invalid because both channels were individually above threshold. Recalibration cannot help: class separation is $-0.30$ raw and $-0.39$ calibrated, and a monotone map preserves the overlap. The reason is structural (the extended version states it in closed form). A valid fire requires the query to pass Stage~3 and the chunk to survive Stage~6, i.e., low injection scores on both channels; a co-activation signal built from those scores is therefore low on exactly the rows it targets, while any payload strong enough to raise it saturates the near-binary classifier and is stopped by Stage~3 or~6 alone. The premise is saturation, which suggests a repair: reading the DeBERTa logit margin as a graded channel gives 24/30 valid fires at 1/80 benign false fires. The repair generalizes poorly: 6/200 false fires on held-out benign questions, 8/30 fires on external BIPIA attacks (4/30 on benign controls), and no context floor separates attack contexts from benign ones. The impossibility is thus specific to saturated channels. It did not cost security here, because Stage~6 redacted every conjunctive chunk.
+
+\subsection{External Benchmarks and the Semantic Gap}\label{sec:external}
+On BIPIA, the pipeline blocks 45 of 50 indirect injections (0/50 undefended); of the 5 unblocked, 2 followed the injected instruction. On deepset, the gate flags 17 of 30 real injections at 0/30 benign; on the full test split, letting the gate also flag on the graded margin raises flagged injections from 28/60 to 38/60 at 2/56 benign. Knowledge corruption is different. PoisonedRAG passages carry no instruction signature (gate score 0), Stage~6 redacts none of the 148, the reranker ranks the poisoned passage first in all 148, and every successful attack passes the grounding judge (median faithfulness 1.0); the true answer appears in another retrieved passage in only 11 rows, as the questions come from other corpora. ASR is 90.7\% defended vs.\ 91.3\% undefended (7 fixed, 6 broken, $p=1.0$). Asked without context, \texttt{llama3.2:3b} knew the true answer in 54\% of the defended successes; knowing it gave no protection (90.2\% vs.\ 91.2\% ASR). On our 40-row semantic slice, ASR falls from 75.0\% to 35.0\% ($p=4\times10^{-4}$), but grounding alone has no effect, because a planted fact is ``grounded'' in its passage. An agreement-based generator removes the attack (0/40) only by abstaining (it answers 15 of 40 benign questions), and a routed variant that keeps utility reduces ASR only from 18/40 to 15/40 ($p=0.45$). Table~\ref{tab:external} summarizes the external results. Every effective layer keys on instruction signatures; defending against knowledge corruption requires provenance and corroboration, which this defense class lacks.
+
+
+\textbf{Practical implications.} Any deployment that retrieves from a corpus outsiders can write to (wikis, reviews, tickets, crawled pages) is exposed: one fluent passage that ranks highly for a target question yields confident, citation-backed false answers, and injection classifiers, canaries, and spotlighting are blind to it by design. Deployments should treat retrieval provenance as a security boundary, require corroboration across passages for high-stakes answers, surface citations, and route single-source high-stakes answers to human review.
+
+\subsection{Overhead}\label{sec:overhead}
+On benign queries, median latency is 8.6\,s undefended and 15.3\,s for the full stack; the three-layer subset takes 19.0\,s, because it keeps the CPU-bound grounding judge, the dominant cost. Moving the encoders to the GPU in fp16 cuts the full stack's median to 8.6\,s (13.3\,s with CPU encoders in the same session), with identical decisions on all 50 benign questions tested. Peak usage is 6.3\,GB of the 8\,GB GPU and 8.0\,GB of host RAM (Table~\ref{tab:overhead}).
+
 
 \subsection{Threats to Validity}
 Components were developed against the Protocol~A slice; Protocol~B, the semantic slice, and the external sets were not used for development. Protocol~B uses one generator, and Ollama GPU generation is not bit-reproducible, which we address with three seeds and a fresh rerun. The knowledge base is small and the generators are 3--7B models; generalization to larger corpora and stronger, adaptive attackers is untested, and fixed attack sets overstate robustness~\cite{nasr2025attacker}. The pipeline runs queries sequentially (about 240 per hour on one laptop), so concurrent load and larger deployments are untested. Protocol~B and the external results each rest on \texttt{llama3.2:3b} and one knowledge base, and our held-out attack wording was written by us. The ControlNET reimplementation reaches a validation F1 of 0.88 and omits its mitigation module; ADO runs with substitute controller and attention-filter models and without its trust history.
