@@ -166,7 +166,7 @@ Generation uses temperature 0.2 and seed 42. The policy check uses temperature 0
 | 9 Generation | `step_09.generate_single` / `generate_candidates` | **single `llama3.2:3b`**, 148 / 49 | **ensemble of 3, 0 / 36** | recovered routing rule reproduced on every row (Section 8) |
 | HIGH policy check | `adaptive_verification._policy_check` | not executed | executed, 0 / 36 | source; verdict not saved |
 | 10 Grounding + canary | `step_10_grounding_judge.py` | executed, 148 / 49; blocked 4 / 44 | returns immediately (row already blocked) | saved `grounding.*` |
-| Final adaptive decision | `process_adaptive()` | – | ungrounded at HIGH → `adaptive_policy` block, 0 / 36 | `block_stage = "adaptive_policy"` |
+| Final adaptive decision | `process_adaptive()` | – | ungrounded at HIGH → relabels the existing Stage 10 block as `adaptive_policy`, 0 / 36 | `block_stage = "adaptive_policy"`; all 36 have faithfulness < threshold |
 | 10A Multivector detector | `multivector.py` | **not executed** (only imported through `run_full_pipeline`) | not executed | empty `multivector` field on 150 / 50 |
 | 10B Risk controller | `risk_feedback_controller.py` | **not executed** | not executed | empty `controller` field on 150 / 50 |
 | 11 Output sanitisation (Presidio) | `step_11` | **not executed** | not executed | empty `output_sanitization` field on 150 / 50 |
@@ -231,7 +231,7 @@ read manually.
 | PoisonedRAG undefended, NQ / HotpotQA / MS MARCO | 46 / 46 / 45 | 46 / 46 / 45 |
 | PoisonedRAG poison removed before generation | 0/148 | 0/148 |
 | BIPIA blocked, defended / undefended | 45/50 / 0/50 | 45/50 / 0/50 |
-| BIPIA blocks by stage | adaptive policy 36, grounding 8, gate 1 | 36 / 8 / 1 |
+| BIPIA blocks by stage | recorded: adaptive policy 36, grounding 8, gate 1; effective: grounding judge 44 (incl. the 36), gate 1 | 44 / 1 (corrected from 36 / 8 / 1) |
 | BIPIA poison removed before generation | 33/49: **10 by Stage 6, 23 by Stage 7** | "Stage 6 redacts 33 of the 49" (inaccurate attribution) |
 | Graded risk recomputed by the classifier vs saved `input_risk` | 197/197 within rounding | – |
 | Tier routing (first tier and HIGH re-pass) | reproduced on all 197 rows that reached retrieval | – |
@@ -306,6 +306,14 @@ makes exact-match replacements and writes nothing unless every old string matche
   17 pages.
 - The IEEE PDFs, the Word version and the results report were rebuilt.
 - `verify_claims.py` passes 86/86 and `verify_adaptive_external.py` passes 36/36.
+
+**Second set (`--set2`, approved and applied 2026-11-25).**
+- *BIPIA block attribution.* All 36 rows recorded as `adaptive_policy` blocks had failed grounding
+  (faithfulness below threshold in 36 of 36), so Stage 10 had already blocked them. The policy only
+  re-generated them with the ensemble and relabelled the block. Effective attribution: grounding judge
+  44/50, gate 1/50. This is corrected in `main.tex` Sec. V-G, the results report, the audit file
+  (`research_improvement/01`) and Sections 6 and 8 above.
+- *README.* The external-results row now names the adaptive-tier variant, the launcher and the verifier.
 
 The texts below are as applied. T-a4 differs from the original proposal: instead of removing the
 "restore the scripts" item, it now says where the restored scripts are.
