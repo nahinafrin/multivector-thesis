@@ -14,8 +14,11 @@ The main changes are:
   (Table IV). They include 150 PoisonedRAG rows, 50 BIPIA rows and 60 deepset rows, none of which we
   constructed.
 * **Comparison with simpler and existing defenses.**
-  * A three-layer subset (sanitization, grounding, refusal on detection) is statistically
-    indistinguishable from the seven-layer stack, and we now recommend it.
+  * On instruction-bearing attacks, a three-layer subset (sanitization, grounding, refusal on detection)
+    is not significantly different from the seven-layer stack; the gap is at most 2.4 points at n = 424.
+    It does not suffice on assertion-only attacks, so we recommend it as a starting point and keep the
+    guarded prompt where planted factual claims matter. The layers act as near-independent filters
+    (new factorial analysis).
   * On the same 200 attacks, the seven-layer stack outperforms an LLM-Guard firewall, Spotlighting and
     an adapted implementation of the ADO orchestrator, and matches the ControlNET detector used as a
     firewall (Table VI).
@@ -71,7 +74,7 @@ and 200 benign questions, with the same generator and scoring, paired by row.
 | LLM-Guard prompt-injection firewall | 21.0% | 3 vs. 38 discordant rows, p = 1×10⁻⁸ | no significant difference |
 | Spotlighting (datamarking) | 23.0% | p < 10⁻⁹ | no significant difference |
 | ADO (Sentinel–Strategist orchestrator) | 28.5% | 54 vs. 4 discordant rows, p = 3×10⁻¹² | 35.5% (p = 6×10⁻⁶) |
-| ControlNET detector, used as a firewall | 4.5% | p = 0.77 (statistically indistinguishable) | 46.0% (p = 0.058) |
+| ControlNET detector, used as a firewall | 4.5% | p = 0.77 (not significantly different) | 46.0% (p = 0.058) |
 
 * **ADO.** We ran the authors' unmodified code through an adapter. Local hardware forced a substitute
   controller and a 4-bit attention filter, so we call it an adapted implementation.
@@ -263,7 +266,7 @@ The "Statistics" paragraph (Sec. IV) explains:
 * McNemar's test uses only discordant pairs. We use the exact test and print the discordant counts next
   to every p.
 * A large p means no detectable difference at that n, not equivalence. This is why we call the
-  three-layer subset "statistically indistinguishable", not "equivalent".
+  three-layer subset "not significantly different" and report an upper bound on the gap, not "equivalent".
 * Proportions carry 95% Wilson intervals.
 * Leave-one-out and subset families use Bonferroni correction.
 
